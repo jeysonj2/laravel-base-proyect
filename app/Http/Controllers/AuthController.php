@@ -62,8 +62,6 @@ class AuthController extends Controller
                 'message' => 'Could not refresh token.',
                 'data' => [
                     'eMessage' => $e->getMessage(),
-                    'refreshToken' => $refreshToken,
-                    'refreshTokenHeader' => $request->header('Authorization'),
                 ]
             ], 500);
         }

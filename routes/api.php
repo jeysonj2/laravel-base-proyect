@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EmailVerificationController;
 
 Route::middleware(['auth:api'])->group(function () {
     // ---------------------------------------------------------------------
@@ -24,8 +25,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         Route::apiResource('roles', RoleController::class);
         Route::apiResource('users', UserController::class);
+        Route::post('users/{user}/resend-verification', [EmailVerificationController::class, 'resend']);
     });
 });
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('refresh', [AuthController::class, 'refresh']);
+Route::get('verify-email', [EmailVerificationController::class, 'verify']);

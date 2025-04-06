@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use App\Events\UserCreated;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EmailVerification;
 
 class UserController extends Controller
 {
@@ -33,6 +36,10 @@ class UserController extends Controller
         $validated['password'] = bcrypt($validated['password']);
 
         $user = User::create($validated);
+
+        // Dispatch the UserCreated event
+        event(new UserCreated($user));
+
         return response()->json($user, 201);
     }
 
@@ -63,7 +70,17 @@ class UserController extends Controller
         }
 
         $user = User::findOrFail($id);
+        $currentEmail = $user->email;
+
         $user->update($validated);
+
+        if (isset($validated['email']) && $validated['email'] !== $currentEmail) {
+            $user->verification_code = bin2hex(random_bytes(16));
+            $user->email_verified_at = null;
+            Mail::to($validated['email'])->send(new EmailVerification($user));
+            $user->save();
+        }
+
         return response()->json($user);
     }
 
