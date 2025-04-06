@@ -10,9 +10,12 @@ Vamos a continuar con el proyecto en Laravel 12, hasta ahora llevamos:
 - Se creó un controlador para la autenticación con los end-points de login y refresh token
 - Para el manejo de la sesión se está usando JWT, con la libreria tymon/jwt-auth
 - Se aseguraron las rutas de users y roles con el manejo de sesión, solo usuarios con una sesión válida pueden acceder, es decir, con un token JWT válido
+- Se agrega middleware para restringir el acceso a las rutas dependiendo del role del usuario de la sessión
+- Se restringieron todas las rutas de usuarios y roles para que solo las puedan acceder los usuarios con role 'admin'
 
 Siempre recuerda que:
 - Estamos usando docker compose durante el desarrollo, asi que todo se está ejecutando en contenedores y no desde mi terminal, asi que cualquier comando que necesite ejecutar debe ser dentro de los contenedores
-- Estamos usando Laravel 12, asi que todas las soluciones que se vayan a aplicar debe ser teniendo en cuenta que son para la versión 12 de Laravel
+- Estamos usando Laravel 12, asi que todas las soluciones que se vayan a aplicar debe ser teniendo en cuenta que son para la versión 12 de Laravel, si lo requieres por favor accede a la documentación de Laravel 12 que está en https://laravel.com/docs/12.x
+- Nosotros chateamos en español, pero todo el código generado junto con los mensajes y comentarios debe ser en inglés para seguir el estandar internacional
 
 Por favor confirmame si estas listo para darte la siguiente tarea.
