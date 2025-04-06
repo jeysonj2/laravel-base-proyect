@@ -17,6 +17,12 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->renderable(function (Throwable $e, $request) {
+            if ($e instanceof \Illuminate\Auth\AuthenticationException) {
+                return response()->json([
+                    'code' => 401,
+                    'message' => 'Unauthenticated.',
+                ], 401);
+            }
             return response()->json([
                 'code' => $e->getCode() ?: 500,
                 'message' => $e->getMessage() ?: 'An error occurred.',

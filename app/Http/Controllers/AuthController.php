@@ -13,7 +13,7 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (!$token = Auth::attempt($credentials)) {
+        if (!$token = Auth::guard('api')->attempt($credentials)) {
             return response()->json([
                 'code' => 401,
                 'message' => 'Invalid credentials.',
@@ -26,8 +26,8 @@ class AuthController extends Controller
             'data' => [
                 'access_token' => $token,
                 'token_type' => 'bearer',
-                'expires_in' => auth()->factory()->getTTL() * 60,
-                'refresh_token' => JWTAuth::claims(['refresh' => true])->fromUser(auth()->user()),
+                'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
+                'refresh_token' => JWTAuth::claims(['refresh' => true])->fromUser(Auth::guard('api')->user()),
             ],
         ]);
     }
@@ -36,6 +36,7 @@ class AuthController extends Controller
     {
         try {
             $refreshToken = $request->header('Authorization');
+            $refreshToken = str_replace('Bearer ', '', $refreshToken);
 
             if (!$refreshToken || !JWTAuth::setToken($refreshToken)->getClaim('refresh')) {
                 return response()->json([
@@ -44,7 +45,7 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            $newToken = JWTAuth::refresh($refreshToken);
+            $newToken = Auth::guard('api')->refresh();
 
             return response()->json([
                 'code' => 200,
@@ -52,13 +53,18 @@ class AuthController extends Controller
                 'data' => [
                     'access_token' => $newToken,
                     'token_type' => 'bearer',
-                    'expires_in' => auth()->factory()->getTTL() * 60,
+                    'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
                 ],
             ]);
         } catch (JWTException $e) {
             return response()->json([
                 'code' => 500,
                 'message' => 'Could not refresh token.',
+                'data' => [
+                    'eMessage' => $e->getMessage(),
+                    'refreshToken' => $refreshToken,
+                    'refreshTokenHeader' => $request->header('Authorization'),
+                ]
             ], 500);
         }
     }

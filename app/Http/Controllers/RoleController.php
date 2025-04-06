@@ -9,21 +9,6 @@ use Illuminate\Support\Facades\Gate;
 
 class RoleController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-        $this->middleware(function ($request, $next) {
-            if (auth()->user()->role->name !== 'ADMIN') {
-                return response()->json([
-                    'code' => 403,
-                    'message' => 'Access denied. Only ADMIN users can access this resource.',
-                ], 403);
-            }
-
-            return $next($request);
-        });
-    }
-
     /**
      * Display a listing of the resource.
      */
