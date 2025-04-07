@@ -24,6 +24,8 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'role_id',
+        'password_reset_token',
+        'password_reset_expires_at',
     ];
 
     /**
@@ -35,6 +37,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'remember_token',
         'verification_code',
+        'password_reset_token',
     ];
 
     /**
@@ -47,6 +50,7 @@ class User extends Authenticatable implements JWTSubject
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'password_reset_expires_at' => 'datetime',
         ];
     }
     
