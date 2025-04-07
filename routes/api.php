@@ -32,6 +32,8 @@ Route::middleware(['auth:api'])->group(function () {
     // Routes available to any authenticated user
     Route::post('change-password', [AuthController::class, 'changePassword']);
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('profile', [AuthController::class, 'profile']);
+    Route::put('profile', [AuthController::class, 'updateProfile']);
 });
 
 Route::post('login', [AuthController::class, 'login'])->name('login');

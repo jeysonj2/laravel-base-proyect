@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class PasswordChanged extends Mailable
 {
@@ -18,7 +19,7 @@ class PasswordChanged extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        public User $user
+        public User | Authenticatable $user
     ) {}
 
     /**

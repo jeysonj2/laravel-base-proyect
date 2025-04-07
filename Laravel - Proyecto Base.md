@@ -26,12 +26,18 @@ Continuaremos con el proyecto en Laravel 12. Hasta ahora hemos logrado lo siguie
 - Validación de contraseñas nuevas mediante la regla `strong_password`, que requiere al menos una letra mayúscula, un número y un carácter especial.
 - Implementación de un endpoint de logout que invalida el token de acceso.
 - Implementación de un endpoint para que el usuario autenticado pueda cambiar su propia contraseña.
+- Creación de dos endpoints para la gestión del perfil del usuario en sesión:
+  - Un endpoint para obtener los datos del usuario autenticado.
+  - Un endpoint para actualizar los datos del usuario autenticado, con las siguientes restricciones:
+    - No permite cambiar la contraseña a través de este endpoint.
+    - No permite cambiar el rol del usuario.
+    - Si se cambia el email, se envía automáticamente un correo de verificación al nuevo email.
 
 **Notas importantes:**
 
 - Estamos utilizando Docker Compose durante el desarrollo, por lo que todo se ejecuta en contenedores y no directamente desde la terminal. Cualquier comando que necesite ejecutarse debe realizarse dentro de los contenedores.
 - Estamos trabajando con Laravel 12, por lo que todas las soluciones deben estar adaptadas a esta versión. Si es necesario, consulta la documentación oficial de Laravel 12 en <https://laravel.com/docs/12.x>.
 - Las variables de entorno se obtienen como cadenas de texto (strings), por lo que es necesario realizar un casting explícito a otros tipos de datos según sea necesario.
-- Aunque nos comunicamos en español, todo el código generado, junto con los mensajes y comentarios, debe estar en inglés para cumplir con los estándares internacionales.
+- Nosotros nos estaremos comunicando en español, sin embargo, todo el código generado, junto con los mensajes y comentarios, debe estar en inglés para cumplir con los estándares internacionales.
 
 Por favor, confirma si estás listo para recibir la siguiente tarea.

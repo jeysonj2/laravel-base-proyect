@@ -10,6 +10,7 @@ use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\PasswordChanged;
+use App\Mail\EmailVerification;
 use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
@@ -175,6 +176,81 @@ class AuthController extends Controller
         return response()->json([
             'code' => 200,
             'message' => 'Password changed successfully.',
+        ]);
+    }
+
+    /**
+     * Get the authenticated user's profile.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function profile()
+    {
+        $user = Auth::guard('api')->user();
+        
+        return response()->json([
+            'code' => 200,
+            'message' => 'Profile retrieved successfully.',
+            'data' => $user,
+        ]);
+    }
+
+    /**
+     * Update the authenticated user's profile.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::guard('api')->user();
+
+        // Check if password is being attempted to change
+        if ($request->has('password')) {
+            return response()->json([
+                'code' => 422,
+                'message' => 'Password cannot be updated through this endpoint. Please use the change-password endpoint instead.',
+            ], 422);
+        }
+
+        // Check if role is being attempted to change
+        if ($request->has('role_id')) {
+            return response()->json([
+                'code' => 422,
+                'message' => 'Role cannot be updated through this endpoint.',
+            ], 422);
+        }
+
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string',
+            'last_name' => 'sometimes|required|string',
+            'email' => 'sometimes|required|email|case_insensitive_unique:users,email,' . $user->id,
+        ]);
+
+        $currentEmail = $user->email;
+        
+        $user->update($validated);
+
+        // If email has changed, reset verification status and send verification email
+        if (isset($validated['email']) && $validated['email'] !== $currentEmail) {
+            $user->verification_code = bin2hex(random_bytes(16));
+            $user->email_verified_at = null;
+            $user->save();
+            
+            // Send verification email
+            Mail::to($validated['email'])->send(new EmailVerification($user));
+            
+            return response()->json([
+                'code' => 200,
+                'message' => 'Profile updated successfully. Please verify your new email address.',
+                'data' => $user,
+            ]);
+        }
+
+        return response()->json([
+            'code' => 200,
+            'message' => 'Profile updated successfully.',
+            'data' => $user,
         ]);
     }
 }
