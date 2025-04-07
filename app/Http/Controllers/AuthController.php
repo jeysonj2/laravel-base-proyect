@@ -112,4 +112,30 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Log the user out (Invalidate the token).
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout()
+    {
+        try {
+            // Invalidate the token by adding it to the blacklist
+            Auth::guard('api')->logout();
+
+            return response()->json([
+                'code' => 200,
+                'message' => 'Successfully logged out',
+            ]);
+        } catch (JWTException $e) {
+            return response()->json([
+                'code' => 500,
+                'message' => 'Failed to logout, please try again.',
+                'data' => config('app.debug') ? [
+                    'exception-message' => $e->getMessage(),
+                ] : null,
+            ], 500);
+        }
+    }
 }

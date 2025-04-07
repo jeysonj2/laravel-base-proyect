@@ -9,7 +9,7 @@ use App\Http\Controllers\PasswordResetController;
 
 Route::middleware(['auth:api'])->group(function () {
     // ---------------------------------------------------------------------
-    // Define routes that require authentorization per HTTP method, e.g., for admin users
+    // Define routes that require authentication per HTTP method, e.g., for admin users
     // You can use the 'role' middleware to restrict access based on user roles
     // The role name is passed to the middleware after the 'role:' prefix
     // For example, to restrict access to admin users:
@@ -28,6 +28,9 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('users', UserController::class);
         Route::post('users/{user}/resend-verification', [EmailVerificationController::class, 'resend']);
     });
+    
+    // Logout route - requires authentication
+    Route::post('logout', [AuthController::class, 'logout']);
 });
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
