@@ -14,6 +14,19 @@ class EmailVerificationController extends Controller
      */
     public function resend(User $user)
     {
+        // Check if the user is already verified
+        if ($user->email_verified_at) {
+            return $this->errorResponse('User is already verified.', null, 400);
+        }
+
+        // Check if the user has a verification code
+        // If not, generate a new one
+        if (!$user->verification_code) {
+            $user->verification_code = bin2hex(random_bytes(16));
+            $user->save();
+        }
+
+        // Send the verification email
         Mail::to($user->email)->send(new EmailVerification($user));
 
         return $this->successResponse('Verification email resent successfully.');
