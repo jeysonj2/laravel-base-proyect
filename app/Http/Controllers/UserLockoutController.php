@@ -23,11 +23,7 @@ class UserLockoutController extends Controller
                 });
         })->get();
 
-        return response()->json([
-            'code' => 200,
-            'message' => 'Locked users retrieved successfully.',
-            'data' => $lockedUsers
-        ]);
+        return $this->successResponse('Locked users retrieved successfully.', $lockedUsers);
     }
 
     /**
@@ -42,18 +38,11 @@ class UserLockoutController extends Controller
         $resetLockoutCount = $request->input('reset_lockout_count', true);
         
         if (!$user->isLockedOut()) {
-            return response()->json([
-                'code' => 400,
-                'message' => 'This account is not locked.',
-            ], 400);
+            return $this->errorResponse('This account is not locked.', null, 400);
         }
 
         $user->unlock($resetLockoutCount);
 
-        return response()->json([
-            'code' => 200,
-            'message' => 'User account unlocked successfully.',
-            'data' => $user
-        ]);
+        return $this->successResponse('User account unlocked successfully.', $user);
     }
 }

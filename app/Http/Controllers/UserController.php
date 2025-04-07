@@ -17,7 +17,7 @@ class UserController extends Controller
     public function index(): JsonResponse
     {
         $users = User::all();
-        return response()->json($users);
+        return $this->successResponse('Users retrieved successfully', $users);
     }
 
     /**
@@ -40,7 +40,7 @@ class UserController extends Controller
         // Dispatch the UserCreated event
         event(new UserCreated($user));
 
-        return response()->json($user, 201);
+        return $this->successResponse('User created successfully', $user, 201);
     }
 
     /**
@@ -49,7 +49,7 @@ class UserController extends Controller
     public function show(string $id): JsonResponse
     {
         $user = User::findOrFail($id);
-        return response()->json($user);
+        return $this->successResponse('User retrieved successfully', $user);
     }
 
     /**
@@ -79,9 +79,11 @@ class UserController extends Controller
             $user->email_verified_at = null;
             Mail::to($validated['email'])->send(new EmailVerification($user));
             $user->save();
+            
+            return $this->successResponse('User updated successfully. Please verify the new email address.', $user);
         }
 
-        return response()->json($user);
+        return $this->successResponse('User updated successfully', $user);
     }
 
     /**
@@ -91,9 +93,6 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
-        return response()->json([
-            'code' => 200,
-            'message' => 'Record deleted successfully.',
-        ], 200);
+        return $this->successResponse('User deleted successfully');
     }
 }

@@ -26,25 +26,16 @@ class AuthController extends Controller
 
         // If user doesn't exist, return invalid credentials message
         if (!$user) {
-            return response()->json([
-                'code' => 401,
-                'message' => 'Invalid credentials.',
-            ], 401);
+            return $this->unauthorizedResponse('Invalid credentials.');
         }
 
         // Check if the user is locked out
         if ($user->isLockedOut()) {
             if ($user->is_permanently_locked) {
-                return response()->json([
-                    'code' => 401,
-                    'message' => 'Your account has been permanently locked due to multiple failed login attempts. Please contact an administrator.',
-                ], 401);
+                return $this->unauthorizedResponse('Your account has been permanently locked due to multiple failed login attempts. Please contact an administrator.');
             } else {
                 $minutesRemaining = now()->diffInMinutes($user->locked_until);
-                return response()->json([
-                    'code' => 401,
-                    'message' => "Your account is temporarily locked due to multiple failed login attempts. Please try again in {$minutesRemaining} minutes or contact an administrator.",
-                ], 401);
+                return $this->unauthorizedResponse("Your account is temporarily locked due to multiple failed login attempts. Please try again in {$minutesRemaining} minutes or contact an administrator.");
             }
         }
 
@@ -63,22 +54,13 @@ class AuthController extends Controller
                 ));
                 
                 if ($user->is_permanently_locked) {
-                    return response()->json([
-                        'code' => 401,
-                        'message' => 'Your account has been permanently locked due to multiple failed login attempts. Please contact an administrator.',
-                    ], 401);
+                    return $this->unauthorizedResponse('Your account has been permanently locked due to multiple failed login attempts. Please contact an administrator.');
                 } else {
-                    return response()->json([
-                        'code' => 401,
-                        'message' => "Your account has been temporarily locked due to multiple failed login attempts. Please try again in {$lockoutDuration} minutes or contact an administrator.",
-                    ], 401);
+                    return $this->unauthorizedResponse("Your account has been temporarily locked due to multiple failed login attempts. Please try again in {$lockoutDuration} minutes or contact an administrator.");
                 }
             }
 
-            return response()->json([
-                'code' => 401,
-                'message' => 'Invalid credentials.',
-            ], 401);
+            return $this->unauthorizedResponse('Invalid credentials.');
         }
 
         // Authentication successful, reset failed attempts counter
@@ -100,16 +82,12 @@ class AuthController extends Controller
         // Restore original TTL for future tokens
         $factory->setTTL($originalTTL);
 
-        return response()->json([
-            'code' => 200,
-            'message' => 'Login successful.',
-            'data' => [
-                'access_token' => $token,
-                'token_type' => 'bearer',
-                'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
-                'refresh_token' => $refreshToken,
-                'refresh_expires_in' => $refreshTTL * 60,
-            ],
+        return $this->successResponse('Login successful.', [
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
+            'refresh_token' => $refreshToken,
+            'refresh_expires_in' => $refreshTTL * 60,
         ]);
     }
 
@@ -120,10 +98,7 @@ class AuthController extends Controller
             $refreshToken = str_replace('Bearer ', '', $refreshToken);
 
             if (!$refreshToken) {
-                return response()->json([
-                    'code' => 401,
-                    'message' => 'Refresh token is required.',
-                ], 401);
+                return $this->unauthorizedResponse('Refresh token is required.');
             }
 
             // Set the refresh token
@@ -132,13 +107,8 @@ class AuthController extends Controller
             // Verify the token is valid, not expired, and has the refresh claim
             $payload = JWTAuth::getPayload();
             if (!$payload->get('refresh')) {
-                return response()->json([
-                    'code' => 401,
-                    'message' => 'Invalid refresh token.',
-                    'data' => config('app.debug') ? [
-                        'exception-message' => "Token does not have refresh claim.",
-                    ] : null,
-                ], 401);
+                $errorData = config('app.debug') ? ['exception-message' => "Token does not have refresh claim."] : null;
+                return $this->unauthorizedResponse('Invalid refresh token.', $errorData);
             }
 
             // If we've reached here, token is valid, not expired, and has refresh claim
@@ -147,31 +117,17 @@ class AuthController extends Controller
             // Generate only a new access token
             $newToken = JWTAuth::fromUser($user);
 
-            return response()->json([
-                'code' => 200,
-                'message' => 'Token refreshed successfully.',
-                'data' => [
-                    'access_token' => $newToken,
-                    'token_type' => 'bearer',
-                    'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
-                ],
+            return $this->successResponse('Token refreshed successfully.', [
+                'access_token' => $newToken,
+                'token_type' => 'bearer',
+                'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
             ]);
         } catch (TokenInvalidException | TokenExpiredException $e) {
-            return response()->json([
-                'code' => 401,
-                'message' => 'Invalid refresh token.',
-                'data' => config('app.debug') ? [
-                    'exception-message' => $e->getMessage(),
-                ] : null,
-            ], 401);
+            $errorData = config('app.debug') ? ['exception-message' => $e->getMessage()] : null;
+            return $this->unauthorizedResponse('Invalid refresh token.', $errorData);
         } catch (JWTException $e) {
-            return response()->json([
-                'code' => 500,
-                'message' => 'Could not refresh token.',
-                'data' => config('app.debug') ? [
-                    'exception-message' => $e->getMessage(),
-                ] : null,
-            ], 500);
+            $errorData = config('app.debug') ? ['exception-message' => $e->getMessage()] : null;
+            return $this->serverErrorResponse('Could not refresh token.', $errorData);
         }
     }
 
@@ -186,18 +142,10 @@ class AuthController extends Controller
             // Invalidate the token by adding it to the blacklist
             Auth::guard('api')->logout();
 
-            return response()->json([
-                'code' => 200,
-                'message' => 'Successfully logged out',
-            ]);
+            return $this->successResponse('Successfully logged out');
         } catch (JWTException $e) {
-            return response()->json([
-                'code' => 500,
-                'message' => 'Failed to logout, please try again.',
-                'data' => config('app.debug') ? [
-                    'exception-message' => $e->getMessage(),
-                ] : null,
-            ], 500);
+            $errorData = config('app.debug') ? ['exception-message' => $e->getMessage()] : null;
+            return $this->serverErrorResponse('Failed to logout, please try again.', $errorData);
         }
     }
 
@@ -218,10 +166,7 @@ class AuthController extends Controller
 
         // Verify the current password
         if (!Hash::check($validated['current_password'], $user->password)) {
-            return response()->json([
-                'code' => 422,
-                'message' => 'Current password is incorrect.',
-            ], 422);
+            return $this->validationErrorResponse('Current password is incorrect.');
         }
 
         // Update the password
@@ -231,10 +176,7 @@ class AuthController extends Controller
         // Send confirmation email
         Mail::to($user->email)->send(new PasswordChanged($user));
 
-        return response()->json([
-            'code' => 200,
-            'message' => 'Password changed successfully.',
-        ]);
+        return $this->successResponse('Password changed successfully.');
     }
 
     /**
@@ -246,11 +188,7 @@ class AuthController extends Controller
     {
         $user = Auth::guard('api')->user();
         
-        return response()->json([
-            'code' => 200,
-            'message' => 'Profile retrieved successfully.',
-            'data' => $user,
-        ]);
+        return $this->successResponse('Profile retrieved successfully.', $user);
     }
 
     /**
@@ -265,18 +203,12 @@ class AuthController extends Controller
 
         // Check if password is being attempted to change
         if ($request->has('password')) {
-            return response()->json([
-                'code' => 422,
-                'message' => 'Password cannot be updated through this endpoint. Please use the change-password endpoint instead.',
-            ], 422);
+            return $this->validationErrorResponse('Password cannot be updated through this endpoint. Please use the change-password endpoint instead.');
         }
 
         // Check if role is being attempted to change
         if ($request->has('role_id')) {
-            return response()->json([
-                'code' => 422,
-                'message' => 'Role cannot be updated through this endpoint.',
-            ], 422);
+            return $this->validationErrorResponse('Role cannot be updated through this endpoint.');
         }
 
         $validated = $request->validate([
@@ -298,17 +230,9 @@ class AuthController extends Controller
             // Send verification email
             Mail::to($validated['email'])->send(new EmailVerification($user));
             
-            return response()->json([
-                'code' => 200,
-                'message' => 'Profile updated successfully. Please verify your new email address.',
-                'data' => $user,
-            ]);
+            return $this->successResponse('Profile updated successfully. Please verify your new email address.', $user);
         }
 
-        return response()->json([
-            'code' => 200,
-            'message' => 'Profile updated successfully.',
-            'data' => $user,
-        ]);
+        return $this->successResponse('Profile updated successfully.', $user);
     }
 }

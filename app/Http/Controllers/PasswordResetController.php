@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Responses\ApiResponseTrait;
 use App\Mail\PasswordChanged;
 use App\Mail\PasswordReset as PasswordResetMail;
 use App\Models\User;
@@ -38,9 +39,7 @@ class PasswordResetController extends Controller
         // Send the email with the token
         Mail::to($user->email)->send(new PasswordResetMail($user, $token));
 
-        return response()->json([
-            'message' => 'Password reset link sent to your email',
-        ]);
+        return $this->successResponse('Password reset link sent to your email');
     }
 
     /**
@@ -60,9 +59,7 @@ class PasswordResetController extends Controller
             ->first();
 
         if (!$user) {
-            return response()->json([
-                'message' => 'Invalid or expired password reset token',
-            ], 422);
+            return $this->validationErrorResponse('Invalid or expired password reset token');
         }
 
         // Reset the password
@@ -74,8 +71,6 @@ class PasswordResetController extends Controller
         // Send confirmation email
         Mail::to($user->email)->send(new PasswordChanged($user));
 
-        return response()->json([
-            'message' => 'Password has been reset successfully',
-        ]);
+        return $this->successResponse('Password has been reset successfully');
     }
 }

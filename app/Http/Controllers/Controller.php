@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Responses\ApiResponseTrait;
 use Illuminate\Routing\Controller as BaseController;
 
 abstract class Controller extends BaseController
 {
-    // Base controller for other controllers
+    use ApiResponseTrait;
 }

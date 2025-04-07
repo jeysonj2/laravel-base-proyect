@@ -15,7 +15,7 @@ class RoleController extends Controller
     public function index(): JsonResponse
     {
         $roles = Role::all();
-        return response()->json($roles);
+        return $this->successResponse('Roles retrieved successfully', $roles);
     }
 
     /**
@@ -28,7 +28,7 @@ class RoleController extends Controller
         ]);
 
         $role = Role::create($validated);
-        return response()->json($role, 201);
+        return $this->successResponse('Role created successfully', $role, 201);
     }
 
     /**
@@ -37,7 +37,7 @@ class RoleController extends Controller
     public function show(string $id): JsonResponse
     {
         $role = Role::findOrFail($id);
-        return response()->json($role);
+        return $this->successResponse('Role retrieved successfully', $role);
     }
 
     /**
@@ -51,7 +51,7 @@ class RoleController extends Controller
 
         $role = Role::findOrFail($id);
         $role->update($validated);
-        return response()->json($role);
+        return $this->successResponse('Role updated successfully', $role);
     }
 
     /**
@@ -61,9 +61,6 @@ class RoleController extends Controller
     {
         $role = Role::findOrFail($id);
         $role->delete();
-        return response()->json([
-            'code' => 200,
-            'message' => 'Record deleted successfully.',
-        ], 200);
+        return $this->successResponse('Role deleted successfully');
     }
 }

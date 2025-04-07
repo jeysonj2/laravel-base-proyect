@@ -16,7 +16,7 @@ class EmailVerificationController extends Controller
     {
         Mail::to($user->email)->send(new EmailVerification($user));
 
-        return response()->json(['message' => 'Verification email resent successfully.']);
+        return $this->successResponse('Verification email resent successfully.');
     }
 
     /**
@@ -31,13 +31,13 @@ class EmailVerificationController extends Controller
         $user = User::where('verification_code', $request->code)->first();
 
         if (!$user) {
-            return response()->json(['error' => 'Invalid verification code.'], 400);
+            return $this->errorResponse('Invalid verification code.', null, 400);
         }
 
         $user->email_verified_at = now();
         $user->verification_code = null; // Clear the verification code after successful verification
         $user->save();
 
-        return response()->json(['message' => 'Email verified successfully.']);
+        return $this->successResponse('Email verified successfully.');
     }
 }
