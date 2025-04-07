@@ -15,6 +15,7 @@ Vamos a continuar con el proyecto en Laravel 12, hasta ahora llevamos:
 - Se creó un end-point para enviar un email al usuario con un código para que confirme que su correo es válido
 - Se creó un end-point que se usa para verificar el email del usuario, este recibe un codigo que se usa para validar el email
 - Cuando se crea o edita un usuario se envía automáticamente el email de verificación para que el usuario confirme que es su cuenta de correo
+- Se configuró Mailpit con el docker compose para las pruebas de envío de correos
 
 Siempre recuerda que:
 - Estamos usando docker compose durante el desarrollo, asi que todo se está ejecutando en contenedores y no desde mi terminal, asi que cualquier comando que necesite ejecutar debe ser dentro de los contenedores

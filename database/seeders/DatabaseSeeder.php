@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'last_name' => 'User',
             'email' => 'admin@example.com',
+            'password' => bcrypt('Abcde12345!'),
             'role_id' => Role::where('name', 'ADMIN')->first()->id,
         ]);
         
@@ -30,6 +31,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
+            'password' => bcrypt('Abcde12345!'),
             'role_id' => Role::where('name', 'USER')->first()->id,
         ]);
     }
