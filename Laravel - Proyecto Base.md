@@ -52,6 +52,13 @@ Continuaremos con el proyecto en Laravel 12. Hasta ahora hemos logrado lo siguie
   - Documentación de las rutas API, web y console.
   - Documentación del sistema de respuestas API estandarizadas.
   - Todo siguiendo los estándares oficiales de PHPDoc para asegurar compatibilidad con herramientas de generación de documentación y facilitar el desarrollo futuro.
+- Actualización del archivo README.md del proyecto:
+  - Creación de un README profesional con información detallada sobre el proyecto.
+  - Inclusión de badges informativos sobre la versión de Laravel, PHP 8.4, JWT, PostgreSQL y Docker.
+  - Documentación clara de todas las características y funcionalidades del proyecto.
+  - Instrucciones de instalación y configuración detalladas para un entorno Docker.
+  - Lista completa de endpoints API organizados por categoría y funcionalidad.
+  - Documentación de las variables de entorno importantes para la configuración del proyecto.
 
 **Notas importantes:**
 

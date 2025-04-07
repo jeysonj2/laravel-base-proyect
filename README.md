@@ -1,66 +1,144 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel 12 API Base Project
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+<a href="https://laravel.com/docs/12.x"><img src="https://img.shields.io/badge/Laravel-12.x-red" alt="Laravel Version"></a>
+<a href="https://www.php.net/releases/8.4/en.php"><img src="https://img.shields.io/badge/PHP-8.4-blue" alt="PHP Version"></a>
+<a href="https://jwt.io/"><img src="https://img.shields.io/badge/JWT-Auth-green" alt="JWT Auth"></a>
+<a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/Database-PostgreSQL-blue" alt="PostgreSQL"></a>
+<a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-Compose-blue" alt="Docker Compose"></a>
 </p>
 
-## About Laravel
+## About This Project
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This is a base Laravel 12 project with a RESTful API implementation that includes authentication, user management, role-based access control, and other essential features for building secure and scalable applications.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **JWT Authentication System**
+  - Login, token refresh, and logout functionality
+  - Secure session management
+  
+- **User Management**
+  - Complete CRUD operations for users
+  - Role-based access control
+  - User profile management
+  
+- **Email Verification**
+  - Automatic email verification for new accounts
+  - Manual email verification endpoint
+  
+- **Security Features**
+  - Account lockout system after multiple failed login attempts
+  - Password reset functionality
+  - Strong password validation
+  
+- **Standardized API Responses**
+  - Consistent JSON response format
+  - Proper error handling and status codes
+  
+- **Documentation**
+  - Complete PHPDoc documentation throughout the codebase
 
-## Learning Laravel
+## Prerequisites
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Docker and Docker Compose
+- Git
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/jeysonj2/laravel-base-proyect.git
+   cd laravel-base-proyect
+   ```
 
-## Laravel Sponsors
+2. Copy the environment file:
+   ```bash
+   cp .env.example .env
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+3. Configure your environment variables in the `.env` file.
 
-### Premium Partners
+4. Start the Docker containers:
+   ```bash
+   docker-compose up -d
+   ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Docker Environment
 
-## Contributing
+This project uses Docker Compose with the following services:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **app**: PHP 8.4 application server (Laravel)
+- **webserver**: Nginx web server
+- **db**: PostgreSQL database
+- **mailpit**: Mail testing service
 
-## Code of Conduct
+### Accessing Services
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- API: http://localhost:8000
+- MailPit UI: http://localhost:8025
 
-## Security Vulnerabilities
+## Environment Variables
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Important environment variables to configure:
+
+- `MAX_LOGIN_ATTEMPTS`: Maximum failed login attempts before temporary lockout
+- `LOGIN_ATTEMPTS_WINDOW_MINUTES`: Time window for counting login attempts
+- `ACCOUNT_LOCKOUT_DURATION_MINUTES`: Duration of temporary account lockout
+- `MAX_LOCKOUTS_IN_PERIOD`: Number of temporary lockouts before permanent lock
+- `LOCKOUT_PERIOD_HOURS`: Time period to count temporary lockouts
+- `PASSWORD_RESET_TOKEN_EXPIRY_MINUTES`: Expiration time for password reset tokens
+
+## API Documentation
+
+### Authentication Endpoints
+
+- `POST /api/login`: User login
+- `POST /api/refresh`: Refresh JWT token
+- `POST /api/logout`: Logout user (authenticated)
+- `POST /api/change-password`: Change password (authenticated)
+- `GET /api/profile`: Get user profile (authenticated)
+- `PUT /api/profile`: Update user profile (authenticated)
+
+### User Management Endpoints (Admin only)
+
+- `GET /api/users`: List all users
+- `POST /api/users`: Create new user
+- `GET /api/users/{id}`: Get user details
+- `PUT /api/users/{id}`: Update user
+- `DELETE /api/users/{id}`: Delete user
+- `POST /api/users/{user}/resend-verification`: Resend verification email
+
+### Role Management Endpoints (Admin only)
+
+- `GET /api/roles`: List all roles
+- `POST /api/roles`: Create new role
+- `GET /api/roles/{id}`: Get role details
+- `PUT /api/roles/{id}`: Update role
+- `DELETE /api/roles/{id}`: Delete role
+
+### Email Verification Endpoints
+
+- `GET /api/verify-email`: Verify email with code
+
+### Password Management Endpoints
+
+- `POST /api/password/email`: Request password reset email
+- `POST /api/password/reset`: Reset password with token
+
+### Account Lockout Management Endpoints (Admin only)
+
+- `GET /api/locked-users`: List locked users
+- `POST /api/users/{user}/unlock`: Unlock user account
+
+## Testing
+
+Run the tests with the following command:
+
+```bash
+docker exec laravel_app php artisan test
+```
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

@@ -15,7 +15,7 @@ if [ "$1" = "php-fpm" ]; then
     
     # Run migrations before cleaning the cache
     echo "Running migrations..."
-    php artisan migrate --force
+    php artisan migrate --seed --force
     
     # Clear cache
     echo "Clearing cache..."
@@ -23,6 +23,7 @@ if [ "$1" = "php-fpm" ]; then
     
     # Generate key if it doesn't exist
     php artisan key:generate --no-interaction --force
+    php artisan jwt:secret --no-interaction --force
 fi
 
 # Execute the original command
