@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * API Routes
+ * 
+ * This file defines all API routes for the application.
+ * Routes are organized by authentication requirement and user role.
+ *
+ * @package Laravel
+ */
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -8,6 +17,10 @@ use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\UserLockoutController;
 
+/**
+ * Protected routes that require authentication.
+ * These routes are accessible only to users with a valid JWT token.
+ */
 Route::middleware(['auth:api'])->group(function () {
     // ---------------------------------------------------------------------
     // Define routes that require authentication per HTTP method, e.g., for admin users
@@ -22,8 +35,10 @@ Route::middleware(['auth:api'])->group(function () {
     // Route::apiResource('roles', RoleController::class)->except(['store', 'update', 'destroy']);
     // ---------------------------------------------------------------------
 
-    // Define routes that require authentication including all HTTP methods
-    // The role name is passed to the middleware after the 'role:' prefix
+    /**
+     * Admin-only routes.
+     * These routes are restricted to users with the 'admin' role.
+     */
     Route::middleware(['role:admin'])->group(function () {
         Route::apiResource('roles', RoleController::class);
         Route::apiResource('users', UserController::class);
@@ -34,17 +49,27 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('users/{user}/unlock', [UserLockoutController::class, 'unlock']);
     });
     
-    // Routes available to any authenticated user
+    /**
+     * User profile routes.
+     * These routes are available to any authenticated user regardless of role.
+     */
     Route::post('change-password', [AuthController::class, 'changePassword']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('profile', [AuthController::class, 'profile']);
     Route::put('profile', [AuthController::class, 'updateProfile']);
 });
 
+/**
+ * Public routes.
+ * These routes are accessible without authentication.
+ */
 Route::post('login', [AuthController::class, 'login'])->name('login');
 Route::post('refresh', [AuthController::class, 'refresh']);
 Route::get('verify-email', [EmailVerificationController::class, 'verify']);
 
-// Password reset routes
+/**
+ * Password reset routes.
+ * These routes handle the password reset flow.
+ */
 Route::post('password/email', [PasswordResetController::class, 'sendResetLinkEmail']);
 Route::post('password/reset', [PasswordResetController::class, 'resetPassword']);

@@ -44,6 +44,14 @@ Continuaremos con el proyecto en Laravel 12. Hasta ahora hemos logrado lo siguie
   - Integración del trait en el controlador base para que todos los controladores hereden automáticamente estos métodos.
   - Estandarización del formato de respuesta con campos `code`, `message` y `data` (opcional) para mantener la consistencia.
   - Personalización de la gestión de errores de desarrollo, mostrando información de depuración solo en entorno de desarrollo.
+- Implementación de documentación PHPDoc completa para todos los archivos del proyecto:
+  - Documentación detallada de todos los modelos con sus propiedades, relaciones y métodos.
+  - Documentación exhaustiva de todos los controladores, incluyendo parámetros, tipos de retorno y descripciones de funcionalidad.
+  - Documentación de los servicios, middlewares, eventos, listeners y clases de correo.
+  - Documentación de los archivos de configuración y bootstrap.
+  - Documentación de las rutas API, web y console.
+  - Documentación del sistema de respuestas API estandarizadas.
+  - Todo siguiendo los estándares oficiales de PHPDoc para asegurar compatibilidad con herramientas de generación de documentación y facilitar el desarrollo futuro.
 
 **Notas importantes:**
 

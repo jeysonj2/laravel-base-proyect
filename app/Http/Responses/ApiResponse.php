@@ -4,6 +4,14 @@ namespace App\Http\Responses;
 
 use Illuminate\Http\JsonResponse;
 
+/**
+ * API Response Helper
+ * 
+ * This class provides a standardized way to create consistent JSON responses
+ * across the application. It offers static methods for common response types
+ * such as success, error, not found, etc., ensuring that all API responses
+ * follow the same format with code, message, and optional data.
+ */
 class ApiResponse
 {
     /**

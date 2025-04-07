@@ -4,6 +4,16 @@ namespace App\Http\Responses;
 
 use Illuminate\Http\JsonResponse;
 
+/**
+ * API Response Trait
+ * 
+ * This trait provides convenient methods for controllers to return
+ * standardized JSON responses. It acts as a wrapper around the ApiResponse class,
+ * making the response methods available directly within controllers.
+ * 
+ * When used in a controller, it allows for consistent API responses
+ * across the entire application with minimal code duplication.
+ */
 trait ApiResponseTrait
 {
     /**

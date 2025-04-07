@@ -5,10 +5,22 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Application Service Provider
+ * 
+ * This service provider is responsible for registering application services
+ * and bootstrapping functionality. It's where custom validation rules and
+ * other application-wide services are defined.
+ */
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
+     * 
+     * This method is called by Laravel during the service provider registration process.
+     * It's used to bind items into the service container.
+     *
+     * @return void
      */
     public function register(): void
     {
@@ -17,6 +29,15 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
+     * 
+     * This method is called after all services are registered.
+     * It's used to perform actions needed when the application is booting.
+     * 
+     * In this project, it registers custom validation rules:
+     * - case_insensitive_unique: For validating uniqueness regardless of letter case
+     * - strong_password: For enforcing password complexity requirements
+     *
+     * @return void
      */
     public function boot(): void
     {

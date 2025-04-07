@@ -15,8 +15,23 @@ use App\Mail\AccountLocked;
 use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 
+/**
+ * Authentication Controller.
+ * 
+ * Handles user authentication, token management, password management,
+ * and user profile operations for the API.
+ */
 class AuthController extends Controller
 {
+    /**
+     * Authenticate a user and generate access and refresh tokens.
+     * 
+     * This method also handles account lockout logic when invalid credentials
+     * are provided multiple times.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -91,6 +106,14 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Refresh a user's access token using their refresh token.
+     * 
+     * Validates the refresh token and generates a new access token if valid.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function refresh(Request $request)
     {
         try {
@@ -133,6 +156,8 @@ class AuthController extends Controller
 
     /**
      * Log the user out (Invalidate the token).
+     * 
+     * Adds the current token to the blacklist to prevent further use.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -151,6 +176,9 @@ class AuthController extends Controller
 
     /**
      * Change the authenticated user's password.
+     * 
+     * Validates the current password and enforces strong password requirements
+     * for the new password. Sends a confirmation email upon successful change.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
@@ -181,6 +209,8 @@ class AuthController extends Controller
 
     /**
      * Get the authenticated user's profile.
+     * 
+     * Returns the current user's profile information.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -193,6 +223,11 @@ class AuthController extends Controller
 
     /**
      * Update the authenticated user's profile.
+     * 
+     * Allows users to update their own profile information with restrictions:
+     * - Cannot change password through this endpoint
+     * - Cannot change role through this endpoint
+     * - Email changes trigger a new verification process
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse

@@ -9,10 +9,20 @@ use App\Events\UserCreated;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EmailVerification;
 
+/**
+ * User Controller.
+ * 
+ * Handles CRUD operations for users in the system.
+ * This controller is typically restricted to administrators.
+ */
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of all users.
+     * 
+     * Retrieves and returns all users in the system.
+     *
+     * @return \Illuminate\Http\JsonResponse Response containing all users
      */
     public function index(): JsonResponse
     {
@@ -21,7 +31,14 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created user in the database.
+     * 
+     * Validates and creates a new user with the provided data.
+     * Uses case-insensitive uniqueness validation for the email.
+     * Triggers the UserCreated event after successful creation.
+     *
+     * @param  \Illuminate\Http\Request  $request  Request containing the user data
+     * @return \Illuminate\Http\JsonResponse Response containing the newly created user
      */
     public function store(Request $request): JsonResponse
     {
@@ -44,7 +61,12 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified user.
+     * 
+     * Retrieves and returns a specific user by ID.
+     *
+     * @param  string  $id  The ID of the user to retrieve
+     * @return \Illuminate\Http\JsonResponse Response containing the requested user
      */
     public function show(string $id): JsonResponse
     {
@@ -53,7 +75,15 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified user in the database.
+     * 
+     * Validates and updates an existing user with the provided data.
+     * Uses case-insensitive uniqueness validation for the email.
+     * If the email is changed, triggers email verification process.
+     *
+     * @param  \Illuminate\Http\Request  $request  Request containing the updated user data
+     * @param  string  $id  The ID of the user to update
+     * @return \Illuminate\Http\JsonResponse Response containing the updated user
      */
     public function update(Request $request, string $id): JsonResponse
     {
@@ -87,7 +117,12 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified user from the database.
+     * 
+     * Deletes a user by ID.
+     *
+     * @param  string  $id  The ID of the user to delete
+     * @return \Illuminate\Http\JsonResponse Response indicating successful deletion
      */
     public function destroy(string $id): JsonResponse
     {

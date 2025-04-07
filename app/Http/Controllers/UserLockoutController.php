@@ -6,12 +6,22 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * User Lockout Controller.
+ * 
+ * Manages user account lockouts, providing functionality to list
+ * locked user accounts and unlock specific accounts.
+ * This controller is typically accessible only to administrators.
+ */
 class UserLockoutController extends Controller
 {
     /**
      * Get all locked users.
      * 
-     * @return JsonResponse
+     * Retrieves a list of all user accounts that are currently locked,
+     * either temporarily or permanently.
+     *
+     * @return \Illuminate\Http\JsonResponse Response containing the list of locked users
      */
     public function index(): JsonResponse
     {
@@ -29,9 +39,12 @@ class UserLockoutController extends Controller
     /**
      * Unlock a user account.
      * 
-     * @param User $user
-     * @param Request $request
-     * @return JsonResponse
+     * Removes the lock from a user account, allowing the user to log in again.
+     * Can optionally reset the lockout counter to prevent rapid re-locking.
+     *
+     * @param  \App\Models\User  $user  The user to unlock
+     * @param  \Illuminate\Http\Request  $request  Request potentially containing reset_lockout_count parameter
+     * @return \Illuminate\Http\JsonResponse
      */
     public function unlock(User $user, Request $request): JsonResponse
     {

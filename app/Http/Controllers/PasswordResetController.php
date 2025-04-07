@@ -12,10 +12,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
+/**
+ * Password Reset Controller.
+ * 
+ * Handles the password reset process, including sending reset tokens
+ * via email and processing password reset requests.
+ */
 class PasswordResetController extends Controller
 {
     /**
      * Send a password reset token to the user's email.
+     * 
+     * Generates a unique token and sends it to the user's registered
+     * email address with instructions to reset their password.
+     * The token expires after a configurable time period.
+     *
+     * @param  \Illuminate\Http\Request  $request  Request containing the user's email
+     * @return \Illuminate\Http\JsonResponse
      */
     public function sendResetLinkEmail(Request $request): JsonResponse
     {
@@ -44,6 +57,13 @@ class PasswordResetController extends Controller
 
     /**
      * Reset the password with the provided token.
+     * 
+     * Validates the token and email combination, ensures the token
+     * has not expired, and then updates the user's password.
+     * Sends a confirmation email after successful password reset.
+     *
+     * @param  \Illuminate\Http\Request  $request  Request containing token, email, and new password
+     * @return \Illuminate\Http\JsonResponse
      */
     public function resetPassword(Request $request): JsonResponse
     {

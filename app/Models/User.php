@@ -8,6 +8,40 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * User model representing a user in the system.
+ * 
+ * This model includes all user-related functionality including authentication,
+ * role assignment, account verification, password management, and account lockout functionality.
+ *
+ * @property int $id The unique identifier for the user
+ * @property string $name The user's first name
+ * @property string $last_name The user's last name
+ * @property string $email The user's email address (unique)
+ * @property \Illuminate\Support\Carbon|null $email_verified_at Timestamp of when the email was verified
+ * @property string $password The hashed password
+ * @property int $role_id The ID of the role assigned to this user
+ * @property string|null $verification_code Code used for email verification
+ * @property string|null $remember_token Remember me token for persistent sessions
+ * @property string|null $password_reset_token Token for password reset requests
+ * @property \Illuminate\Support\Carbon|null $password_reset_expires_at Expiration time for password reset token
+ * @property int $failed_login_attempts Number of consecutive failed login attempts
+ * @property \Illuminate\Support\Carbon|null $last_failed_login_at Timestamp of the last failed login attempt
+ * @property \Illuminate\Support\Carbon|null $locked_until Timestamp until when the account is temporarily locked
+ * @property int $lockout_count Number of times the account has been locked
+ * @property \Illuminate\Support\Carbon|null $last_lockout_at Timestamp of the last account lockout
+ * @property bool $is_permanently_locked Whether the account is permanently locked
+ * @property \Illuminate\Support\Carbon $created_at Timestamp of when the user was created
+ * @property \Illuminate\Support\Carbon $updated_at Timestamp of when the user was last updated
+ * 
+ * @property-read \App\Models\Role $role The role associated with this user
+ * 
+ * @method static \Database\Factories\UserFactory factory()
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereRoleId($value)
+ */
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -66,6 +100,8 @@ class User extends Authenticatable implements JWTSubject
     
     /**
      * Get the role that owns the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Role, \App\Models\User>
      */
     public function role()
     {
@@ -74,6 +110,8 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed The primary key of the user
      */
     public function getJWTIdentifier(): mixed
     {
@@ -82,6 +120,8 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array<string, mixed> An empty array as no custom claims are currently used
      */
     public function getJWTCustomClaims(): array
     {
@@ -90,6 +130,10 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Boot the model.
+     *
+     * Generates a verification code when creating a new user.
+     *
+     * @return void
      */
     protected static function booted()
     {
@@ -99,9 +143,12 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Check if the user is locked out
+     * Check if the user is locked out from logging in.
      *
-     * @return bool
+     * Determines if the user account is either permanently locked
+     * or temporarily locked and the lockout period has not expired.
+     *
+     * @return bool True if the user is locked out, false otherwise
      */
     public function isLockedOut(): bool
     {
@@ -117,7 +164,14 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Increment failed login attempts and check if user should be locked
+     * Increment failed login attempts and check if user should be locked.
+     *
+     * Uses environment variables to control the lockout behavior:
+     * - MAX_LOGIN_ATTEMPTS: Maximum allowed consecutive failed attempts
+     * - LOGIN_ATTEMPTS_WINDOW_MINUTES: Time window for counting failed attempts
+     * - ACCOUNT_LOCKOUT_DURATION_MINUTES: Duration of temporary lockout
+     * - MAX_LOCKOUTS_IN_PERIOD: Maximum allowed lockouts before permanent lock
+     * - LOCKOUT_PERIOD_HOURS: Time period for counting lockouts
      *
      * @return bool Whether the user is now locked
      */
@@ -174,7 +228,10 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Reset failed login attempts
+     * Reset failed login attempts.
+     *
+     * Clears the counter and timestamp for failed login attempts.
+     * Typically called after a successful login.
      *
      * @return void
      */
@@ -186,7 +243,10 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Unlock the user account
+     * Unlock the user account.
+     *
+     * Removes both temporary and permanent locks on the user account.
+     * Optionally resets the lockout count and timestamp.
      *
      * @param bool $resetLockoutCount Whether to reset the lockout count
      * @return void
