@@ -83,6 +83,12 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   docker-compose up -d
   ```
 
+5. Run seeds to add default Roles and Users:
+
+  ```bash
+  docker-compose exec app php artisan migrate --seed
+  ```
+
 ## Docker Environment
 
 This project uses Docker Compose with the following services:
@@ -181,7 +187,7 @@ Error responses follow the same format with appropriate status codes and error m
 Run the tests with the following command:
 
 ```bash
-docker exec laravel_app php artisan test
+docker-compose exec app php artisan test
 ```
 
 ## License

@@ -15,7 +15,7 @@ if [ "$1" = "php-fpm" ]; then
     
     # Run migrations before cleaning the cache
     echo "Running migrations..."
-    php artisan migrate --seed --force
+    php artisan migrate --force
     
     # Clear cache
     echo "Clearing cache..."

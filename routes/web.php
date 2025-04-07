@@ -18,5 +18,5 @@ use Illuminate\Support\Facades\Route;
  * Returns the welcome view when accessing the root URL.
  */
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', ['appName' => env('APP_NAME', 'Laravel Application')]);
 });

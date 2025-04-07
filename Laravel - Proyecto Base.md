@@ -59,6 +59,7 @@ Continuaremos con el proyecto en Laravel 12. Hasta ahora hemos logrado lo siguie
   - Instrucciones de instalación y configuración detalladas para un entorno Docker.
   - Lista completa de endpoints API organizados por categoría y funcionalidad.
   - Documentación de las variables de entorno importantes para la configuración del proyecto.
+- Agregados tests faltantes
 
 **Notas importantes:**
 
@@ -66,6 +67,8 @@ Continuaremos con el proyecto en Laravel 12. Hasta ahora hemos logrado lo siguie
 - Estamos trabajando con Laravel 12, por lo que todas las soluciones deben estar adaptadas a esta versión. Si es necesario, consulta la documentación oficial de Laravel 12 en <https://laravel.com/docs/12.x>.
 - Las variables de entorno se obtienen como cadenas de texto (strings), por lo que es necesario realizar un casting explícito a otros tipos de datos según sea necesario.
 - Nosotros nos estaremos comunicando en español, sin embargo, todo el código generado, junto con los mensajes y comentarios, debe estar en inglés para cumplir con los estándares internacionales.
+- Al agregar una nueva funcionalidad por favor agrega los tests relacionados
+- Al modificar alguna funcionalidad por favor modifica los tests relacionados de ser necesario
 - cada ves que es te escriba `probado y aprobado` tu vas a actualizar el archivo `Laravel - Proyecto Base.md` con lo que se haya hecho recientemente y el archivo `README.md` de ser necesario
 
 Por favor, confirma si estás listo para recibir la siguiente tarea.
