@@ -8,6 +8,9 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Illuminate\Support\Facades\Hash;
+use App\Mail\PasswordChanged;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -137,5 +140,41 @@ class AuthController extends Controller
                 ] : null,
             ], 500);
         }
+    }
+
+    /**
+     * Change the authenticated user's password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changePassword(Request $request)
+    {
+        $user = Auth::guard('api')->user();
+
+        $validated = $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|strong_password|different:current_password',
+        ]);
+
+        // Verify the current password
+        if (!Hash::check($validated['current_password'], $user->password)) {
+            return response()->json([
+                'code' => 422,
+                'message' => 'Current password is incorrect.',
+            ], 422);
+        }
+
+        // Update the password
+        $user->password = bcrypt($validated['new_password']);
+        $user->save();
+
+        // Send confirmation email
+        Mail::to($user->email)->send(new PasswordChanged($user));
+
+        return response()->json([
+            'code' => 200,
+            'message' => 'Password changed successfully.',
+        ]);
     }
 }

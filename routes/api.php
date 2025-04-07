@@ -29,7 +29,8 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('users/{user}/resend-verification', [EmailVerificationController::class, 'resend']);
     });
     
-    // Logout route - requires authentication
+    // Routes available to any authenticated user
+    Route::post('change-password', [AuthController::class, 'changePassword']);
     Route::post('logout', [AuthController::class, 'logout']);
 });
 
