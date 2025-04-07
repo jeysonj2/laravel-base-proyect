@@ -32,10 +32,16 @@ Continuaremos con el proyecto en Laravel 12. Hasta ahora hemos logrado lo siguie
     - No permite cambiar la contraseña a través de este endpoint.
     - No permite cambiar el rol del usuario.
     - Si se cambia el email, se envía automáticamente un correo de verificación al nuevo email.
+- Implementación de un sistema de bloqueo de cuentas de usuario tras múltiples intentos fallidos de inicio de sesión:
+  - Bloqueo temporal después de ingresar incorrectamente la contraseña más de 3 veces en un periodo de 5 minutos (valores configurables mediante variables de entorno `MAX_LOGIN_ATTEMPTS` y `LOGIN_ATTEMPTS_WINDOW_MINUTES`).
+  - El bloqueo temporal dura 1 hora por defecto (configurable mediante la variable de entorno `ACCOUNT_LOCKOUT_DURATION_MINUTES`).
+  - Si un usuario es bloqueado temporalmente 2 veces dentro de un periodo de 24 horas, se bloquea indefinidamente (valores configurables mediante variables de entorno `MAX_LOCKOUTS_IN_PERIOD` y `LOCKOUT_PERIOD_HOURS`).
+  - Cuando un usuario es bloqueado, recibe un correo electrónico indicando la duración del bloqueo y la opción de contactar a un administrador.
+  - Creación de endpoints para que los administradores puedan ver la lista de usuarios bloqueados y desbloquearlos.
 
 **Notas importantes:**
 
-- Estamos utilizando Docker Compose durante el desarrollo, por lo que todo se ejecuta en contenedores y no directamente desde la terminal. Cualquier comando que necesite ejecutarse debe realizarse dentro de los contenedores.
+- Estamos utilizando Docker Compose durante el desarrollo, por lo que todo se ejecuta en contenedores y no directamente desde la terminal. Cualquier comando que necesite ejecutarse debe realizarse dentro de los contenedores. Por favor lee el archivo docker-compose.yml para que tengas en el contexto los nombres de los servicios.
 - Estamos trabajando con Laravel 12, por lo que todas las soluciones deben estar adaptadas a esta versión. Si es necesario, consulta la documentación oficial de Laravel 12 en <https://laravel.com/docs/12.x>.
 - Las variables de entorno se obtienen como cadenas de texto (strings), por lo que es necesario realizar un casting explícito a otros tipos de datos según sea necesario.
 - Nosotros nos estaremos comunicando en español, sin embargo, todo el código generado, junto con los mensajes y comentarios, debe estar en inglés para cumplir con los estándares internacionales.

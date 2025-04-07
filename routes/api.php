@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\UserLockoutController;
 
 Route::middleware(['auth:api'])->group(function () {
     // ---------------------------------------------------------------------
@@ -27,6 +28,10 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('roles', RoleController::class);
         Route::apiResource('users', UserController::class);
         Route::post('users/{user}/resend-verification', [EmailVerificationController::class, 'resend']);
+        
+        // User lockout management routes (admin only)
+        Route::get('locked-users', [UserLockoutController::class, 'index']);
+        Route::post('users/{user}/unlock', [UserLockoutController::class, 'unlock']);
     });
     
     // Routes available to any authenticated user

@@ -11,7 +11,9 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\PasswordChanged;
 use App\Mail\EmailVerification;
+use App\Mail\AccountLocked;
 use Illuminate\Support\Facades\Mail;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -19,12 +21,68 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (!$token = Auth::guard('api')->attempt($credentials)) {
+        // Find the user without checking the password
+        $user = User::where('email', $credentials['email'])->first();
+
+        // If user doesn't exist, return invalid credentials message
+        if (!$user) {
             return response()->json([
                 'code' => 401,
                 'message' => 'Invalid credentials.',
             ], 401);
         }
+
+        // Check if the user is locked out
+        if ($user->isLockedOut()) {
+            if ($user->is_permanently_locked) {
+                return response()->json([
+                    'code' => 401,
+                    'message' => 'Your account has been permanently locked due to multiple failed login attempts. Please contact an administrator.',
+                ], 401);
+            } else {
+                $minutesRemaining = now()->diffInMinutes($user->locked_until);
+                return response()->json([
+                    'code' => 401,
+                    'message' => "Your account is temporarily locked due to multiple failed login attempts. Please try again in {$minutesRemaining} minutes or contact an administrator.",
+                ], 401);
+            }
+        }
+
+        // Attempt authentication
+        if (!$token = Auth::guard('api')->attempt($credentials)) {
+            // Authentication failed, increment failed attempts
+            $wasLocked = $user->registerFailedLoginAttempt();
+            
+            // If user got locked, send notification email
+            if ($wasLocked) {
+                $lockoutDuration = (int) env('ACCOUNT_LOCKOUT_DURATION_MINUTES', 60);
+                Mail::to($user->email)->send(new AccountLocked(
+                    $user, 
+                    $user->is_permanently_locked, 
+                    $user->is_permanently_locked ? null : $lockoutDuration
+                ));
+                
+                if ($user->is_permanently_locked) {
+                    return response()->json([
+                        'code' => 401,
+                        'message' => 'Your account has been permanently locked due to multiple failed login attempts. Please contact an administrator.',
+                    ], 401);
+                } else {
+                    return response()->json([
+                        'code' => 401,
+                        'message' => "Your account has been temporarily locked due to multiple failed login attempts. Please try again in {$lockoutDuration} minutes or contact an administrator.",
+                    ], 401);
+                }
+            }
+
+            return response()->json([
+                'code' => 401,
+                'message' => 'Invalid credentials.',
+            ], 401);
+        }
+
+        // Authentication successful, reset failed attempts counter
+        $user->resetFailedLoginAttempts();
 
         // Configure JWTAuth factory to use the refresh TTL
         $refreshTTL = config('jwt.refresh_ttl');
