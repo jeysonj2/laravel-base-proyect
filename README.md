@@ -16,28 +16,44 @@ This is a base Laravel 12 project with a RESTful API implementation that include
 
 - **JWT Authentication System**
   - Login, token refresh, and logout functionality
-  - Secure session management
+  - Secure session management with `tymon/jwt-auth` package
+  - Token validation and management
   
 - **User Management**
   - Complete CRUD operations for users
-  - Role-based access control
-  - User profile management
+  - Role-based access control with middleware protection
+  - User profile management with restricted permissions
   
 - **Email Verification**
-  - Automatic email verification for new accounts
-  - Manual email verification endpoint
+  - Automatic email verification for new accounts and email updates
+  - Manual email verification endpoint with verification codes
+  - Auto-resend verification emails when creating or updating users
   
 - **Security Features**
-  - Account lockout system after multiple failed login attempts
-  - Password reset functionality
-  - Strong password validation
+  - Advanced account lockout system:
+    - Temporary lockouts after multiple failed login attempts
+    - Permanent lockouts after repeated temporary blocks
+    - Email notifications for locked accounts
+    - Admin interface to manage and unlock user accounts
+  - Password reset workflow with secure tokens
+  - Strong password validation with customizable requirements
+  - Confirmation emails for password changes
   
 - **Standardized API Responses**
-  - Consistent JSON response format
+  - Consistent JSON response format for all controllers
   - Proper error handling and status codes
+  - Standardized structure with `code`, `message`, and `data` fields
+  - Development-specific error details in non-production environments
+  
+- **Data Validation**
+  - Comprehensive input validation for all endpoints
+  - Custom case-insensitive uniqueness validator for fields like usernames and emails
+  - Data sanitization and normalization
   
 - **Documentation**
   - Complete PHPDoc documentation throughout the codebase
+  - Detailed documentation of models, relationships, and methods
+  - API endpoints documentation with parameters and response formats
 
 ## Prerequisites
 
@@ -47,22 +63,25 @@ This is a base Laravel 12 project with a RESTful API implementation that include
 ## Installation
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/jeysonj2/laravel-base-proyect.git
-   cd laravel-base-proyect
-   ```
+
+  ```bash
+  git clone https://github.com/jeysonj2/laravel-base-proyect.git
+  cd laravel-base-proyect
+  ```
 
 2. Copy the environment file:
-   ```bash
-   cp .env.example .env
-   ```
+
+  ```bash
+  cp .env.example .env
+  ```
 
 3. Configure your environment variables in the `.env` file.
 
 4. Start the Docker containers:
-   ```bash
-   docker-compose up -d
-   ```
+
+  ```bash
+  docker-compose up -d
+  ```
 
 ## Docker Environment
 
@@ -71,7 +90,7 @@ This project uses Docker Compose with the following services:
 - **app**: PHP 8.4 application server (Laravel)
 - **webserver**: Nginx web server
 - **db**: PostgreSQL database
-- **mailpit**: Mail testing service
+- **mailpit**: Mail testing service for email development and testing
 
 ### Accessing Services
 
@@ -82,11 +101,11 @@ This project uses Docker Compose with the following services:
 
 Important environment variables to configure:
 
-- `MAX_LOGIN_ATTEMPTS`: Maximum failed login attempts before temporary lockout
-- `LOGIN_ATTEMPTS_WINDOW_MINUTES`: Time window for counting login attempts
-- `ACCOUNT_LOCKOUT_DURATION_MINUTES`: Duration of temporary account lockout
-- `MAX_LOCKOUTS_IN_PERIOD`: Number of temporary lockouts before permanent lock
-- `LOCKOUT_PERIOD_HOURS`: Time period to count temporary lockouts
+- `MAX_LOGIN_ATTEMPTS`: Maximum failed login attempts before temporary lockout (default: 3)
+- `LOGIN_ATTEMPTS_WINDOW_MINUTES`: Time window for counting login attempts (default: 5)
+- `ACCOUNT_LOCKOUT_DURATION_MINUTES`: Duration of temporary account lockout (default: 60)
+- `MAX_LOCKOUTS_IN_PERIOD`: Number of temporary lockouts before permanent lock (default: 2)
+- `LOCKOUT_PERIOD_HOURS`: Time period to count temporary lockouts (default: 24)
 - `PASSWORD_RESET_TOKEN_EXPIRY_MINUTES`: Expiration time for password reset tokens
 
 ## API Documentation
@@ -130,6 +149,32 @@ Important environment variables to configure:
 
 - `GET /api/locked-users`: List locked users
 - `POST /api/users/{user}/unlock`: Unlock user account
+
+## Response Format
+
+All API responses follow a standardized format:
+
+```json
+{
+  "code": 200,
+  "message": "Operation successful",
+  "data": {
+    // Response data here
+  }
+}
+```
+
+Error responses follow the same format with appropriate status codes and error messages:
+
+```json
+{
+  "code": 400,
+  "message": "Validation failed",
+  "errors": {
+    // Validation errors or other error details
+  }
+}
+```
 
 ## Testing
 
