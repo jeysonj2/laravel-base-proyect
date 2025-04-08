@@ -74,6 +74,23 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Configuration of PHPUnit to generate detailed coverage reports in HTML and text formats
   - Setup for running tests with coverage metrics via the `--coverage` flag
   - Directory structure for storing coverage reports in an organized manner
+- Implementation of Swagger/OpenAPI documentation for all API endpoints:
+  - Installation and configuration of the L5-Swagger package for Laravel
+  - Addition of detailed Swagger annotations to all controllers:
+    - AuthController
+    - EmailVerificationController
+    - PasswordResetController
+    - RoleController
+    - UserController
+    - UserLockoutController
+  - Enhancement of model schemas with detailed property descriptions:
+    - User model with email validation, lockout features, and role relationship details
+    - Role model with unique name validation explanation
+  - Documentation of complex flows like email verification process and password reset
+  - Detailed description of security features like account lockout mechanism
+  - Configuration of Swagger UI to use application URL from environment variables
+  - Setup for JWT authentication in Swagger UI with bearer token support
+  - Comprehensive documentation of request parameters and response formats
 
 **Important Notes:**
 
@@ -81,8 +98,8 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
 - We are working with Laravel 12, so all solutions must be adapted to this version. If necessary, consult the official Laravel 12 documentation at <https://laravel.com/docs/12.x>.
 - Environment variables are obtained as strings, so explicit casting to other data types is necessary when required.
 - We will communicate in Spanish or English; however, all generated code, along with messages and comments, must be in English to comply with international standards.
-- When adding a new feature, please add the related tests.
-- When modifying a feature, please update the related tests if necessary.
-- Every time I write "tested and approved" or "probado y aprobado" you will update the `AI Agent Context.md` file with what has been recently done and the `README.md` file if necessary.
+- When adding a new feature, please add the related PHPdoc, Swagger annotations and tests.
+- When modifying a feature, please update the related PHPdoc, Swagger annotations and tests if necessary.
+- Every time I write to you (Github Copilot Agent Mode) in your prompt the sentence: `tested and approved` or `probado y aprobado`, you will update the `AI Agent Context.md` file with what has been recently done and the `README.md` file if necessary.
 
 Please confirm if you are ready to receive the next task.

@@ -21,6 +21,37 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * 
  * @method static \Illuminate\Database\Eloquent\Builder|Role whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Role whereName($value)
+ * 
+ * @OA\Schema(
+ *     schema="Role",
+ *     title="Role",
+ *     description="User role model with unique case-insensitive name validation",
+ *     @OA\Property(
+ *         property="id", 
+ *         type="integer", 
+ *         format="int64", 
+ *         example=1,
+ *         description="Unique identifier for the role"
+ *     ),
+ *     @OA\Property(
+ *         property="name", 
+ *         type="string", 
+ *         example="admin",
+ *         description="Role name (must be unique, case-insensitive, automatically converted to lowercase)"
+ *     ),
+ *     @OA\Property(
+ *         property="created_at", 
+ *         type="string", 
+ *         format="date-time",
+ *         description="Timestamp when the role was created"
+ *     ),
+ *     @OA\Property(
+ *         property="updated_at", 
+ *         type="string", 
+ *         format="date-time",
+ *         description="Timestamp when the role was last updated"
+ *     )
+ * )
  */
 class Role extends Model
 {

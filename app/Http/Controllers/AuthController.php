@@ -29,6 +29,84 @@ class AuthController extends Controller
      * This method also handles account lockout logic when invalid credentials
      * are provided multiple times.
      *
+     * @OA\Post(
+     *     path="/api/login",
+     *     summary="Authenticate user and generate tokens",
+     *     description="Logs in a user with email and password, and returns access and refresh tokens. This endpoint implements a sophisticated account lockout mechanism to prevent brute-force attacks: after MAX_LOGIN_ATTEMPTS (default: 3) failed attempts within LOGIN_ATTEMPTS_WINDOW_MINUTES (default: 5), the account is temporarily locked for ACCOUNT_LOCKOUT_DURATION_MINUTES (default: 60). If a user gets locked out MAX_LOCKOUTS_IN_PERIOD (default: 2) times within LOCKOUT_PERIOD_HOURS (default: 24), their account becomes permanently locked and requires administrator intervention to unlock. When an account is locked, a notification email is sent to the user.",
+     *     operationId="authLogin",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email","password"},
+     *             @OA\Property(
+     *                 property="email", 
+     *                 type="string", 
+     *                 format="email", 
+     *                 example="user@example.com",
+     *                 description="User's registered email address (case-insensitive)"
+     *             ),
+     *             @OA\Property(
+     *                 property="password", 
+     *                 type="string", 
+     *                 format="password", 
+     *                 example="password123",
+     *                 description="User's password"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Login successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=200),
+     *             @OA\Property(property="message", type="string", example="Login successful."),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="access_token", 
+     *                     type="string", 
+     *                     example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+     *                     description="JWT token for authentication (short-lived)"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="token_type", 
+     *                     type="string", 
+     *                     example="bearer",
+     *                     description="Type of token, always 'bearer'"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="expires_in", 
+     *                     type="integer", 
+     *                     example=3600,
+     *                     description="Access token expiration time in seconds"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="refresh_token", 
+     *                     type="string", 
+     *                     example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+     *                     description="JWT refresh token (long-lived) for obtaining a new access token"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="refresh_expires_in", 
+     *                     type="integer", 
+     *                     example=1209600,
+     *                     description="Refresh token expiration time in seconds"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized - Invalid credentials or account locked",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=401),
+     *             @OA\Property(property="message", type="string", example="Invalid credentials.")
+     *         )
+     *     )
+     * )
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -111,6 +189,53 @@ class AuthController extends Controller
      * 
      * Validates the refresh token and generates a new access token if valid.
      *
+     * @OA\Post(
+     *     path="/api/refresh",
+     *     summary="Refresh access token",
+     *     description="Generate a new access token using a valid refresh token. This endpoint is used when the short-lived access token expires but the refresh token is still valid. The refresh token must include a special 'refresh' claim to be valid for this operation. This endpoint is important for maintaining user sessions without requiring frequent re-authentication while still providing security through the short-lived nature of the access tokens.",
+     *     operationId="authRefresh",
+     *     tags={"Authentication"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Token refreshed successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=200),
+     *             @OA\Property(property="message", type="string", example="Token refreshed successfully."),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="access_token", 
+     *                     type="string", 
+     *                     example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+     *                     description="New JWT access token"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="token_type", 
+     *                     type="string", 
+     *                     example="bearer",
+     *                     description="Type of token, always 'bearer'"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="expires_in", 
+     *                     type="integer", 
+     *                     example=3600,
+     *                     description="Access token expiration time in seconds"
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized - Invalid refresh token",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=401),
+     *             @OA\Property(property="message", type="string", example="Invalid refresh token.")
+     *         )
+     *     )
+     * )
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -159,6 +284,31 @@ class AuthController extends Controller
      * 
      * Adds the current token to the blacklist to prevent further use.
      *
+     * @OA\Post(
+     *     path="/api/logout",
+     *     summary="Logout user",
+     *     description="Invalidate the user's token and log them out",
+     *     operationId="authLogout",
+     *     tags={"Authentication"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successfully logged out",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=200),
+     *             @OA\Property(property="message", type="string", example="Successfully logged out")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error during logout",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=500),
+     *             @OA\Property(property="message", type="string", example="Failed to logout, please try again.")
+     *         )
+     *     )
+     * )
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function logout()
@@ -179,6 +329,39 @@ class AuthController extends Controller
      * 
      * Validates the current password and enforces strong password requirements
      * for the new password. Sends a confirmation email upon successful change.
+     *
+     * @OA\Post(
+     *     path="/api/change-password",
+     *     summary="Change user password",
+     *     description="Change the authenticated user's password with validation",
+     *     operationId="changePassword",
+     *     tags={"User Profile"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"current_password","new_password"},
+     *             @OA\Property(property="current_password", type="string", format="password", example="oldPassword123"),
+     *             @OA\Property(property="new_password", type="string", format="password", example="newStrongPassword123!")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password changed successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=200),
+     *             @OA\Property(property="message", type="string", example="Password changed successfully.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=422),
+     *             @OA\Property(property="message", type="string", example="Current password is incorrect.")
+     *         )
+     *     )
+     * )
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
@@ -212,6 +395,28 @@ class AuthController extends Controller
      * 
      * Returns the current user's profile information.
      *
+     * @OA\Get(
+     *     path="/api/profile",
+     *     summary="Get user profile",
+     *     description="Retrieve the authenticated user's profile information",
+     *     operationId="getProfile",
+     *     tags={"User Profile"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Profile retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=200),
+     *             @OA\Property(property="message", type="string", example="Profile retrieved successfully."),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 ref="#/components/schemas/User"
+     *             )
+     *         )
+     *     )
+     * )
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function profile()
@@ -228,6 +433,44 @@ class AuthController extends Controller
      * - Cannot change password through this endpoint
      * - Cannot change role through this endpoint
      * - Email changes trigger a new verification process
+     *
+     * @OA\Put(
+     *     path="/api/profile",
+     *     summary="Update user profile",
+     *     description="Update the authenticated user's profile information",
+     *     operationId="updateProfile",
+     *     tags={"User Profile"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="John"),
+     *             @OA\Property(property="last_name", type="string", example="Doe"),
+     *             @OA\Property(property="email", type="string", format="email", example="john.doe@example.com")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Profile updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=200),
+     *             @OA\Property(property="message", type="string", example="Profile updated successfully."),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 ref="#/components/schemas/User"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=422),
+     *             @OA\Property(property="message", type="string", example="The email field must be a valid email address.")
+     *         )
+     *     )
+     * )
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse

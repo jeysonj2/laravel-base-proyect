@@ -42,6 +42,87 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRoleId($value)
+ * 
+ * @OA\Schema(
+ *     schema="User",
+ *     title="User",
+ *     description="User model with authentication and profile data, account lockout features, and email verification",
+ *     @OA\Property(
+ *         property="id", 
+ *         type="integer", 
+ *         format="int64", 
+ *         example=1,
+ *         description="Unique identifier for the user"
+ *     ),
+ *     @OA\Property(
+ *         property="name", 
+ *         type="string", 
+ *         example="John",
+ *         description="User's first name"
+ *     ),
+ *     @OA\Property(
+ *         property="last_name", 
+ *         type="string", 
+ *         example="Doe",
+ *         description="User's last name"
+ *     ),
+ *     @OA\Property(
+ *         property="email", 
+ *         type="string", 
+ *         format="email", 
+ *         example="john.doe@example.com",
+ *         description="User's email address (unique, case-insensitive validation)"
+ *     ),
+ *     @OA\Property(
+ *         property="email_verified_at", 
+ *         type="string", 
+ *         format="date-time", 
+ *         nullable=true,
+ *         description="Timestamp of when the email was verified, null if not verified"
+ *     ),
+ *     @OA\Property(
+ *         property="role_id", 
+ *         type="integer", 
+ *         example=2,
+ *         description="ID of the role assigned to this user, references roles table"
+ *     ),
+ *     @OA\Property(
+ *         property="failed_login_attempts", 
+ *         type="integer", 
+ *         example=0,
+ *         description="Number of consecutive failed login attempts, resets after successful login"
+ *     ),
+ *     @OA\Property(
+ *         property="locked_until", 
+ *         type="string", 
+ *         format="date-time", 
+ *         nullable=true,
+ *         description="Timestamp until when the account is temporarily locked, null if not locked"
+ *     ),
+ *     @OA\Property(
+ *         property="is_permanently_locked", 
+ *         type="boolean", 
+ *         example=false,
+ *         description="Whether the account is permanently locked due to multiple lockouts"
+ *     ),
+ *     @OA\Property(
+ *         property="created_at", 
+ *         type="string", 
+ *         format="date-time",
+ *         description="Timestamp when the user was created"
+ *     ),
+ *     @OA\Property(
+ *         property="updated_at", 
+ *         type="string", 
+ *         format="date-time",
+ *         description="Timestamp when the user was last updated"
+ *     ),
+ *     @OA\Property(
+ *         property="role",
+ *         ref="#/components/schemas/Role",
+ *         description="The role assigned to this user"
+ *     )
+ * )
  */
 class User extends Authenticatable implements JWTSubject
 {

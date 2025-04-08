@@ -6,6 +6,7 @@
 <a href="https://jwt.io/"><img src="https://img.shields.io/badge/JWT-Auth-green" alt="JWT Auth"></a>
 <a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/Database-PostgreSQL-blue" alt="PostgreSQL"></a>
 <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-Compose-blue" alt="Docker Compose"></a>
+<a href="https://swagger.io/"><img src="https://img.shields.io/badge/Swagger-API%20Documentation-green" alt="Swagger API Documentation"></a>
 </p>
 
 ## About This Project
@@ -50,7 +51,14 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   - Custom case-insensitive uniqueness validator for fields like usernames and emails
   - Data sanitization and normalization
   
-- **Documentation**
+- **API Documentation**
+  - Complete Swagger/OpenAPI documentation for all endpoints
+  - Interactive API testing through Swagger UI
+  - Detailed request and response examples
+  - Schema definitions for all models
+  - Comprehensive documentation of complex flows like email verification and password reset
+  
+- **PHPDoc Documentation**
   - Complete PHPDoc documentation throughout the codebase
   - Detailed documentation of models, relationships, and methods
   - API endpoints documentation with parameters and response formats
@@ -107,6 +115,7 @@ This project uses Docker Compose with the following services:
 ### Accessing Services
 
 - API: http://localhost:8000
+- Swagger UI Documentation: http://localhost:8000/api/documentation
 - MailPit UI: http://localhost:8025
 
 ## Environment Variables
@@ -119,8 +128,11 @@ Important environment variables to configure:
 - `MAX_LOCKOUTS_IN_PERIOD`: Number of temporary lockouts before permanent lock (default: 2)
 - `LOCKOUT_PERIOD_HOURS`: Time period to count temporary lockouts (default: 24)
 - `PASSWORD_RESET_TOKEN_EXPIRY_MINUTES`: Expiration time for password reset tokens
+- `L5_SWAGGER_CONST_HOST`: Host for Swagger documentation (defaults to APP_URL)
 
 ## API Documentation
+
+Interactive API documentation is available through Swagger UI at `/api/documentation`.
 
 ### Authentication Endpoints
 
@@ -208,6 +220,14 @@ This generates:
 - A text summary in `coverage.txt`
 
 You can view the HTML report by opening `coverage-report/index.html` in your web browser.
+
+## Generating Swagger Documentation
+
+After making changes to the API controllers or models, regenerate the Swagger documentation with:
+
+```bash
+docker-compose exec app php artisan l5-swagger:generate
+```
 
 ## License
 

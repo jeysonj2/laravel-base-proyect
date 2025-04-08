@@ -27,6 +27,43 @@ class PasswordResetController extends Controller
      * email address with instructions to reset their password.
      * The token expires after a configurable time period.
      *
+     * @OA\Post(
+     *     path="/api/password/email",
+     *     summary="Send password reset link",
+     *     description="Initiates the password reset flow by sending a reset link to the specified email address. This endpoint is the first step in the password reset process. When a user forgets their password, they request a reset link through this endpoint. The system generates a unique, time-limited token (expiring after PASSWORD_RESET_TOKEN_EXPIRY_MINUTES, default 60 minutes) and sends it to the user's email. The user then uses this token along with their email in the password reset endpoint to set a new password.",
+     *     operationId="sendPasswordResetLink",
+     *     tags={"Password Reset"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email"},
+     *             @OA\Property(
+     *                 property="email", 
+     *                 type="string", 
+     *                 format="email", 
+     *                 example="user@example.com",
+     *                 description="Email address of the registered user who needs to reset their password"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password reset link sent successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=200),
+     *             @OA\Property(property="message", type="string", example="Password reset link sent to your email")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=422),
+     *             @OA\Property(property="message", type="string", example="The email field must be a valid email address.")
+     *         )
+     *     )
+     * )
+     *
      * @param  \Illuminate\Http\Request  $request  Request containing the user's email
      * @return \Illuminate\Http\JsonResponse
      */
@@ -61,6 +98,56 @@ class PasswordResetController extends Controller
      * Validates the token and email combination, ensures the token
      * has not expired, and then updates the user's password.
      * Sends a confirmation email after successful password reset.
+     *
+     * @OA\Post(
+     *     path="/api/password/reset",
+     *     summary="Reset password",
+     *     description="Completes the password reset process using the token received in email. This endpoint is the second and final step in the password reset flow. After receiving the reset token via email, the user submits their email, token, and desired new password. The system validates that the token matches the one stored for the user and that it hasn't expired. If valid, the user's password is updated, the token is cleared, and a confirmation email is sent to notify the user of the successful password change. The new password must meet the strong password requirements.",
+     *     operationId="resetPassword",
+     *     tags={"Password Reset"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "token", "password"},
+     *             @OA\Property(
+     *                 property="email", 
+     *                 type="string", 
+     *                 format="email", 
+     *                 example="user@example.com",
+     *                 description="Email address of the user resetting their password"
+     *             ),
+     *             @OA\Property(
+     *                 property="token", 
+     *                 type="string", 
+     *                 example="60charsstringtoken",
+     *                 description="Token received in the password reset email (60 characters)"
+     *             ),
+     *             @OA\Property(
+     *                 property="password", 
+     *                 type="string", 
+     *                 format="password", 
+     *                 example="NewStrongPassword123!",
+     *                 description="New password (must meet strong password requirements: upper/lowercase, number, special char)"
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password reset successful",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=200),
+     *             @OA\Property(property="message", type="string", example="Password has been reset successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error or invalid token",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=422),
+     *             @OA\Property(property="message", type="string", example="Invalid or expired password reset token")
+     *         )
+     *     )
+     * )
      *
      * @param  \Illuminate\Http\Request  $request  Request containing token, email, and new password
      * @return \Illuminate\Http\JsonResponse
