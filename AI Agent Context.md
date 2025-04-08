@@ -69,6 +69,11 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Test of the root route to verify system status.
   - Structured organization of tests into folders by functionality to facilitate maintenance.
   - Implementation of tests for all main API features.
+- Implementation of code coverage reporting to evaluate test effectiveness:
+  - Configuration of Docker environment with Xdebug support and coverage mode enabled
+  - Configuration of PHPUnit to generate detailed coverage reports in HTML and text formats
+  - Setup for running tests with coverage metrics via the `--coverage` flag
+  - Directory structure for storing coverage reports in an organized manner
 
 **Important Notes:**
 

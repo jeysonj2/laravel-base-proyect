@@ -55,6 +55,12 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   - Detailed documentation of models, relationships, and methods
   - API endpoints documentation with parameters and response formats
 
+- **Testing and Code Quality**
+  - Comprehensive test suite with Unit and Feature tests
+  - Code coverage reporting using Xdebug
+  - HTML and text-based coverage reports
+  - Current code coverage: 92.1%
+
 ## Prerequisites
 
 - Docker and Docker Compose
@@ -189,6 +195,19 @@ Run the tests with the following command:
 ```bash
 docker-compose exec app php artisan test
 ```
+
+To run tests with code coverage reporting:
+
+```bash
+docker-compose exec app php artisan test --coverage
+```
+
+This generates:
+
+- A detailed HTML report in the `coverage-report` directory
+- A text summary in `coverage.txt`
+
+You can view the HTML report by opening `coverage-report/index.html` in your web browser.
 
 ## License
 
