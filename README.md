@@ -26,6 +26,7 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   - Complete CRUD operations for users
   - Role-based access control with middleware protection
   - User profile management with restricted permissions
+  - Automatic admin user creation during production deployment
   
 - **Email Verification**
   - Automatic email verification for new accounts and email updates
@@ -76,6 +77,7 @@ This is a base Laravel 12 project with a RESTful API implementation that include
 
 - **Production-Ready Deployment**
   - Docker Compose configuration for production environment
+  - Automatic creation of admin user during deployment
   - SSL/TLS with Let's Encrypt integration
   - Optimized PHP and Nginx configurations
   - SMTP server for email delivery
@@ -301,6 +303,78 @@ After setup, code will be automatically formatted before each commit.
 ### GitHub Actions
 
 Code quality is automatically checked on each push and pull request via GitHub Actions.
+
+## Shell Scripts
+
+This project provides a set of convenient shell scripts to simplify common Docker container operations. These scripts are located in the `shell-scripts/` directory and can be executed from the project root.
+
+### Available Scripts
+
+#### Development Environment Scripts
+
+| Script | Description |
+|--------|-------------|
+| `./shell-scripts/start.sh` | Start all development containers in detached mode |
+| `./shell-scripts/stop.sh` | Stop and remove all development containers |
+| `./shell-scripts/restart.sh` | Restart all development containers |
+| `./shell-scripts/build.sh` | Build development Docker images |
+| `./shell-scripts/reset.sh` | Stop containers, rebuild images, and start containers again |
+| `./shell-scripts/reset-full.sh` | Remove all containers and volumes, rebuild images from scratch, and start containers |
+| `./shell-scripts/seed-roles-users.sh` | Seed the database with default roles and users |
+
+#### Production Environment Scripts
+
+| Script | Description |
+|--------|-------------|
+| `./shell-scripts/start-prod.sh` | Start all production containers in detached mode |
+| `./shell-scripts/stop-prod.sh` | Stop and remove all production containers |
+| `./shell-scripts/restart-prod.sh` | Restart all production containers |
+| `./shell-scripts/build-prod.sh` | Build production Docker images |
+| `./shell-scripts/reset-prod.sh` | Stop containers, rebuild production images, and start containers again |
+| `./shell-scripts/reset-full-prod.sh` | Remove all production containers and volumes, rebuild images from scratch, and start containers |
+
+#### Code Quality Scripts
+
+| Script | Description |
+|--------|-------------|
+| `./shell-scripts/check-style.sh` | Check code against style standards |
+| `./shell-scripts/fix-style.sh` | Automatically fix code style issues |
+
+### Making Scripts Executable
+
+If you encounter permission issues when trying to run the scripts, make them executable with:
+
+```bash
+chmod +x ./shell-scripts/*.sh
+```
+
+### Usage Examples
+
+Reset your development environment completely:
+
+```bash
+./shell-scripts/reset-full.sh
+```
+
+Start the development environment:
+
+```bash
+./shell-scripts/start.sh
+```
+
+Check and fix code style:
+
+```bash
+./shell-scripts/check-style.sh
+./shell-scripts/fix-style.sh
+```
+
+Deploy to production:
+
+```bash
+./shell-scripts/build-prod.sh
+./shell-scripts/start-prod.sh
+```
 
 ## Production Deployment
 

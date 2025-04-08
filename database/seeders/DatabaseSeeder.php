@@ -17,22 +17,26 @@ class DatabaseSeeder extends Seeder
         // Run role seeder first to ensure roles exist
         $this->call(RoleSeeder::class);
 
-        // Create a default admin user
-        User::factory()->create([
-            'name' => 'Admin',
-            'last_name' => 'User',
-            'email' => 'admin@example.com',
-            'password' => bcrypt('Abcde12345!'),
-            'role_id' => Role::where('name', 'ADMIN')->first()->id,
-        ]);
+        // Check and create a default admin user if it doesn't exist
+        if (! User::where('email', 'admin@example.com')->exists()) {
+            User::factory()->create([
+                'name' => 'Admin',
+                'last_name' => 'User',
+                'email' => 'admin@example.com',
+                'password' => bcrypt('Abcde12345!'),
+                'role_id' => Role::where('name', 'admin')->first()->id,
+            ]);
+        }
 
-        // Create a default regular user
-        User::factory()->create([
-            'name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('Abcde12345!'),
-            'role_id' => Role::where('name', 'USER')->first()->id,
-        ]);
+        // Check and create a default regular user if it doesn't exist
+        if (! User::where('email', 'test@example.com')->exists()) {
+            User::factory()->create([
+                'name' => 'Test',
+                'last_name' => 'User',
+                'email' => 'test@example.com',
+                'password' => bcrypt('Abcde12345!'),
+                'role_id' => Role::where('name', 'user')->first()->id,
+            ]);
+        }
     }
 }

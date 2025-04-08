@@ -118,7 +118,7 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Implementation of a SMTP server for email delivery in production
   - Creation of production entry point scripts with automatic migrations and optimizations
   - Automatic Swagger documentation generation for production environments
-  - Creation of a `.env.prod` template with production-ready settings
+  - Creation of a `.env.prod-example` template with production-ready settings
   - Complete documentation of the deployment process in a dedicated `DEPLOYMENT.md` file
   - Implementation of security best practices for production environments
 

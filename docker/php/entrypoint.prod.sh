@@ -8,17 +8,29 @@ chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 if [ "$1" = "php-fpm" ]; then
   echo "Optimizing for production..."
 
+  # Explicitly remove cached PHP files to prevent environment conflicts
+  echo "Removing cached PHP files..."
+  rm -f /var/www/html/bootstrap/cache/*.php
+
   # Run migrations
   php artisan migrate --force
+
+  # Create default admin user for production
+  echo "Ensuring admin user exists..."
+  php artisan app:create-default-admin --email="${ADMIN_EMAIL:-admin@example.com}" --password="${ADMIN_PASSWORD:-}" || true
+
+  # Ensure keys exist first - before caching configuration
+  echo "Generating application keys..."
+  php artisan key:generate --force
+  php artisan jwt:secret --force
+
+  # Clear any existing configuration cache
+  php artisan config:clear
 
   # Optimize configuration for production
   php artisan config:cache
   php artisan route:cache
   php artisan view:cache
-
-  # Ensure keys exist
-  php artisan key:generate --force
-  php artisan jwt:secret --force
 
   # Generate Swagger documentation with production URL
   echo "Generating Swagger documentation..."

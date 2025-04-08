@@ -12,6 +12,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    env_file:
+      - .env
     environment:
       PHP_EXTENSIONS: "pdo_pgsql,pgsql,mbstring,tokenizer,xml,curl,zip,openssl"
 
@@ -34,6 +36,8 @@ services:
     container_name: laravel_db
     ports:
       - "5432:5432"
+    env_file:
+      - .env
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
