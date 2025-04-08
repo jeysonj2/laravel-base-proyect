@@ -30,12 +30,18 @@ class PasswordReset extends Mailable
      * @var int
      */
     public int $expiryMinutes;
+    
+    /**
+     * The reset token
+     *
+     * @var string
+     */
+    public string $token;
 
     /**
      * Create a new message instance.
      *
      * @param  \App\Models\User  $user  The user requesting the password reset
-     * @param  string  $token  The unique token for the password reset
      * @return void
      */
     public function __construct(
@@ -44,16 +50,10 @@ class PasswordReset extends Mailable
          * 
          * @var \App\Models\User
          */
-        public User $user,
-        
-        /**
-         * The unique token for the password reset.
-         * 
-         * @var string
-         */
-        public string $token
+        public User $user
     ) {
         $this->expiryMinutes = (int)env('PASSWORD_RESET_TOKEN_EXPIRY_MINUTES', 60);
+        $this->token = $user->password_reset_token;
     }
 
     /**
@@ -66,7 +66,8 @@ class PasswordReset extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Password Reset Request',
+            subject: 'Reset Your Password',
+            to: [$this->user->email],
         );
     }
 
@@ -82,6 +83,11 @@ class PasswordReset extends Mailable
     {
         return new Content(
             view: 'emails.password-reset',
+            with: [
+                'user' => $this->user,
+                'token' => $this->token,
+                'expiryMinutes' => $this->expiryMinutes,
+            ],
         );
     }
 

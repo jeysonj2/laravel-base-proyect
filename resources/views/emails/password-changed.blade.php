@@ -39,15 +39,15 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Password Successfully Changed</h1>
+            <h1>Password Changed Successfully</h1>
         </div>
         
-        <p>Hello {{ $user->name }},</p>
+        <p>Hello {{ $name }},</p>
         
         <p>This email confirms that your password has been successfully changed.</p>
         
         <div class="alert">
-            <p>If you did not make this change, please contact our support team immediately.</p>
+            <p>If you did not change your password, please contact our support team immediately.</p>
         </div>
         
         <p>Thank you,<br>

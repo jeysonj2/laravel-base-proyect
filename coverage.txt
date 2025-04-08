@@ -1,0 +1,46 @@
+
+
+[1;37;40mCode Coverage Report:      [0m
+[1;37;40m  2025-04-08 08:51:43      [0m
+[1;37;40m                           [0m
+[1;37;40m Summary:                  [0m
+[37;41m  Classes: 47.37% (9/19)   [0m
+[30;43m  Methods: 79.22% (61/77)  [0m
+[30;42m  Lines:   92.14% (375/407)[0m
+
+App\Events\UserCreated
+  [37;41mMethods:  50.00% ( 1/ 2)[0m   [37;41mLines:  25.00% (  1/  4)[0m
+App\Http\Controllers\AuthController
+  [37;41mMethods:  16.67% ( 1/ 6)[0m   [30;43mLines:  84.69% ( 83/ 98)[0m
+App\Http\Controllers\EmailVerificationController
+  [37;41mMethods:  50.00% ( 1/ 2)[0m   [30;43mLines:  82.35% ( 14/ 17)[0m
+App\Http\Controllers\PasswordResetController
+  [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% ( 28/ 28)[0m
+App\Http\Controllers\RoleController
+  [30;42mMethods: 100.00% ( 5/ 5)[0m   [30;42mLines: 100.00% ( 18/ 18)[0m
+App\Http\Controllers\UserController
+  [30;43mMethods:  80.00% ( 4/ 5)[0m   [30;42mLines:  94.59% ( 35/ 37)[0m
+App\Http\Controllers\UserLockoutController
+  [37;41mMethods:  50.00% ( 1/ 2)[0m   [30;42mLines:  92.31% ( 12/ 13)[0m
+App\Http\Middleware\RoleMiddleware
+  [37;41mMethods:   0.00% ( 0/ 1)[0m   [30;43mLines:  87.50% (  7/  8)[0m
+App\Http\Responses\ApiResponse
+  [30;43mMethods:  87.50% ( 7/ 8)[0m   [30;42mLines:  94.12% ( 16/ 17)[0m
+App\Http\Responses\ApiResponseTrait
+  [30;43mMethods:  57.14% ( 4/ 7)[0m   [30;43mLines:  57.14% (  4/  7)[0m
+App\Listeners\SendVerificationEmail
+  [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% (  3/  3)[0m
+App\Mail\AccountLocked
+  [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 17/ 17)[0m
+App\Mail\EmailVerification
+  [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 12/ 12)[0m
+App\Mail\PasswordChanged
+  [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 12/ 12)[0m
+App\Mail\PasswordReset
+  [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 15/ 15)[0m
+App\Models\Role
+  [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% (  7/  7)[0m
+App\Models\User
+  [30;42mMethods:  91.67% (11/12)[0m   [30;42mLines:  97.06% ( 66/ 68)[0m
+App\Providers\AppServiceProvider
+  [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% ( 25/ 25)[0m

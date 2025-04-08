@@ -47,7 +47,8 @@ class PasswordChanged extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Password Has Been Changed',
+            subject: 'Password Changed Successfully',
+            to: [$this->user->email],
         );
     }
 
@@ -63,6 +64,9 @@ class PasswordChanged extends Mailable
     {
         return new Content(
             view: 'emails.password-changed',
+            with: [
+                'name' => $this->user->name,
+            ],
         );
     }
 

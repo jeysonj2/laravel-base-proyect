@@ -36,21 +36,21 @@ class AccountLocked extends Mailable
          *
          * @var \App\Models\User
          */
-        protected User $user,
+        public User $user,
         
         /**
          * Whether the lock is permanent.
          * 
          * @var bool
          */
-        protected bool $isPermanent = false,
+        public bool $isPermanent = false,
         
         /**
          * Duration of the temporary lock in minutes, null if permanent.
          * 
          * @var int|null
          */
-        protected ?int $lockoutDurationMinutes = null
+        public ?int $lockoutDurationMinutes = 60
     ) {}
 
     /**
@@ -62,8 +62,13 @@ class AccountLocked extends Mailable
      */
     public function envelope(): Envelope
     {
+        $subject = $this->isPermanent
+            ? 'Your Account Has Been Permanently Locked'
+            : 'Your Account Has Been Temporarily Locked';
+            
         return new Envelope(
-            subject: 'Account Locked',
+            subject: $subject,
+            to: [$this->user->email],
         );
     }
 
@@ -90,5 +95,15 @@ class AccountLocked extends Mailable
                 'lockoutDuration' => $this->lockoutDurationMinutes,
             ],
         );
+    }
+    
+    /**
+     * Get the attachments for the message.
+     *
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     */
+    public function attachments(): array
+    {
+        return [];
     }
 }

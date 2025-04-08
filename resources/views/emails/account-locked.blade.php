@@ -37,12 +37,14 @@
         <p>Hello {{ $name }},</p>
         
         @if($isPermanent)
+            <h2>Your Account Has Been Permanently Locked</h2>
             <p>Your account has been <strong>permanently locked</strong> due to multiple failed login attempts.</p>
-            <p>To regain access to your account, please contact our administration team.</p>
+            <p>To regain access to your account, please contact an administrator.</p>
         @else
+            <h2>Your Account Has Been Temporarily Locked</h2>
             <p>Your account has been temporarily locked due to multiple failed login attempts.</p>
-            <p>Your account will be automatically unlocked in <strong>{{ $lockoutDuration }} minutes</strong>.</p>
-            <p>If you need immediate access to your account, please contact our administration team.</p>
+            <p>Your account will be automatically unlocked in <strong>{{ $lockoutDuration }} {{ Str::plural('minute', $lockoutDuration) }}</strong>.</p>
+            <p>If you need immediate access to your account, please contact an administrator.</p>
         @endif
         
         <p>If you did not attempt to log in to your account, we recommend changing your password immediately after you regain access.</p>

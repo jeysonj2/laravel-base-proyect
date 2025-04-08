@@ -41,6 +41,14 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => 'Unauthenticated.',
                 ], 401);
             }
+            
+            if ($e instanceof \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException) {
+                return response()->json([
+                    'code' => 403,
+                    'message' => $e->getMessage() ?: 'Forbidden. You do not have the required permissions.',
+                ], 403);
+            }
+            
             return response()->json([
                 'code' => $e->getCode() ?: 500,
                 'message' => $e->getMessage() ?: 'An error occurred.',

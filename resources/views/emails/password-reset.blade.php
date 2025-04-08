@@ -41,7 +41,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Password Reset Request</h1>
+            <h1>Reset Your Password</h1>
         </div>
         
         <p>Hello {{ $user->name }},</p>

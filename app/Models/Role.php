@@ -44,4 +44,39 @@ class Role extends Model
     {
         return $this->hasMany(User::class);
     }
+    
+    /**
+     * Check if this role is an admin role.
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return strtolower($this->name) === 'admin';
+    }
+    
+    /**
+     * Find a role by its name (case insensitive).
+     *
+     * @param string $name
+     * @return self|null
+     */
+    public static function findByName(string $name): ?self
+    {
+        return self::where('name', strtolower($name))->first();
+    }
+    
+    /**
+     * Setup model events to convert name to lowercase when saving.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::saving(function ($role) {
+            $role->name = strtolower($role->name);
+        });
+    }
 }

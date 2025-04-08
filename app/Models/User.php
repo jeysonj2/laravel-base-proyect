@@ -35,6 +35,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property \Illuminate\Support\Carbon $updated_at Timestamp of when the user was last updated
  * 
  * @property-read \App\Models\Role $role The role associated with this user
+ * @property-read bool $isAdmin Whether the user has admin role
  * 
  * @method static \Database\Factories\UserFactory factory()
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
@@ -143,6 +144,53 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * Check if the user account is locked.
+     *
+     * @return bool True if the user account is locked, false otherwise
+     */
+    public function isLocked(): bool
+    {
+        if ($this->locked_until && now()->lt($this->locked_until)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the user account is permanently locked.
+     *
+     * A user is considered permanently locked if either:
+     * 1. The is_permanently_locked flag is set to true, or
+     * 2. The locked_until date is set to a date far in the future (> threshold days)
+     *
+     * @return bool True if the user account is permanently locked, false otherwise
+     */
+    public function isPermanentlyLocked(): bool
+    {
+        if ($this->is_permanently_locked) {
+            return true;
+        }
+
+        if ($this->locked_until) {
+            $thresholdDays = config('auth.permanent_lock_threshold_days', 365);
+            return now()->diffInDays($this->locked_until) >= $thresholdDays;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the isAdmin attribute.
+     *
+     * @return bool True if the user has admin role, false otherwise
+     */
+    public function getIsAdminAttribute(): bool
+    {
+        return $this->role && $this->role->isAdmin();
+    }
+
+    /**
      * Check if the user is locked out from logging in.
      *
      * Determines if the user account is either permanently locked
@@ -204,18 +252,20 @@ class User extends Authenticatable implements JWTSubject
             // Set temporary lockout
             $this->locked_until = now()->addMinutes($lockoutDuration);
             
-            // Check previous lockouts within the period
-            $this->lockout_count++;
-            
-            // If this is the first lockout or the lockout period has expired, reset the counter
+            // If there wasn't a previous lockout or the lockout period has expired, reset the counter
             if (!$this->last_lockout_at || 
                 now()->diffInHours($this->last_lockout_at) > $lockoutPeriod) {
                 $this->lockout_count = 1;
+            } else {
+                // Otherwise, increment the lockout count
+                $this->lockout_count++;
             }
             
             // Check if we've hit the maximum lockouts in the period
             if ($this->lockout_count >= $maxLockouts) {
                 $this->is_permanently_locked = true;
+                // Set a very long lockout for permanent locks
+                $this->locked_until = now()->addYears(10);
             }
             
             $this->last_lockout_at = now();
@@ -255,6 +305,7 @@ class User extends Authenticatable implements JWTSubject
     {
         $this->locked_until = null;
         $this->is_permanently_locked = false;
+        $this->failed_login_attempts = 0;
         
         if ($resetLockoutCount) {
             $this->lockout_count = 0;

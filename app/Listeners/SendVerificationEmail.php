@@ -33,12 +33,16 @@ class SendVerificationEmail
      * Sends a verification email to the newly created user.
      * Uses the EmailVerification mailable class to generate and send
      * the email with the verification code.
+     * Does not send an email if the user is already verified.
      *
      * @param  \App\Events\UserCreated  $event  The event containing the user data
      * @return void
      */
     public function handle(UserCreated $event): void
     {
-        Mail::to($event->user->email)->send(new EmailVerification($event->user));
+        // Only send verification email if the user is not already verified
+        if (!$event->user->email_verified_at) {
+            Mail::to($event->user->email)->send(new EmailVerification($event->user));
+        }
     }
 }

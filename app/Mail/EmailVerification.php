@@ -7,6 +7,8 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 
 /**
  * Email Verification Mail
@@ -38,17 +40,45 @@ class EmailVerification extends Mailable
     }
 
     /**
-     * Build the message.
+     * Get the message envelope.
      * 
-     * Sets the subject line, view template, and data for the email.
+     * Defines the subject of the email.
+     *
+     * @return \Illuminate\Mail\Mailables\Envelope
+     */
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'Verify Your Email Address',
+            to: [$this->user->email],
+        );
+    }
+
+    /**
+     * Get the message content definition.
+     * 
+     * Specifies the view template to be used for the email content.
      * The template is expected to be located at resources/views/emails/verify-email.blade.php
      *
-     * @return $this
+     * @return \Illuminate\Mail\Mailables\Content
      */
-    public function build(): self
+    public function content(): Content
     {
-        return $this->subject('Email Verification')
-                    ->view('emails.verify-email')
-                    ->with(['user' => $this->user]);
+        return new Content(
+            view: 'emails.verify-email',
+            with: [
+                'user' => $this->user,
+            ],
+        );
+    }
+
+    /**
+     * Get the attachments for the message.
+     *
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     */
+    public function attachments(): array
+    {
+        return [];
     }
 }

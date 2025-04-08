@@ -12,6 +12,10 @@ RUN apt-get update && apt-get install -y \
 # Install PHP extensions required by Laravel
 RUN docker-php-ext-install pdo pdo_pgsql pgsql zip bcmath
 
+# Install Xdebug for code coverage
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+RUN echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
 # Set working directory
 WORKDIR /var/www/html
 

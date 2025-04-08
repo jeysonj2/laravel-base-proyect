@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Role Middleware
@@ -19,22 +20,36 @@ class RoleMiddleware
      * 
      * Verifies that the authenticated user has the required role to access the route.
      * The comparison is case-insensitive to make role checking more flexible.
-     * Returns a 403 Forbidden response if the user doesn't have the required role.
+     * Throws an AccessDeniedHttpException if the user doesn't have any of the required roles.
+     * Supports multiple roles by separating them with commas.
      *
      * @param  \Illuminate\Http\Request  $request  The incoming request
      * @param  \Closure  $next  The next middleware in the pipeline
-     * @param  string  $role  The role name required to access the route
+     * @param  string  $roles  The role name(s) required to access the route (comma-separated)
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string $roles): Response
     {
-        $user = $request->user();
-
-        // Check if the user is authenticated and has the required role
-        if (!$user || strtolower($user->role->name ?? '') !== strtolower($role)) {
-            return response()->json(['error' => 'Forbidden'], 403);
+        // Get authenticated user either from request or from Auth facade
+        $user = $request->user() ?? auth()->user();
+        
+        // If no authenticated user, throw exception
+        if (!$user) {
+            throw new AccessDeniedHttpException('User not authenticated.');
         }
-
-        return $next($request);
+        
+        // Split roles by comma if multiple roles are specified
+        $acceptedRoles = explode(',', $roles);
+        
+        // Check if the user has any of the required roles
+        foreach ($acceptedRoles as $role) {
+            if (strtolower($user->role->name) === strtolower(trim($role))) {
+                return $next($request);
+            }
+        }
+        
+        // If we get here, the user doesn't have any of the required roles
+        throw new AccessDeniedHttpException('User does not have the required role.');
     }
 }
