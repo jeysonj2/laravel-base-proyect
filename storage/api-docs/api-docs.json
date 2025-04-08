@@ -26,7 +26,7 @@
                     "Authentication"
                 ],
                 "summary": "Authenticate user and generate tokens",
-                "description": "Logs in a user with email and password, and returns access and refresh tokens. This endpoint implements a sophisticated account lockout mechanism to prevent brute-force attacks: after MAX_LOGIN_ATTEMPTS (default: 3) failed attempts within LOGIN_ATTEMPTS_WINDOW_MINUTES (default: 5), the account is temporarily locked for ACCOUNT_LOCKOUT_DURATION_MINUTES (default: 60). If a user gets locked out MAX_LOCKOUTS_IN_PERIOD (default: 2) times within LOCKOUT_PERIOD_HOURS (default: 24), their account becomes permanently locked and requires administrator intervention to unlock. When an account is locked, a notification email is sent to the user.",
+                "description": "Logs in a user with email and password, and returns access and refresh tokens.\n     *     This endpoint implements a sophisticated account lockout mechanism to prevent brute-force attacks:\n     *     after MAX_LOGIN_ATTEMPTS (default: 3) failed attempts within LOGIN_ATTEMPTS_WINDOW_MINUTES (default: 5),\n     *     the account is temporarily locked for ACCOUNT_LOCKOUT_DURATION_MINUTES (default: 60).\n     *     If a user gets locked out MAX_LOCKOUTS_IN_PERIOD (default: 2) times within\n     *     LOCKOUT_PERIOD_HOURS (default: 24), their account becomes permanently locked and requires\n     *     administrator intervention to unlock. When an account is locked, a notification email is sent to the user.",
                 "operationId": "authLogin",
                 "requestBody": {
                     "required": true,
@@ -136,7 +136,7 @@
                     "Authentication"
                 ],
                 "summary": "Refresh access token",
-                "description": "Generate a new access token using a valid refresh token. This endpoint is used when the short-lived access token expires but the refresh token is still valid. The refresh token must include a special 'refresh' claim to be valid for this operation. This endpoint is important for maintaining user sessions without requiring frequent re-authentication while still providing security through the short-lived nature of the access tokens.",
+                "description": "Generate a new access token using a valid refresh token. This endpoint is used when the\n     *     short-lived access token expires but the refresh token is still valid. The refresh token must include\n     *     a special 'refresh' claim to be valid for this operation. This endpoint is important for maintaining\n     *     user sessions without requiring frequent re-authentication while still providing security through\n     *     the short-lived nature of the access tokens.",
                 "operationId": "authRefresh",
                 "responses": {
                     "200": {
@@ -285,12 +285,12 @@
                                     "current_password": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "oldPassword123"
+                                        "example": "oldPass123"
                                     },
                                     "new_password": {
                                         "type": "string",
                                         "format": "password",
-                                        "example": "newStrongPassword123!"
+                                        "example": "newStrongPass123!"
                                     }
                                 },
                                 "type": "object"
@@ -476,7 +476,7 @@
                     "Email Verification"
                 ],
                 "summary": "Resend verification email",
-                "description": "Resends the verification email to a specific user. This endpoint is used when the user has not received or has lost the initial verification email. It generates a unique verification code and sends an email with a link containing this code. The user then clicks on the link or manually enters the code in the verification endpoint to complete the email verification process.",
+                "description": "Resends the verification email to a specific user. This endpoint is used when the user has not\n     *     received or has lost the initial verification email. It generates a unique verification code and sends\n     *     an email with a link containing this code. The user then clicks on the link or manually enters the code\n     *     in the verification endpoint to complete the email verification process.",
                 "operationId": "resendVerification",
                 "parameters": [
                     {
@@ -585,7 +585,7 @@
                     "Email Verification"
                 ],
                 "summary": "Verify email address",
-                "description": "Verifies a user's email address using the verification code sent in the email. This endpoint completes the email verification flow. When a user is created or changes their email, they receive an email with a unique verification code. The user clicks on the verification link or manually enters the code in this endpoint. If the code matches what's stored in the database, the user's email is marked as verified and the verification code is cleared from the database.",
+                "description": "Verifies a user's email address using the verification code sent in the email. This endpoint\n     *     completes the email verification flow. When a user is created or changes their email, they receive an email\n     *     with a unique verification code. The user clicks on the verification link or manually enters the code in this\n     *     endpoint. If the code matches what's stored in the database, the user's email is marked as verified and the\n     *     verification code is cleared from the database.",
                 "operationId": "verifyEmail",
                 "parameters": [
                     {
@@ -668,7 +668,7 @@
                     "Password Reset"
                 ],
                 "summary": "Send password reset link",
-                "description": "Initiates the password reset flow by sending a reset link to the specified email address. This endpoint is the first step in the password reset process. When a user forgets their password, they request a reset link through this endpoint. The system generates a unique, time-limited token (expiring after PASSWORD_RESET_TOKEN_EXPIRY_MINUTES, default 60 minutes) and sends it to the user's email. The user then uses this token along with their email in the password reset endpoint to set a new password.",
+                "description": "Initiates the password reset flow by sending a reset link to the specified email address.\n     *     This endpoint is the first step in the password reset process. When a user forgets their password,\n     *     they request a reset link through this endpoint. The system generates a unique, time-limited token\n     *     (expiring after PASSWORD_RESET_TOKEN_EXPIRY_MINUTES, default 60 minutes) and sends it to the user's email.\n     *     The user then uses this token along with their email in the password reset endpoint to set a new password.",
                 "operationId": "sendPasswordResetLink",
                 "requestBody": {
                     "required": true,
@@ -724,7 +724,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "The email field must be a valid email address."
+                                            "example": "The email field must be a valid email."
                                         }
                                     },
                                     "type": "object"
@@ -741,7 +741,7 @@
                     "Password Reset"
                 ],
                 "summary": "Reset password",
-                "description": "Completes the password reset process using the token received in email. This endpoint is the second and final step in the password reset flow. After receiving the reset token via email, the user submits their email, token, and desired new password. The system validates that the token matches the one stored for the user and that it hasn't expired. If valid, the user's password is updated, the token is cleared, and a confirmation email is sent to notify the user of the successful password change. The new password must meet the strong password requirements.",
+                "description": "Completes the password reset process using the token received in email. This endpoint is the\n     *     second and final step in the password reset flow. After receiving the reset token via email, the user\n     *     submits their email, token, and desired new password. The system validates that the token matches the one\n     *     stored for the user and that it hasn't expired. If valid, the user's password is updated, the token is cleared,\n     *     and a confirmation email is sent to notify the user of the successful password change. The new password must\n     *     meet the strong password requirements.",
                 "operationId": "resetPassword",
                 "requestBody": {
                     "required": true,

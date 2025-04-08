@@ -24,7 +24,10 @@ class EmailVerificationController extends Controller
      * @OA\Post(
      *     path="/api/users/{user}/resend-verification",
      *     summary="Resend verification email",
-     *     description="Resends the verification email to a specific user. This endpoint is used when the user has not received or has lost the initial verification email. It generates a unique verification code and sends an email with a link containing this code. The user then clicks on the link or manually enters the code in the verification endpoint to complete the email verification process.",
+     *     description="Resends the verification email to a specific user. This endpoint is used when the user has not
+     *     received or has lost the initial verification email. It generates a unique verification code and sends
+     *     an email with a link containing this code. The user then clicks on the link or manually enters the code
+     *     in the verification endpoint to complete the email verification process.",
      *     operationId="resendVerification",
      *     tags={"Email Verification"},
      *     security={{"bearerAuth":{}}},
@@ -116,7 +119,11 @@ class EmailVerificationController extends Controller
      * @OA\Get(
      *     path="/api/verify-email",
      *     summary="Verify email address",
-     *     description="Verifies a user's email address using the verification code sent in the email. This endpoint completes the email verification flow. When a user is created or changes their email, they receive an email with a unique verification code. The user clicks on the verification link or manually enters the code in this endpoint. If the code matches what's stored in the database, the user's email is marked as verified and the verification code is cleared from the database.",
+     *     description="Verifies a user's email address using the verification code sent in the email. This endpoint
+     *     completes the email verification flow. When a user is created or changes their email, they receive an email
+     *     with a unique verification code. The user clicks on the verification link or manually enters the code in this
+     *     endpoint. If the code matches what's stored in the database, the user's email is marked as verified and the
+     *     verification code is cleared from the database.",
      *     operationId="verifyEmail",
      *     tags={"Email Verification"},
      *

@@ -183,7 +183,8 @@ return [
                 'oauth2_security_example' => [ // Unique name of security
                     'type' => 'oauth2', // The type of the security scheme. Valid values are "basic", "apiKey" or "oauth2".
                     'description' => 'A short description for oauth2 security scheme.',
-                    'flow' => 'implicit', // The flow used by the OAuth2 security scheme. Valid values are "implicit", "password", "application" or "accessCode".
+                    // The flow used by the OAuth2 security scheme. Valid values are "implicit", "password", "application" or "accessCode".
+                    'flow' => 'implicit',
                     'authorizationUrl' => 'http://example.com/auth', // The authorization URL to be used for (implicit/accessCode)
                     //'tokenUrl' => 'http://example.com/auth' // The authorization URL to be used for (password/application/accessCode)
                     'scopes' => [
@@ -284,12 +285,10 @@ return [
                 'doc_expansion' => env('L5_SWAGGER_UI_DOC_EXPANSION', 'none'),
 
                 /**
-                 * If set, enables filtering. The top bar will show an edit box that
-                 * you can use to filter the tagged operations that are shown. Can be
-                 * Boolean to enable or disable, or a string, in which case filtering
-                 * will be enabled using that string as the filter expression. Filtering
-                 * is case-sensitive matching the filter expression anywhere inside
-                 * the tag.
+                 * If set, enables filtering. The top bar will show an edit box that you can use to filter
+                 * the tagged operations that are shown. Can be Boolean to enable or disable, or a string,
+                 * in which case filtering will be enabled using that string as the filter expression.
+                 * Filtering is case-sensitive matching the filter expression anywhere inside the tag.
                  */
                 'filter' => env('L5_SWAGGER_UI_FILTERS', true), // true | false
             ],

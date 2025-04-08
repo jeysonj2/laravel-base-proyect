@@ -65,10 +65,11 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Validator::replacer('strong_password', function ($message, $attribute, $rule, $parameters) {
-            return __('The :attribute must be at least :min characters long, contain at least one uppercase letter, one number, and one special character.', [
-                'attribute' => $attribute,
-                'min' => env('PASSWORD_MIN_LENGTH', 10),
-            ]);
+            return __('The :attribute must be at least :min characters long, contain at least one uppercase letter, ' .
+                'one number, and one special character.', [
+                    'attribute' => $attribute,
+                    'min' => env('PASSWORD_MIN_LENGTH', 10),
+                ]);
         });
     }
 }

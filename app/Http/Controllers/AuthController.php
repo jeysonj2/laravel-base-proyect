@@ -32,7 +32,13 @@ class AuthController extends Controller
      * @OA\Post(
      *     path="/api/login",
      *     summary="Authenticate user and generate tokens",
-     *     description="Logs in a user with email and password, and returns access and refresh tokens. This endpoint implements a sophisticated account lockout mechanism to prevent brute-force attacks: after MAX_LOGIN_ATTEMPTS (default: 3) failed attempts within LOGIN_ATTEMPTS_WINDOW_MINUTES (default: 5), the account is temporarily locked for ACCOUNT_LOCKOUT_DURATION_MINUTES (default: 60). If a user gets locked out MAX_LOCKOUTS_IN_PERIOD (default: 2) times within LOCKOUT_PERIOD_HOURS (default: 24), their account becomes permanently locked and requires administrator intervention to unlock. When an account is locked, a notification email is sent to the user.",
+     *     description="Logs in a user with email and password, and returns access and refresh tokens.
+     *     This endpoint implements a sophisticated account lockout mechanism to prevent brute-force attacks:
+     *     after MAX_LOGIN_ATTEMPTS (default: 3) failed attempts within LOGIN_ATTEMPTS_WINDOW_MINUTES (default: 5),
+     *     the account is temporarily locked for ACCOUNT_LOCKOUT_DURATION_MINUTES (default: 60).
+     *     If a user gets locked out MAX_LOCKOUTS_IN_PERIOD (default: 2) times within
+     *     LOCKOUT_PERIOD_HOURS (default: 24), their account becomes permanently locked and requires
+     *     administrator intervention to unlock. When an account is locked, a notification email is sent to the user.",
      *     operationId="authLogin",
      *     tags={"Authentication"},
      *
@@ -133,11 +139,17 @@ class AuthController extends Controller
         // Check if the user is locked out
         if ($user->isLockedOut()) {
             if ($user->is_permanently_locked) {
-                return $this->unauthorizedResponse('Your account has been permanently locked due to multiple failed login attempts. Please contact an administrator.');
+                return $this->unauthorizedResponse(
+                    'Your account has been permanently locked due to multiple failed login attempts. ' .
+                    'Please contact an administrator.'
+                );
             } else {
                 $minutesRemaining = now()->diffInMinutes($user->locked_until);
 
-                return $this->unauthorizedResponse("Your account is temporarily locked due to multiple failed login attempts. Please try again in {$minutesRemaining} minutes or contact an administrator.");
+                return $this->unauthorizedResponse(
+                    'Your account is temporarily locked due to multiple failed login attempts. ' .
+                    "Please try again in {$minutesRemaining} minutes or contact an administrator."
+                );
             }
         }
 
@@ -156,9 +168,15 @@ class AuthController extends Controller
                 ));
 
                 if ($user->is_permanently_locked) {
-                    return $this->unauthorizedResponse('Your account has been permanently locked due to multiple failed login attempts. Please contact an administrator.');
+                    return $this->unauthorizedResponse(
+                        'Your account has been permanently locked due to multiple failed login attempts. ' .
+                        'Please contact an administrator.'
+                    );
                 } else {
-                    return $this->unauthorizedResponse("Your account has been temporarily locked due to multiple failed login attempts. Please try again in {$lockoutDuration} minutes or contact an administrator.");
+                    return $this->unauthorizedResponse(
+                        'Your account has been temporarily locked due to multiple failed login attempts. ' .
+                        "Please try again in {$lockoutDuration} minutes or contact an administrator."
+                    );
                 }
             }
 
@@ -201,7 +219,11 @@ class AuthController extends Controller
      * @OA\Post(
      *     path="/api/refresh",
      *     summary="Refresh access token",
-     *     description="Generate a new access token using a valid refresh token. This endpoint is used when the short-lived access token expires but the refresh token is still valid. The refresh token must include a special 'refresh' claim to be valid for this operation. This endpoint is important for maintaining user sessions without requiring frequent re-authentication while still providing security through the short-lived nature of the access tokens.",
+     *     description="Generate a new access token using a valid refresh token. This endpoint is used when the
+     *     short-lived access token expires but the refresh token is still valid. The refresh token must include
+     *     a special 'refresh' claim to be valid for this operation. This endpoint is important for maintaining
+     *     user sessions without requiring frequent re-authentication while still providing security through
+     *     the short-lived nature of the access tokens.",
      *     operationId="authRefresh",
      *     tags={"Authentication"},
      *     security={{"bearerAuth":{}}},
@@ -269,7 +291,9 @@ class AuthController extends Controller
             // Verify the token is valid, not expired, and has the refresh claim
             $payload = JWTAuth::getPayload();
             if (! $payload->get('refresh')) {
-                $errorData = config('app.debug') ? ['exception-message' => 'Token does not have refresh claim.'] : null;
+                $errorData = config('app.debug')
+                    ? ['exception-message' => 'Token does not have refresh claim.']
+                    : null;
 
                 return $this->unauthorizedResponse('Invalid refresh token.', $errorData);
             }
@@ -368,8 +392,8 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *             required={"current_password","new_password"},
      *
-     *             @OA\Property(property="current_password", type="string", format="password", example="oldPassword123"),
-     *             @OA\Property(property="new_password", type="string", format="password", example="newStrongPassword123!")
+     *             @OA\Property(property="current_password", type="string", format="password", example="oldPass123"),
+     *             @OA\Property(property="new_password", type="string", format="password", example="newStrongPass123!")
      *         )
      *     ),
      *
@@ -484,7 +508,12 @@ class AuthController extends Controller
      *
      *             @OA\Property(property="name", type="string", example="John"),
      *             @OA\Property(property="last_name", type="string", example="Doe"),
-     *             @OA\Property(property="email", type="string", format="email", example="john.doe@example.com")
+     *             @OA\Property(
+     *                 property="email",
+     *                 type="string",
+     *                 format="email",
+     *                 example="john.doe@example.com"
+     *             )
      *         )
      *     ),
      *
@@ -511,7 +540,11 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *
      *             @OA\Property(property="code", type="integer", example=422),
-     *             @OA\Property(property="message", type="string", example="The email field must be a valid email address.")
+     *             @OA\Property(
+     *                 property="message",
+     *                 type="string",
+     *                 example="The email field must be a valid email address."
+     *             )
      *         )
      *     )
      * )
@@ -524,7 +557,9 @@ class AuthController extends Controller
 
         // Check if password is being attempted to change
         if ($request->has('password')) {
-            return $this->validationErrorResponse('Password cannot be updated through this endpoint. Please use the change-password endpoint instead.');
+            return $this->validationErrorResponse(
+                'Password cannot be updated through this endpoint. Please use the change-password endpoint instead.'
+            );
         }
 
         // Check if role is being attempted to change
@@ -535,7 +570,8 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|required|string',
             'last_name' => 'sometimes|required|string',
-            'email' => 'sometimes|required|email|case_insensitive_unique:users,email,' . $user->id,
+            'email' => 'sometimes|required|email|case_insensitive_unique:users,email,' .
+                $user->id,
         ]);
 
         $currentEmail = $user->email;
