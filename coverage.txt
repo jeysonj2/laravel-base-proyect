@@ -1,17 +1,17 @@
 
 
 [1;37;40mCode Coverage Report:      [0m
-[1;37;40m  2025-04-08 10:31:45      [0m
+[1;37;40m  2025-04-08 15:42:00      [0m
 [1;37;40m                           [0m
 [1;37;40m Summary:                  [0m
 [37;41m  Classes: 47.37% (9/19)   [0m
 [30;43m  Methods: 79.22% (61/77)  [0m
-[30;42m  Lines:   92.14% (375/407)[0m
+[30;42m  Lines:   92.00% (391/425)[0m
 
 App\Events\UserCreated
   [37;41mMethods:  50.00% ( 1/ 2)[0m   [37;41mLines:  25.00% (  1/  4)[0m
 App\Http\Controllers\AuthController
-  [37;41mMethods:  16.67% ( 1/ 6)[0m   [30;43mLines:  84.69% ( 83/ 98)[0m
+  [37;41mMethods:  16.67% ( 1/ 6)[0m   [30;43mLines:  85.22% ( 98/115)[0m
 App\Http\Controllers\EmailVerificationController
   [37;41mMethods:  50.00% ( 1/ 2)[0m   [30;43mLines:  82.35% ( 14/ 17)[0m
 App\Http\Controllers\PasswordResetController
@@ -43,4 +43,4 @@ App\Models\Role
 App\Models\User
   [30;42mMethods:  91.67% (11/12)[0m   [30;42mLines:  97.06% ( 66/ 68)[0m
 App\Providers\AppServiceProvider
-  [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% ( 25/ 25)[0m
+  [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% ( 26/ 26)[0m
