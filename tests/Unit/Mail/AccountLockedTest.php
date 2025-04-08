@@ -6,9 +6,9 @@ use App\Mail\AccountLocked;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
-use Illuminate\Support\Str;
 
 class AccountLockedTest extends TestCase
 {
@@ -44,9 +44,9 @@ class AccountLockedTest extends TestCase
         $mailable->assertHasTo($user->email);
         $mailable->assertSeeInHtml($user->name);
         $mailable->assertSeeInHtml('Your Account Has Been Temporarily Locked');
-        
+
         // Check parts of the expected text separately
-        $this->assertStringContainsString("automatically unlocked", $html);
+        $this->assertStringContainsString('automatically unlocked', $html);
         $this->assertStringContainsString((string) $lockoutDuration, $html);
         $this->assertStringContainsString($minuteWord, haystack: $html);
     }

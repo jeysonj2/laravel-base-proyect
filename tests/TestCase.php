@@ -2,18 +2,23 @@
 
 namespace Tests;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 abstract class TestCase extends BaseTestCase
 {
     protected User $admin;
+
     protected User $regularUser;
+
     protected Role $adminRole;
+
     protected Role $userRole;
+
     protected string $adminToken;
+
     protected string $userToken;
 
     protected function setUpWithAuth(): void

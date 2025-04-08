@@ -10,7 +10,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * User model representing a user in the system.
- * 
+ *
  * This model includes all user-related functionality including authentication,
  * role assignment, account verification, password management, and account lockout functionality.
  *
@@ -33,87 +33,87 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property bool $is_permanently_locked Whether the account is permanently locked
  * @property \Illuminate\Support\Carbon $created_at Timestamp of when the user was created
  * @property \Illuminate\Support\Carbon $updated_at Timestamp of when the user was last updated
- * 
- * @property-read \App\Models\Role $role The role associated with this user
+ * @property-read Role $role The role associated with this user
  * @property-read bool $isAdmin Whether the user has admin role
- * 
+ *
  * @method static \Database\Factories\UserFactory factory()
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRoleId($value)
- * 
+ *
  * @OA\Schema(
  *     schema="User",
  *     title="User",
  *     description="User model with authentication and profile data, account lockout features, and email verification",
+ *
  *     @OA\Property(
- *         property="id", 
- *         type="integer", 
- *         format="int64", 
+ *         property="id",
+ *         type="integer",
+ *         format="int64",
  *         example=1,
  *         description="Unique identifier for the user"
  *     ),
  *     @OA\Property(
- *         property="name", 
- *         type="string", 
+ *         property="name",
+ *         type="string",
  *         example="John",
  *         description="User's first name"
  *     ),
  *     @OA\Property(
- *         property="last_name", 
- *         type="string", 
+ *         property="last_name",
+ *         type="string",
  *         example="Doe",
  *         description="User's last name"
  *     ),
  *     @OA\Property(
- *         property="email", 
- *         type="string", 
- *         format="email", 
+ *         property="email",
+ *         type="string",
+ *         format="email",
  *         example="john.doe@example.com",
  *         description="User's email address (unique, case-insensitive validation)"
  *     ),
  *     @OA\Property(
- *         property="email_verified_at", 
- *         type="string", 
- *         format="date-time", 
+ *         property="email_verified_at",
+ *         type="string",
+ *         format="date-time",
  *         nullable=true,
  *         description="Timestamp of when the email was verified, null if not verified"
  *     ),
  *     @OA\Property(
- *         property="role_id", 
- *         type="integer", 
+ *         property="role_id",
+ *         type="integer",
  *         example=2,
  *         description="ID of the role assigned to this user, references roles table"
  *     ),
  *     @OA\Property(
- *         property="failed_login_attempts", 
- *         type="integer", 
+ *         property="failed_login_attempts",
+ *         type="integer",
  *         example=0,
  *         description="Number of consecutive failed login attempts, resets after successful login"
  *     ),
  *     @OA\Property(
- *         property="locked_until", 
- *         type="string", 
- *         format="date-time", 
+ *         property="locked_until",
+ *         type="string",
+ *         format="date-time",
  *         nullable=true,
  *         description="Timestamp until when the account is temporarily locked, null if not locked"
  *     ),
  *     @OA\Property(
- *         property="is_permanently_locked", 
- *         type="boolean", 
+ *         property="is_permanently_locked",
+ *         type="boolean",
  *         example=false,
  *         description="Whether the account is permanently locked due to multiple lockouts"
  *     ),
  *     @OA\Property(
- *         property="created_at", 
- *         type="string", 
+ *         property="created_at",
+ *         type="string",
  *         format="date-time",
  *         description="Timestamp when the user was created"
  *     ),
  *     @OA\Property(
- *         property="updated_at", 
- *         type="string", 
+ *         property="updated_at",
+ *         type="string",
  *         format="date-time",
  *         description="Timestamp when the user was last updated"
  *     ),
@@ -127,7 +127,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
+
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -179,11 +181,11 @@ class User extends Authenticatable implements JWTSubject
             'is_permanently_locked' => 'boolean',
         ];
     }
-    
+
     /**
      * Get the role that owns the user.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\App\Models\Role, \App\Models\User>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Role, User>
      */
     public function role()
     {
@@ -214,8 +216,6 @@ class User extends Authenticatable implements JWTSubject
      * Boot the model.
      *
      * Generates a verification code when creating a new user.
-     *
-     * @return void
      */
     protected static function booted()
     {
@@ -255,6 +255,7 @@ class User extends Authenticatable implements JWTSubject
 
         if ($this->locked_until) {
             $thresholdDays = config('auth.permanent_lock_threshold_days', 365);
+
             return now()->diffInDays($this->locked_until) >= $thresholdDays;
         }
 
@@ -313,48 +314,55 @@ class User extends Authenticatable implements JWTSubject
         $lockoutPeriod = (int) env('LOCKOUT_PERIOD_HOURS', 24);
 
         // If this is a new series of failed attempts or the window has expired, reset the counter
-        if (!$this->last_failed_login_at || 
-            now()->diffInMinutes($this->last_failed_login_at) > $attemptWindow) {
+        if (
+            ! $this->last_failed_login_at ||
+            now()->diffInMinutes($this->last_failed_login_at) > $attemptWindow
+        ) {
             $this->failed_login_attempts = 1;
             $this->last_failed_login_at = now();
             $this->save();
+
             return false;
         }
 
         // Increment failed attempts
         $this->failed_login_attempts++;
         $this->last_failed_login_at = now();
-        
+
         // Check if we should lock the account
         if ($this->failed_login_attempts >= $maxAttempts) {
             // Reset failed attempts counter
             $this->failed_login_attempts = 0;
-            
+
             // Set temporary lockout
             $this->locked_until = now()->addMinutes($lockoutDuration);
-            
+
             // If there wasn't a previous lockout or the lockout period has expired, reset the counter
-            if (!$this->last_lockout_at || 
-                now()->diffInHours($this->last_lockout_at) > $lockoutPeriod) {
+            if (
+                ! $this->last_lockout_at ||
+                now()->diffInHours($this->last_lockout_at) > $lockoutPeriod
+            ) {
                 $this->lockout_count = 1;
             } else {
                 // Otherwise, increment the lockout count
                 $this->lockout_count++;
             }
-            
+
             // Check if we've hit the maximum lockouts in the period
             if ($this->lockout_count >= $maxLockouts) {
                 $this->is_permanently_locked = true;
                 // Set a very long lockout for permanent locks
                 $this->locked_until = now()->addYears(10);
             }
-            
+
             $this->last_lockout_at = now();
             $this->save();
+
             return true;
         }
-        
+
         $this->save();
+
         return false;
     }
 
@@ -363,8 +371,6 @@ class User extends Authenticatable implements JWTSubject
      *
      * Clears the counter and timestamp for failed login attempts.
      * Typically called after a successful login.
-     *
-     * @return void
      */
     public function resetFailedLoginAttempts(): void
     {
@@ -380,19 +386,18 @@ class User extends Authenticatable implements JWTSubject
      * Optionally resets the lockout count and timestamp.
      *
      * @param bool $resetLockoutCount Whether to reset the lockout count
-     * @return void
      */
     public function unlock(bool $resetLockoutCount = true): void
     {
         $this->locked_until = null;
         $this->is_permanently_locked = false;
         $this->failed_login_attempts = 0;
-        
+
         if ($resetLockoutCount) {
             $this->lockout_count = 0;
             $this->last_lockout_at = null;
         }
-        
+
         $this->save();
     }
 }

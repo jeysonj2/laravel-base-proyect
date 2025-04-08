@@ -11,7 +11,7 @@ class UserLockoutTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUpWithAuth();
     }
@@ -91,9 +91,9 @@ class UserLockoutTest extends TestCase
                     'name',
                     'email',
                     'locked_until',
-                    'is_permanently_locked'
-                ]
-            ]
+                    'is_permanently_locked',
+                ],
+            ],
         ]);
     }
 
@@ -172,11 +172,11 @@ class UserLockoutTest extends TestCase
         $this->app['config']->set('auth.max_login_attempts', 3);
         $this->app['config']->set('auth.max_lockouts_in_period', 2);
         $this->app['config']->set('auth.lockout_period_hours', 24);
-        
+
         // Ensure we're using the environment variable values
-        config(['auth.max_login_attempts' => (int)env('MAX_LOGIN_ATTEMPTS', 3)]);
-        config(['auth.max_lockouts_in_period' => (int)env('MAX_LOCKOUTS_IN_PERIOD', 2)]);
-        config(['auth.lockout_period_hours' => (int)env('LOCKOUT_PERIOD_HOURS', 24)]);
+        config(['auth.max_login_attempts' => (int) env('MAX_LOGIN_ATTEMPTS', 3)]);
+        config(['auth.max_lockouts_in_period' => (int) env('MAX_LOCKOUTS_IN_PERIOD', 2)]);
+        config(['auth.lockout_period_hours' => (int) env('LOCKOUT_PERIOD_HOURS', 24)]);
 
         // Simulate a user that has already been locked once
         $this->regularUser->update([

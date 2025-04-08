@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Events\UserCreated;
+use App\Mail\EmailVerification;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use App\Events\UserCreated;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\EmailVerification;
 
 /**
  * User Controller.
- * 
+ *
  * Handles CRUD operations for users in the system.
  * This controller is typically restricted to administrators.
  */
@@ -19,7 +19,7 @@ class UserController extends Controller
 {
     /**
      * Display a listing of all users.
-     * 
+     *
      * Retrieves and returns all users in the system.
      *
      * @OA\Get(
@@ -29,48 +29,59 @@ class UserController extends Controller
      *     operationId="getUsers",
      *     tags={"Users"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Response(
      *         response=200,
      *         description="List of users",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=200),
      *             @OA\Property(property="message", type="string", example="Users retrieved successfully"),
      *             @OA\Property(
      *                 property="data",
      *                 type="array",
+     *
      *                 @OA\Items(ref="#/components/schemas/User")
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=401),
      *             @OA\Property(property="message", type="string", example="Unauthorized")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=403,
      *         description="Forbidden - User does not have admin role",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=403),
      *             @OA\Property(property="message", type="string", example="Forbidden")
      *         )
      *     )
      * )
      *
-     * @return \Illuminate\Http\JsonResponse Response containing all users
+     * @return JsonResponse Response containing all users
      */
     public function index(): JsonResponse
     {
         $users = User::all();
+
         return $this->successResponse('Users retrieved successfully', $users);
     }
 
     /**
      * Store a newly created user in the database.
-     * 
+     *
      * Validates and creates a new user with the provided data.
      * Uses case-insensitive uniqueness validation for the email.
      * Triggers the UserCreated event after successful creation.
@@ -82,10 +93,13 @@ class UserController extends Controller
      *     operationId="createUser",
      *     tags={"Users"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             required={"name", "last_name", "email", "password", "role_id"},
+     *
      *             @OA\Property(property="name", type="string", example="John"),
      *             @OA\Property(property="last_name", type="string", example="Doe"),
      *             @OA\Property(property="email", type="string", format="email", example="john.doe@example.com"),
@@ -93,10 +107,13 @@ class UserController extends Controller
      *             @OA\Property(property="role_id", type="integer", example=2)
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=201,
      *         description="User created successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=201),
      *             @OA\Property(property="message", type="string", example="User created successfully"),
      *             @OA\Property(
@@ -105,34 +122,44 @@ class UserController extends Controller
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=401),
      *             @OA\Property(property="message", type="string", example="Unauthorized")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=403,
      *         description="Forbidden - User does not have admin role",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=403),
      *             @OA\Property(property="message", type="string", example="Forbidden")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=422,
      *         description="Validation error",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=422),
      *             @OA\Property(property="message", type="string", example="The email has already been taken.")
      *         )
      *     )
      * )
      *
-     * @param  \Illuminate\Http\Request  $request  Request containing the user data
-     * @return \Illuminate\Http\JsonResponse Response containing the newly created user
+     * @param Request $request Request containing the user data
+     *
+     * @return JsonResponse Response containing the newly created user
      */
     public function store(Request $request): JsonResponse
     {
@@ -156,7 +183,7 @@ class UserController extends Controller
 
     /**
      * Display the specified user.
-     * 
+     *
      * Retrieves and returns a specific user by ID.
      *
      * @OA\Get(
@@ -166,17 +193,22 @@ class UserController extends Controller
      *     operationId="getUser",
      *     tags={"Users"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         description="User ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer", format="int64")
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="User details",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=200),
      *             @OA\Property(property="message", type="string", example="User retrieved successfully"),
      *             @OA\Property(
@@ -185,44 +217,55 @@ class UserController extends Controller
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=401),
      *             @OA\Property(property="message", type="string", example="Unauthorized")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=403,
      *         description="Forbidden - User does not have admin role",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=403),
      *             @OA\Property(property="message", type="string", example="Forbidden")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=404,
      *         description="User not found",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=404),
      *             @OA\Property(property="message", type="string", example="Resource not found")
      *         )
      *     )
      * )
      *
-     * @param  string  $id  The ID of the user to retrieve
-     * @return \Illuminate\Http\JsonResponse Response containing the requested user
+     * @param string $id The ID of the user to retrieve
+     *
+     * @return JsonResponse Response containing the requested user
      */
     public function show(string $id): JsonResponse
     {
         $user = User::findOrFail($id);
+
         return $this->successResponse('User retrieved successfully', $user);
     }
 
     /**
      * Update the specified user in the database.
-     * 
+     *
      * Validates and updates an existing user with the provided data.
      * Uses case-insensitive uniqueness validation for the email.
      * If the email is changed, triggers email verification process.
@@ -234,15 +277,20 @@ class UserController extends Controller
      *     operationId="updateUser",
      *     tags={"Users"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         description="User ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer", format="int64")
      *     ),
+     *
      *     @OA\RequestBody(
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="name", type="string", example="John"),
      *             @OA\Property(property="last_name", type="string", example="Doe"),
      *             @OA\Property(property="email", type="string", format="email", example="john.updated@example.com"),
@@ -250,10 +298,13 @@ class UserController extends Controller
      *             @OA\Property(property="role_id", type="integer", example=2)
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="User updated successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=200),
      *             @OA\Property(property="message", type="string", example="User updated successfully"),
      *             @OA\Property(
@@ -262,43 +313,56 @@ class UserController extends Controller
      *             )
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=401),
      *             @OA\Property(property="message", type="string", example="Unauthorized")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=403,
      *         description="Forbidden - User does not have admin role",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=403),
      *             @OA\Property(property="message", type="string", example="Forbidden")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=404,
      *         description="User not found",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=404),
      *             @OA\Property(property="message", type="string", example="Resource not found")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=422,
      *         description="Validation error",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=422),
      *             @OA\Property(property="message", type="string", example="The email has already been taken.")
      *         )
      *     )
      * )
      *
-     * @param  \Illuminate\Http\Request  $request  Request containing the updated user data
-     * @param  string  $id  The ID of the user to update
-     * @return \Illuminate\Http\JsonResponse Response containing the updated user
+     * @param Request $request Request containing the updated user data
+     * @param string  $id      The ID of the user to update
+     *
+     * @return JsonResponse Response containing the updated user
      */
     public function update(Request $request, string $id): JsonResponse
     {
@@ -324,7 +388,7 @@ class UserController extends Controller
             $user->email_verified_at = null;
             Mail::to($validated['email'])->send(new EmailVerification($user));
             $user->save();
-            
+
             return $this->successResponse('User updated successfully. Please verify the new email address.', $user);
         }
 
@@ -333,7 +397,7 @@ class UserController extends Controller
 
     /**
      * Remove the specified user from the database.
-     * 
+     *
      * Deletes a user by ID.
      *
      * @OA\Delete(
@@ -343,54 +407,70 @@ class UserController extends Controller
      *     operationId="deleteUser",
      *     tags={"Users"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
      *         description="User ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer", format="int64")
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="User deleted successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=200),
      *             @OA\Property(property="message", type="string", example="User deleted successfully")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=401),
      *             @OA\Property(property="message", type="string", example="Unauthorized")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=403,
      *         description="Forbidden - User does not have admin role",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=403),
      *             @OA\Property(property="message", type="string", example="Forbidden")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=404,
      *         description="User not found",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=404),
      *             @OA\Property(property="message", type="string", example="Resource not found")
      *         )
      *     )
      * )
      *
-     * @param  string  $id  The ID of the user to delete
-     * @return \Illuminate\Http\JsonResponse Response indicating successful deletion
+     * @param string $id The ID of the user to delete
+     *
+     * @return JsonResponse Response indicating successful deletion
      */
     public function destroy(string $id): JsonResponse
     {
         $user = User::findOrFail($id);
         $user->delete();
+
         return $this->successResponse('User deleted successfully');
     }
 }

@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Check if there are changes in PHP files
+if git diff --cached --name-only | grep -q "\.php$"; then
+  echo "🔍 Checking PHP code format..."
+  npx lint-staged
+fi

@@ -91,6 +91,24 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Configuration of Swagger UI to use application URL from environment variables
   - Setup for JWT authentication in Swagger UI with bearer token support
   - Comprehensive documentation of request parameters and response formats
+- Implementation of code formatting and linting tools to maintain code quality standards:
+  - Configuration of Laravel Pint with detailed rules for PHP code formatting
+  - Installation and configuration of PHP_CodeSniffer for code standards validation
+  - Creation of composer scripts for easy code linting and formatting:
+    - `composer lint`: To check code against standards
+    - `composer lint:fix`: To automatically fix fixable issues
+    - `composer format`: To format code with Laravel Pint
+    - `composer format:test`: To check formatting without making changes
+    - `composer check-style`: To run all style checks
+    - `composer fix-style`: To fix all style issues automatically
+  - Integration with IDEs/editors through configuration files:
+    - Visual Studio Code settings in `.vscode/settings.json`
+    - PhpStorm configuration in `.idea/php.xml`
+  - Implementation of GitHub Actions workflow for automated code quality checks
+  - Setup of pre-commit hooks configuration with Husky and lint-staged
+  - Standardization of code to follow PSR-12 coding standards
+  - Configuration of `.editorconfig` for consistent formatting across editors
+  - Use of `.gitattributes` for proper line-ending normalization
 
 **Important Notes:**
 

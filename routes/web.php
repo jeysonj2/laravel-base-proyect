@@ -1,20 +1,18 @@
 <?php
 
 /**
- * Web Routes
- * 
+ * Web Routes.
+ *
  * This file defines all web routes for the application.
  * These are loaded by the RouteServiceProvider within a group which
  * contains the "web" middleware group.
- *
- * @package Laravel
  */
 
 use Illuminate\Support\Facades\Route;
 
 /**
- * Home page route
- * 
+ * Home page route.
+ *
  * This route serves as the entry point for the web application.
  * It redirects users to the API documentation page.
  */

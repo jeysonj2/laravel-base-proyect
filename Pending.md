@@ -1,6 +1,5 @@
 # Pending Tasks
 
-- add lint and format to PHP code
 - Deploy in Github pages
 - make the email address verification feature optional through an environment variable
 - if the email address verification option is active, then the user cannot log in if the email has not been verified within a 24-hour period

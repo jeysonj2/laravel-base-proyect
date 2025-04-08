@@ -19,10 +19,10 @@ class RoleMiddlewareTest extends TestCase
 
     protected RoleMiddleware $middleware;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUpWithAuth();
-        
+
         $this->middleware = new RoleMiddleware();
     }
 
@@ -30,16 +30,16 @@ class RoleMiddlewareTest extends TestCase
     public function it_allows_access_to_users_with_required_role()
     {
         $this->actingAs($this->admin);
-        
+
         $request = Request::create('/api/roles', 'GET');
         $request->headers->set('Authorization', 'Bearer ' . $this->adminToken);
-        
+
         $next = function ($request) {
             return new Response('OK');
         };
-        
+
         $response = $this->middleware->handle($request, $next, 'admin');
-        
+
         $this->assertEquals('OK', $response->getContent());
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -48,16 +48,16 @@ class RoleMiddlewareTest extends TestCase
     public function it_denies_access_to_users_without_required_role()
     {
         $this->actingAs($this->regularUser);
-        
+
         $request = Request::create('/api/roles', 'GET');
         $request->headers->set('Authorization', 'Bearer ' . $this->userToken);
-        
+
         $next = function ($request) {
             return new Response('OK');
         };
-        
+
         $this->expectException(AccessDeniedHttpException::class);
-        
+
         $this->middleware->handle($request, $next, 'admin');
     }
 
@@ -65,16 +65,16 @@ class RoleMiddlewareTest extends TestCase
     public function it_allows_access_when_multiple_roles_are_specified_and_user_has_one_of_them()
     {
         $this->actingAs($this->regularUser);
-        
+
         $request = Request::create('/api/route-with-multiple-roles', 'GET');
         $request->headers->set('Authorization', 'Bearer ' . $this->userToken);
-        
+
         $next = function ($request) {
             return new Response('OK');
         };
-        
+
         $response = $this->middleware->handle($request, $next, 'admin,user');
-        
+
         $this->assertEquals('OK', $response->getContent());
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -90,18 +90,18 @@ class RoleMiddlewareTest extends TestCase
             'email' => 'guest@example.com',
             'role_id' => $guestRole->id,
         ]);
-        
+
         $this->actingAs($guestUser);
-        
+
         $request = Request::create('/api/route-with-multiple-roles', 'GET');
         $request->headers->set('Authorization', 'Bearer ' . JWTAuth::fromUser($guestUser));
-        
+
         $next = function ($request) {
             return new Response('OK');
         };
-        
+
         $this->expectException(AccessDeniedHttpException::class);
-        
+
         $this->middleware->handle($request, $next, 'admin,user');
     }
 }

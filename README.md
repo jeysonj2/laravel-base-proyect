@@ -7,6 +7,8 @@
 <a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/Database-PostgreSQL-blue" alt="PostgreSQL"></a>
 <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-Compose-blue" alt="Docker Compose"></a>
 <a href="https://swagger.io/"><img src="https://img.shields.io/badge/Swagger-API%20Documentation-green" alt="Swagger API Documentation"></a>
+<a href="https://github.com/laravel/pint"><img src="https://img.shields.io/badge/Laravel%20Pint-Code%20Style-orange" alt="Laravel Pint"></a>
+<a href="https://github.com/squizlabs/PHP_CodeSniffer"><img src="https://img.shields.io/badge/PHPCS-Code%20Standards-orange" alt="PHP_CodeSniffer"></a>
 </p>
 
 ## About This Project
@@ -68,6 +70,9 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   - Code coverage reporting using Xdebug
   - HTML and text-based coverage reports
   - Current code coverage: 92.1%
+  - Code style enforcement with Laravel Pint
+  - Code standards validation with PHP_CodeSniffer
+  - Automated code formatting and linting tools
 
 ## Prerequisites
 
@@ -114,9 +119,9 @@ This project uses Docker Compose with the following services:
 
 ### Accessing Services
 
-- API: http://localhost:8000
-- Swagger UI Documentation: http://localhost:8000/api/documentation
-- MailPit UI: http://localhost:8025
+- API: <http://localhost:8000>
+- Swagger UI Documentation: <http://localhost:8000/api/documentation>
+- MailPit UI: <http://localhost:8025>
 
 ## Environment Variables
 
@@ -228,6 +233,56 @@ After making changes to the API controllers or models, regenerate the Swagger do
 ```bash
 docker-compose exec app php artisan l5-swagger:generate
 ```
+
+## Code Standards and Formatting
+
+This project uses automated tools to ensure consistent code style and adherence to PHP standards:
+
+### Available Tools
+
+- **Laravel Pint**: [Laravel Pint](https://github.com/laravel/pint) is an opinionated PHP code style fixer based on PHP-CS-Fixer. Official PHP code style fixer for Laravel.
+- **PHP_CodeSniffer**: [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) is used to detect violations of a defined coding standard. Code standards validation based on PSR-12.
+
+### Usage
+
+You can use the following composer commands to check and fix code style:
+
+```bash
+# Check code against standards without making changes
+docker-compose exec app composer lint
+docker-compose exec app composer format:test
+
+# Fix code style issues automatically
+docker-compose exec app composer lint:fix
+docker-compose exec app composer format
+
+# Run all style checks
+docker-compose exec app composer check-style
+
+# Fix all style issues
+docker-compose exec app composer fix-style
+```
+
+### IDE Integration
+
+The project includes configuration files for popular IDEs:
+
+- **VS Code**: Use the `.vscode/settings.json` file with the PHP Intelephense extension
+- **PhpStorm**: Configuration is provided in the `.idea/php.xml` file
+
+### Pre-commit Hooks
+
+The project is configured with Husky and lint-staged to automatically check code style before commits. To enable this feature:
+
+1. Install Node.js if not already installed
+2. Run `npm install` to install dependencies
+3. Run `npm run prepare` to set up Husky
+
+After setup, code will be automatically formatted before each commit.
+
+### GitHub Actions
+
+Code quality is automatically checked on each push and pull request via GitHub Actions.
 
 ## License
 

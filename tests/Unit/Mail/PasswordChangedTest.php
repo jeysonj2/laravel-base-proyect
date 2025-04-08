@@ -25,16 +25,16 @@ class PasswordChangedTest extends TestCase
             'password' => bcrypt('Password1!'),
             'role_id' => 1,
         ]);
-        
+
         // Create the mailable
         $mailable = new PasswordChanged($user);
-        
+
         // Assert mailable content
         $mailable->assertHasTo($user->email);
         $mailable->assertSeeInHtml($user->name);
         $mailable->assertSeeInHtml('Password Changed Successfully');
     }
-    
+
     #[Test]
     public function password_changed_has_correct_subject()
     {
@@ -47,14 +47,14 @@ class PasswordChangedTest extends TestCase
             'password' => bcrypt('Password1!'),
             'role_id' => 1,
         ]);
-        
+
         // Create the mailable
         $mailable = new PasswordChanged($user);
-        
+
         // Assert subject
         $mailable->assertHasSubject('Password Changed Successfully');
     }
-    
+
     #[Test]
     public function password_changed_contains_contact_support_information()
     {
@@ -67,13 +67,13 @@ class PasswordChangedTest extends TestCase
             'password' => bcrypt('Password1!'),
             'role_id' => 1,
         ]);
-        
+
         // Create the mailable
         $mailable = new PasswordChanged($user);
-        
+
         // Get rendered content
         $html = $mailable->render();
-        
+
         // Assert support information is in the email
         $this->assertStringContainsString('If you did not change your password', $html);
         $this->assertStringContainsString('contact', $html);

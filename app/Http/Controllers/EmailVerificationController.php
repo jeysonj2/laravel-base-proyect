@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EmailVerification;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use App\Models\User;
-use App\Mail\EmailVerification;
 
 /**
  * Email Verification Controller.
- * 
+ *
  * Handles the process of verifying user email addresses and resending
  * verification emails when needed.
  */
@@ -17,7 +17,7 @@ class EmailVerificationController extends Controller
 {
     /**
      * Resend the email verification to a specific user.
-     * 
+     *
      * Generates a new verification code if needed and sends a verification
      * email to the user's email address.
      *
@@ -28,48 +28,63 @@ class EmailVerificationController extends Controller
      *     operationId="resendVerification",
      *     tags={"Email Verification"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Parameter(
      *         name="user",
      *         in="path",
      *         description="User ID",
      *         required=true,
+     *
      *         @OA\Schema(type="integer", format="int64")
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Verification email sent successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=200),
      *             @OA\Property(property="message", type="string", example="Verification email resent successfully.")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=400,
      *         description="User already verified",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=400),
      *             @OA\Property(property="message", type="string", example="User is already verified.")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=401),
      *             @OA\Property(property="message", type="string", example="Unauthorized")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=404,
      *         description="User not found",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=404),
      *             @OA\Property(property="message", type="string", example="User not found")
      *         )
      *     )
      * )
      *
-     * @param  \App\Models\User  $user  The user to send the verification email to
+     * @param User $user The user to send the verification email to
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function resend(User $user)
@@ -81,7 +96,7 @@ class EmailVerificationController extends Controller
 
         // Check if the user has a verification code
         // If not, generate a new one
-        if (!$user->verification_code) {
+        if (! $user->verification_code) {
             $user->verification_code = bin2hex(random_bytes(16));
             $user->save();
         }
@@ -94,7 +109,7 @@ class EmailVerificationController extends Controller
 
     /**
      * Verify the user's email using a secret code.
-     * 
+     *
      * Validates the provided verification code against the database
      * and marks the user's email as verified if the code is valid.
      *
@@ -104,40 +119,50 @@ class EmailVerificationController extends Controller
      *     description="Verifies a user's email address using the verification code sent in the email. This endpoint completes the email verification flow. When a user is created or changes their email, they receive an email with a unique verification code. The user clicks on the verification link or manually enters the code in this endpoint. If the code matches what's stored in the database, the user's email is marked as verified and the verification code is cleared from the database.",
      *     operationId="verifyEmail",
      *     tags={"Email Verification"},
+     *
      *     @OA\Parameter(
      *         name="code",
      *         in="query",
      *         description="Verification code sent to user's email (32-character hexadecimal string)",
      *         required=true,
+     *
      *         @OA\Schema(type="string")
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Email verified successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=200),
      *             @OA\Property(property="message", type="string", example="Email verified successfully.")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=400,
      *         description="Invalid verification code",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=400),
      *             @OA\Property(property="message", type="string", example="Invalid verification code.")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=422,
      *         description="Validation error",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="code", type="integer", example=422),
      *             @OA\Property(property="message", type="string", example="The code field is required.")
      *         )
      *     )
      * )
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function verify(Request $request)
@@ -148,7 +173,7 @@ class EmailVerificationController extends Controller
 
         $user = User::where('verification_code', $request->code)->first();
 
-        if (!$user) {
+        if (! $user) {
             return $this->errorResponse('Invalid verification code.', null, 400);
         }
 

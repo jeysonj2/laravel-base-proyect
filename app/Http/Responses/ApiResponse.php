@@ -5,8 +5,8 @@ namespace App\Http\Responses;
 use Illuminate\Http\JsonResponse;
 
 /**
- * API Response Helper
- * 
+ * API Response Helper.
+ *
  * This class provides a standardized way to create consistent JSON responses
  * across the application. It offers static methods for common response types
  * such as success, error, not found, etc., ensuring that all API responses
@@ -17,10 +17,7 @@ class ApiResponse
     /**
      * Create a success response.
      *
-     * @param  string  $message
-     * @param  mixed  $data
-     * @param  int  $statusCode
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     public static function success(string $message = 'Operation successful', $data = null, int $statusCode = 200): JsonResponse
     {
@@ -30,10 +27,7 @@ class ApiResponse
     /**
      * Create an error response.
      *
-     * @param  string  $message
-     * @param  mixed  $data
-     * @param  int  $statusCode
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     public static function error(string $message = 'An error occurred', $data = null, int $statusCode = 400): JsonResponse
     {
@@ -43,9 +37,7 @@ class ApiResponse
     /**
      * Create a not found response.
      *
-     * @param  string  $message
-     * @param  mixed  $data
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     public static function notFound(string $message = 'Resource not found', $data = null): JsonResponse
     {
@@ -55,9 +47,7 @@ class ApiResponse
     /**
      * Create an unauthorized response.
      *
-     * @param  string  $message
-     * @param  mixed  $data
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     public static function unauthorized(string $message = 'Unauthorized', $data = null): JsonResponse
     {
@@ -67,9 +57,7 @@ class ApiResponse
     /**
      * Create a validation error response.
      *
-     * @param  string  $message
-     * @param  mixed  $data
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     public static function validationError(string $message = 'Validation failed', $data = null): JsonResponse
     {
@@ -79,9 +67,7 @@ class ApiResponse
     /**
      * Create a forbidden response.
      *
-     * @param  string  $message
-     * @param  mixed  $data
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     public static function forbidden(string $message = 'Forbidden', $data = null): JsonResponse
     {
@@ -91,9 +77,7 @@ class ApiResponse
     /**
      * Create a server error response.
      *
-     * @param  string  $message
-     * @param  mixed  $data
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     public static function serverError(string $message = 'Server error', $data = null): JsonResponse
     {
@@ -103,10 +87,7 @@ class ApiResponse
     /**
      * Make the JSON response.
      *
-     * @param  int  $code
-     * @param  string  $message
-     * @param  mixed  $data
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     private static function make(int $code, string $message, $data = null): JsonResponse
     {

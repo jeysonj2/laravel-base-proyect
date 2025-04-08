@@ -14,6 +14,8 @@ class RootRouteSuccessTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        // Assert redirect to /api/documentation
+        $response->assertStatus(302);
+        $response->assertRedirect('/api/documentation');
     }
 }

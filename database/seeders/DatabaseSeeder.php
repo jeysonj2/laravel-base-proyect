@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Role;
+use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         // Run role seeder first to ensure roles exist
         $this->call(RoleSeeder::class);
-        
+
         // Create a default admin user
         User::factory()->create([
             'name' => 'Admin',
@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('Abcde12345!'),
             'role_id' => Role::where('name', 'ADMIN')->first()->id,
         ]);
-        
+
         // Create a default regular user
         User::factory()->create([
             'name' => 'Test',

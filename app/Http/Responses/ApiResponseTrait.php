@@ -5,12 +5,12 @@ namespace App\Http\Responses;
 use Illuminate\Http\JsonResponse;
 
 /**
- * API Response Trait
- * 
+ * API Response Trait.
+ *
  * This trait provides convenient methods for controllers to return
  * standardized JSON responses. It acts as a wrapper around the ApiResponse class,
  * making the response methods available directly within controllers.
- * 
+ *
  * When used in a controller, it allows for consistent API responses
  * across the entire application with minimal code duplication.
  */
@@ -19,10 +19,7 @@ trait ApiResponseTrait
     /**
      * Return a success response.
      *
-     * @param  string  $message
-     * @param  mixed  $data
-     * @param  int  $statusCode
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     protected function successResponse(string $message = 'Operation successful', $data = null, int $statusCode = 200): JsonResponse
     {
@@ -32,10 +29,7 @@ trait ApiResponseTrait
     /**
      * Return an error response.
      *
-     * @param  string  $message
-     * @param  mixed  $data
-     * @param  int  $statusCode
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     protected function errorResponse(string $message = 'An error occurred', $data = null, int $statusCode = 400): JsonResponse
     {
@@ -45,9 +39,7 @@ trait ApiResponseTrait
     /**
      * Return a not found response.
      *
-     * @param  string  $message
-     * @param  mixed  $data
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     protected function notFoundResponse(string $message = 'Resource not found', $data = null): JsonResponse
     {
@@ -57,9 +49,7 @@ trait ApiResponseTrait
     /**
      * Return an unauthorized response.
      *
-     * @param  string  $message
-     * @param  mixed  $data
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     protected function unauthorizedResponse(string $message = 'Unauthorized', $data = null): JsonResponse
     {
@@ -69,9 +59,7 @@ trait ApiResponseTrait
     /**
      * Return a validation error response.
      *
-     * @param  string  $message
-     * @param  mixed  $data
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     protected function validationErrorResponse(string $message = 'Validation failed', $data = null): JsonResponse
     {
@@ -81,9 +69,7 @@ trait ApiResponseTrait
     /**
      * Return a forbidden response.
      *
-     * @param  string  $message
-     * @param  mixed  $data
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     protected function forbiddenResponse(string $message = 'Forbidden', $data = null): JsonResponse
     {
@@ -93,9 +79,7 @@ trait ApiResponseTrait
     /**
      * Return a server error response.
      *
-     * @param  string  $message
-     * @param  mixed  $data
-     * @return \Illuminate\Http\JsonResponse
+     * @param mixed $data
      */
     protected function serverErrorResponse(string $message = 'Server error', $data = null): JsonResponse
     {

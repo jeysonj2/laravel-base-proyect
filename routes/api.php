@@ -1,21 +1,19 @@
 <?php
 
 /**
- * API Routes
- * 
+ * API Routes.
+ *
  * This file defines all API routes for the application.
  * Routes are organized by authentication requirement and user role.
- *
- * @package Laravel
  */
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserLockoutController;
+use Illuminate\Support\Facades\Route;
 
 /**
  * Protected routes that require authentication.
@@ -43,12 +41,12 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('roles', RoleController::class);
         Route::apiResource('users', UserController::class);
         Route::post('users/{user}/resend-verification', [EmailVerificationController::class, 'resend']);
-        
+
         // User lockout management routes (admin only)
         Route::get('locked-users', [UserLockoutController::class, 'index']);
         Route::post('users/{user}/unlock', [UserLockoutController::class, 'unlock']);
     });
-    
+
     /**
      * User profile routes.
      * These routes are available to any authenticated user regardless of role.

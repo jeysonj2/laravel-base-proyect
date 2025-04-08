@@ -18,10 +18,10 @@ class UserCreatedTest extends TestCase
     public function user_created_event_is_dispatched_when_creating_a_user()
     {
         Event::fake([UserCreated::class]);
-        
+
         // Create role
         Role::create(['name' => 'user']);
-        
+
         // Create user
         $user = User::create([
             'name' => 'Test',
@@ -30,22 +30,22 @@ class UserCreatedTest extends TestCase
             'password' => bcrypt('Password1!'),
             'role_id' => 1,
         ]);
-        
+
         // Manually dispatch the event since we're using Event::fake()
         event(new UserCreated($user));
-        
+
         // Assert the event was dispatched with the right user
         Event::assertDispatched(UserCreated::class, function ($event) use ($user) {
             return $event->user->id === $user->id;
         });
     }
-    
+
     #[Test]
     public function user_created_event_contains_the_correct_user()
     {
         // Create role
         Role::create(['name' => 'user']);
-        
+
         // Create user
         $user = User::create([
             'name' => 'Test',
@@ -54,10 +54,10 @@ class UserCreatedTest extends TestCase
             'password' => bcrypt('Password1!'),
             'role_id' => 1,
         ]);
-        
+
         // Create the event
         $event = new UserCreated($user);
-        
+
         // Assert the event contains the correct user
         $this->assertEquals($user->id, $event->user->id);
         $this->assertEquals($user->email, $event->user->email);

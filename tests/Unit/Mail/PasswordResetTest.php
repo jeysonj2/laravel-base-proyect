@@ -6,9 +6,9 @@ use App\Mail\PasswordReset;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
-use Illuminate\Support\Str;
 
 class PasswordResetTest extends TestCase
 {
@@ -25,7 +25,7 @@ class PasswordResetTest extends TestCase
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
             'role_id' => 1,
-            'password_reset_token' => 'test-token-12345'
+            'password_reset_token' => 'test-token-12345',
         ]);
 
         // Create the mailable
@@ -49,7 +49,7 @@ class PasswordResetTest extends TestCase
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
             'role_id' => 1,
-            'password_reset_token' => 'test-token-12345'
+            'password_reset_token' => 'test-token-12345',
         ]);
 
         // Create the mailable
@@ -70,7 +70,7 @@ class PasswordResetTest extends TestCase
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
             'role_id' => 1,
-            'password_reset_token' => 'test-token-12345'
+            'password_reset_token' => 'test-token-12345',
         ]);
 
         // Create the mailable
@@ -87,7 +87,7 @@ class PasswordResetTest extends TestCase
     public function password_reset_contains_expiry_information()
     {
         // Read the expiration time from the environment variable
-        $expiryMinutes = (int)env('PASSWORD_RESET_TOKEN_EXPIRY_MINUTES', 60);
+        $expiryMinutes = (int) env('PASSWORD_RESET_TOKEN_EXPIRY_MINUTES', 60);
 
         // Create role and user
         Role::create(['name' => 'user']);
@@ -97,7 +97,7 @@ class PasswordResetTest extends TestCase
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
             'role_id' => 1,
-            'password_reset_token' => 'test-token-12345'
+            'password_reset_token' => 'test-token-12345',
         ]);
 
         // Create the mailable
@@ -110,7 +110,7 @@ class PasswordResetTest extends TestCase
         $html = $mailable->render();
 
         // Verify parts of the expiry information separately
-        $this->assertStringContainsString("expire", $html);
+        $this->assertStringContainsString('expire', $html);
         $this->assertStringContainsString((string) $expiryMinutes, $html);
         $this->assertStringContainsString($minuteWord, $html);
     }

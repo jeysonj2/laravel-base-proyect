@@ -24,19 +24,19 @@ class EmailVerificationTest extends TestCase
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
             'role_id' => 1,
-            'verification_code' => '123456'
+            'verification_code' => '123456',
         ]);
-        
+
         // Create the mailable
         $mailable = new EmailVerification($user);
-        
+
         // Assert mailable content
         $mailable->assertHasTo($user->email);
         $mailable->assertSeeInHtml($user->name);
         $mailable->assertSeeInHtml($user->verification_code);
         $mailable->assertSeeInHtml('Verify Your Email Address');
     }
-    
+
     #[Test]
     public function email_verification_has_correct_subject()
     {
@@ -48,16 +48,16 @@ class EmailVerificationTest extends TestCase
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
             'role_id' => 1,
-            'verification_code' => '123456'
+            'verification_code' => '123456',
         ]);
-        
+
         // Create the mailable
         $mailable = new EmailVerification($user);
-        
+
         // Assert subject
         $mailable->assertHasSubject('Verify Your Email Address');
     }
-    
+
     #[Test]
     public function email_verification_contains_code_in_the_body()
     {
@@ -69,15 +69,15 @@ class EmailVerificationTest extends TestCase
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
             'role_id' => 1,
-            'verification_code' => '123456'
+            'verification_code' => '123456',
         ]);
-        
+
         // Create the mailable
         $mailable = new EmailVerification($user);
-        
+
         // Get rendered content
         $html = $mailable->render();
-        
+
         // Assert verification code is in the email
         $this->assertStringContainsString($user->verification_code, $html);
     }
