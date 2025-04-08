@@ -108,6 +108,17 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   docker-compose exec app php artisan migrate --seed
   ```
 
+### Default Credentials
+
+The following default users are created when running the database seeders:
+
+| Type  | Email             | Password      | Role  |
+|-------|-------------------|---------------|-------|
+| Admin | <admin@example.com> | Abcde12345!   | ADMIN |
+| User  | <test@example.com>  | Abcde12345!   | USER  |
+
+> ⚠️ **SECURITY WARNING**: Change these default passwords immediately after installation to prevent unauthorized access to your application. These credentials are intended for initial setup only.
+
 ## Docker Environment
 
 This project uses Docker Compose with the following services:
