@@ -1,0 +1,75 @@
+FROM php:8.4-fpm-alpine
+
+# Install lightweight system dependencies (using apk instead of apt)
+RUN apk add --no-cache \
+  postgresql-dev \
+  libzip-dev \
+  zip \
+  unzip \
+  git \
+  curl \
+  oniguruma-dev \
+  libxml2-dev
+
+# Install PHP extensions required by Laravel
+RUN docker-php-ext-install \
+  pdo \
+  pdo_pgsql \
+  pgsql \
+  zip \
+  bcmath \
+  opcache \
+  mbstring
+
+# Configure OPcache for production
+RUN { \
+  echo 'opcache.memory_consumption=128'; \
+  echo 'opcache.interned_strings_buffer=8'; \
+  echo 'opcache.max_accelerated_files=4000'; \
+  echo 'opcache.revalidate_freq=2'; \
+  echo 'opcache.fast_shutdown=1'; \
+  echo 'opcache.enable_cli=1'; \
+  } > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+# PHP configuration optimized for production
+RUN { \
+  echo 'memory_limit=512M'; \
+  echo 'max_execution_time=180'; \
+  echo 'upload_max_filesize=10M'; \
+  echo 'post_max_size=12M'; \
+  echo 'display_errors=Off'; \
+  echo 'log_errors=On'; \
+  } > /usr/local/etc/php/conf.d/production.ini
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Create storage directories with appropriate permissions
+RUN mkdir -p /var/www/html/storage/app/public \
+  /var/www/html/storage/framework/cache \
+  /var/www/html/storage/framework/sessions \
+  /var/www/html/storage/framework/views \
+  /var/www/html/storage/logs \
+  /var/www/html/bootstrap/cache
+
+# Copy project files
+COPY . /var/www/html/
+
+# Install dependencies excluding development ones
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress
+
+# Set appropriate permissions
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html
+
+# Copy entry script
+COPY docker/php/entrypoint.prod.sh /usr/local/bin/entrypoint
+RUN chmod +x /usr/local/bin/entrypoint
+
+# Configure entry point
+ENTRYPOINT ["entrypoint"]
+CMD ["php-fpm"]
+EXPOSE 9000

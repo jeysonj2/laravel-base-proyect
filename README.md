@@ -74,6 +74,13 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   - Code standards validation with PHP_CodeSniffer
   - Automated code formatting and linting tools
 
+- **Production-Ready Deployment**
+  - Docker Compose configuration for production environment
+  - SSL/TLS with Let's Encrypt integration
+  - Optimized PHP and Nginx configurations
+  - SMTP server for email delivery
+  - Detailed deployment documentation
+
 ## Prerequisites
 
 - Docker and Docker Compose
@@ -294,6 +301,18 @@ After setup, code will be automatically formatted before each commit.
 ### GitHub Actions
 
 Code quality is automatically checked on each push and pull request via GitHub Actions.
+
+## Production Deployment
+
+This project includes a production-ready Docker Compose configuration optimized for deployment to a live server. It includes:
+
+- Optimized PHP-FPM configuration with OPcache enabled
+- Nginx with HTTP/2 and SSL/TLS support
+- Let's Encrypt integration for free SSL certificates
+- SMTP server for email delivery
+- PostgreSQL database with persistent storage
+
+For detailed deployment instructions, see the [Production Deployment Guide](DEPLOYMENT.md).
 
 ## License
 

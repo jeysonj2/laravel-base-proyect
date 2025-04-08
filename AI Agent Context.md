@@ -109,6 +109,18 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Standardization of code to follow PSR-12 coding standards
   - Configuration of `.editorconfig` for consistent formatting across editors
   - Use of `.gitattributes` for proper line-ending normalization
+- Implementation of a production deployment setup with Docker:
+  - Creation of a `docker-compose.prod.yml` file optimized for production environments
+  - Development of production-specific Dockerfiles with performance and security optimizations:
+    - Lightweight PHP-FPM Alpine image with OPcache enabled
+    - Optimized Nginx configuration with HTTP/2 and SSL/TLS support
+  - Configuration of Let's Encrypt integration for automatic SSL certificate management
+  - Implementation of a SMTP server for email delivery in production
+  - Creation of production entry point scripts with automatic migrations and optimizations
+  - Automatic Swagger documentation generation for production environments
+  - Creation of a `.env.prod` template with production-ready settings
+  - Complete documentation of the deployment process in a dedicated `DEPLOYMENT.md` file
+  - Implementation of security best practices for production environments
 
 **Important Notes:**
 
