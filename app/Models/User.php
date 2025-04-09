@@ -35,6 +35,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property \Illuminate\Support\Carbon $updated_at Timestamp of when the user was last updated
  * @property-read Role $role The role associated with this user
  * @property-read bool $isAdmin Whether the user has admin role
+ * @property-read bool $isSuperadmin Whether the user has superadmin role
  *
  * @method static \Database\Factories\UserFactory factory()
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
@@ -270,6 +271,16 @@ class User extends Authenticatable implements JWTSubject
     public function getIsAdminAttribute(): bool
     {
         return $this->role && $this->role->isAdmin();
+    }
+
+    /**
+     * Get the isSuperadmin attribute.
+     *
+     * @return bool True if the user has superadmin role, false otherwise
+     */
+    public function getIsSuperadminAttribute(): bool
+    {
+        return $this->role && $this->role->isSuperadmin();
     }
 
     /**

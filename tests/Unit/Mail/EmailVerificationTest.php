@@ -17,13 +17,13 @@ class EmailVerificationTest extends TestCase
     public function email_verification_mail_has_correct_data()
     {
         // Create role and user
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
         $user = User::create([
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
             'verification_code' => '123456',
         ]);
 
@@ -41,13 +41,13 @@ class EmailVerificationTest extends TestCase
     public function email_verification_has_correct_subject()
     {
         // Create role and user
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
         $user = User::create([
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
             'verification_code' => '123456',
         ]);
 
@@ -62,13 +62,13 @@ class EmailVerificationTest extends TestCase
     public function email_verification_contains_code_in_the_body()
     {
         // Create role and user
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
         $user = User::create([
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
             'verification_code' => '123456',
         ]);
 

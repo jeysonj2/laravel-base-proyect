@@ -45,9 +45,22 @@ class RoleMiddleware
 
         // Combine the primary role with any additional roles
         $acceptedRoles = array_merge([$role], $additionalRoles);
+        
+        // Process the roles array to handle comma-separated roles
+        $processedRoles = [];
+        foreach ($acceptedRoles as $acceptedRole) {
+            // Check if the role contains commas
+            if (strpos($acceptedRole, ',') !== false) {
+                // Split by comma and merge into processed roles
+                $commaSeparatedRoles = array_map('trim', explode(',', $acceptedRole));
+                $processedRoles = array_merge($processedRoles, $commaSeparatedRoles);
+            } else {
+                $processedRoles[] = $acceptedRole;
+            }
+        }
 
         // Check if the user has any of the required roles
-        foreach ($acceptedRoles as $acceptedRole) {
+        foreach ($processedRoles as $acceptedRole) {
             if ($userRoleName === strtolower(trim($acceptedRole))) {
                 return $next($request);
             }

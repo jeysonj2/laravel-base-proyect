@@ -85,6 +85,24 @@ class Role extends Model
     }
 
     /**
+     * Check if this role is a superadmin role.
+     */
+    public function isSuperadmin(): bool
+    {
+        return strtolower($this->name) === 'superadmin';
+    }
+
+    /**
+     * Get the superadmin role.
+     * 
+     * @return self|null The superadmin role if it exists, null otherwise
+     */
+    public static function getSuperadminRole(): ?self
+    {
+        return self::where('name', 'superadmin')->first();
+    }
+
+    /**
      * Find a role by its name (case insensitive).
      */
     public static function findByName(string $name): ?self

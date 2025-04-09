@@ -20,13 +20,13 @@ class SendVerificationEmailTest extends TestCase
         parent::setUp();
 
         // Create role and user manually instead of using setUpWithAuth
-        \App\Models\Role::create(['name' => 'user']);
+        $role = \App\Models\Role::create(['name' => 'user']);
         $this->regularUser = User::create([
             'name' => 'Regular',
             'last_name' => 'User',
             'email' => 'regular@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
         ]);
     }
 

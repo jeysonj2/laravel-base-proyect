@@ -20,7 +20,7 @@ class UserCreatedTest extends TestCase
         Event::fake([UserCreated::class]);
 
         // Create role
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
 
         // Create user
         $user = User::create([
@@ -28,7 +28,7 @@ class UserCreatedTest extends TestCase
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
         ]);
 
         // Manually dispatch the event since we're using Event::fake()
@@ -44,7 +44,7 @@ class UserCreatedTest extends TestCase
     public function user_created_event_contains_the_correct_user()
     {
         // Create role
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
 
         // Create user
         $user = User::create([
@@ -52,7 +52,7 @@ class UserCreatedTest extends TestCase
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
         ]);
 
         // Create the event

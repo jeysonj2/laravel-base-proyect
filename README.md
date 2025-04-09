@@ -32,6 +32,8 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   - Predefined roles: superadmin, admin, and user
   - Role-based access control to endpoints
   - Superadmin role with highest privileges in the system
+  - Hierarchical permission system (superadmin > admin > user)
+  - Special permissions for managing superadmin users
   
 - **Email Verification**
   - Automatic email verification for new accounts and email updates
@@ -75,10 +77,11 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   - Comprehensive test suite with Unit and Feature tests
   - Code coverage reporting using Xdebug
   - HTML and text-based coverage reports
-  - Current code coverage: 92.0%
+  - Current code coverage: 86.56% (lines), 80.49% (methods), 45.00% (classes)
   - Code style enforcement with Laravel Pint
   - Code standards validation with PHP_CodeSniffer
   - Automated code formatting and linting tools
+  - Convenient test scripts in shell-scripts directory
 
 - **Production-Ready Deployment**
   - Docker Compose configuration for production environment
@@ -241,10 +244,14 @@ Run the tests with the following command:
 docker-compose exec app php artisan test
 ```
 
-To run tests with code coverage reporting:
+Or use the provided shell scripts:
 
 ```bash
-docker-compose exec app php artisan test --coverage
+# Run tests without coverage
+./shell-scripts/tests.sh
+
+# Run tests with coverage reporting
+./shell-scripts/tests-coverage.sh
 ```
 
 This generates:
@@ -341,12 +348,14 @@ This project provides a set of convenient shell scripts to simplify common Docke
 | `./shell-scripts/reset-prod.sh` | Stop containers, rebuild production images, and start containers again |
 | `./shell-scripts/reset-full-prod.sh` | Remove all production containers and volumes, rebuild images from scratch, and start containers |
 
-#### Code Quality Scripts
+#### Code Quality and Testing Scripts
 
 | Script | Description |
 |--------|-------------|
 | `./shell-scripts/check-style.sh` | Check code against style standards |
 | `./shell-scripts/fix-style.sh` | Automatically fix code style issues |
+| `./shell-scripts/tests.sh` | Run all tests without coverage reporting |
+| `./shell-scripts/tests-coverage.sh` | Run tests with coverage reporting |
 
 ### Making Scripts Executable
 
@@ -375,6 +384,12 @@ Check and fix code style:
 ```bash
 ./shell-scripts/check-style.sh
 ./shell-scripts/fix-style.sh
+```
+
+Run tests with coverage:
+
+```bash
+./shell-scripts/tests-coverage.sh
 ```
 
 Deploy to production:

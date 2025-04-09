@@ -39,7 +39,7 @@ class UserManagementTest extends TestCase
             ]);
 
         // Should contain both users
-        $response->assertJsonCount(2, 'data');
+        $response->assertJsonCount(3, 'data');
     }
 
     public function test_admin_can_get_single_user(): void

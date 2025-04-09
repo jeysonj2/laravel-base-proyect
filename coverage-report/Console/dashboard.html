@@ -2,7 +2,7 @@
 <html lang="en">
  <head>
   <meta charset="UTF-8">
-  <title>Dashboard for /var/www/html/app/Listeners</title>
+  <title>Dashboard for /var/www/html/app/Console</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="../_css/bootstrap.min.css?v=11.0.9" rel="stylesheet" type="text/css">
   <link href="../_css/nv.d3.min.css?v=11.0.9" rel="stylesheet" type="text/css">
@@ -17,7 +17,7 @@
       <nav aria-label="breadcrumb">
        <ol class="breadcrumb">
          <li class="breadcrumb-item"><a href="../index.html">/var/www/html/app</a></li>
-         <li class="breadcrumb-item"><a href="index.html">Listeners</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Console</a></li>
          <li class="breadcrumb-item active">(Dashboard)</li>
 
        </ol>
@@ -58,6 +58,7 @@
         </tr>
        </thead>
        <tbody>
+       <tr><td><a href="Commands/CreateDefaultSuperadminUser.php.html#17">App\Console\Commands\CreateDefaultSuperadminUser</a></td><td class="text-right">0%</td></tr>
 
        </tbody>
       </table>
@@ -74,6 +75,7 @@
         </tr>
        </thead>
        <tbody>
+       <tr><td><a href="Commands/CreateDefaultSuperadminUser.php.html#17">App\Console\Commands\CreateDefaultSuperadminUser</a></td><td class="text-right">56</td></tr>
 
        </tbody>
       </table>
@@ -111,6 +113,7 @@
         </tr>
        </thead>
        <tbody>
+       <tr><td><a href="Commands/CreateDefaultSuperadminUser.php.html#39"><abbr title="App\Console\Commands\CreateDefaultSuperadminUser::handle">handle</abbr></a></td><td class="text-right">0%</td></tr>
 
        </tbody>
       </table>
@@ -127,6 +130,7 @@
         </tr>
        </thead>
        <tbody>
+       <tr><td><a href="Commands/CreateDefaultSuperadminUser.php.html#39"><abbr title="App\Console\Commands\CreateDefaultSuperadminUser::handle">handle</abbr></a></td><td class="text-right">56</td></tr>
 
        </tbody>
       </table>
@@ -155,7 +159,7 @@ $(document).ready(function() {
       .yAxis.tickFormat(d3.format('d'));
 
     d3.select('#classCoverageDistribution svg')
-      .datum(getCoverageDistributionData([0,0,0,0,0,0,0,0,0,0,0,1], "Class Coverage"))
+      .datum(getCoverageDistributionData([1,0,0,0,0,0,0,0,0,0,0,0], "Class Coverage"))
       .transition().duration(500).call(chart);
 
     nv.utils.windowResize(chart.update);
@@ -173,7 +177,7 @@ $(document).ready(function() {
       .yAxis.tickFormat(d3.format('d'));
 
     d3.select('#methodCoverageDistribution svg')
-      .datum(getCoverageDistributionData([0,0,0,0,0,0,0,0,0,0,0,2], "Method Coverage"))
+      .datum(getCoverageDistributionData([1,0,0,0,0,0,0,0,0,0,0,0], "Method Coverage"))
       .transition().duration(500).call(chart);
 
     nv.utils.windowResize(chart.update);
@@ -223,7 +227,7 @@ $(document).ready(function() {
     chart.yAxis.axisLabel('Cyclomatic Complexity');
 
     d3.select('#classComplexity svg')
-      .datum(getComplexityData([[100,3,"<a href=\"SendVerificationEmail.php.html#16\">App\\Listeners\\SendVerificationEmail<\/a>"]], 'Class Complexity'))
+      .datum(getComplexityData([[0,7,"<a href=\"Commands\/CreateDefaultSuperadminUser.php.html#17\">App\\Console\\Commands\\CreateDefaultSuperadminUser<\/a>"]], 'Class Complexity'))
       .transition()
       .duration(500)
       .call(chart);
@@ -247,7 +251,7 @@ $(document).ready(function() {
     chart.yAxis.axisLabel('Method Complexity');
 
     d3.select('#methodComplexity svg')
-      .datum(getComplexityData([[100,1,"<a href=\"SendVerificationEmail.php.html#21\">App\\Listeners\\SendVerificationEmail::__construct<\/a>"],[100,2,"<a href=\"SendVerificationEmail.php.html#33\">App\\Listeners\\SendVerificationEmail::handle<\/a>"]], 'Method Complexity'))
+      .datum(getComplexityData([[0,7,"<a href=\"Commands\/CreateDefaultSuperadminUser.php.html#39\">App\\Console\\Commands\\CreateDefaultSuperadminUser::handle<\/a>"]], 'Method Complexity'))
       .transition()
       .duration(500)
       .call(chart);

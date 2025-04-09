@@ -136,12 +136,12 @@ class UserController extends Controller
      *
      *     @OA\Response(
      *         response=403,
-     *         description="Forbidden - User does not have admin role",
+     *         description="Forbidden - User does not have admin role or is trying to create a superadmin without being superadmin",
      *
      *         @OA\JsonContent(
      *
      *             @OA\Property(property="code", type="integer", example=403),
-     *             @OA\Property(property="message", type="string", example="Forbidden")
+     *             @OA\Property(property="message", type="string", example="Only superadmins can create other superadmin users")
      *         )
      *     ),
      *
@@ -170,6 +170,16 @@ class UserController extends Controller
             'password' => 'required|string|strong_password',
             'role_id' => 'required|exists:roles,id',
         ]);
+
+        // Check if creating a superadmin user
+        $superadminRole = \App\Models\Role::getSuperadminRole();
+        if ($superadminRole && $validated['role_id'] == $superadminRole->id) {
+            // Check if user has permission to create superadmin
+            $response = $this->checkSuperadminPermission('create');
+            if ($response !== null) {
+                return $response;
+            }
+        }
 
         $validated['password'] = bcrypt($validated['password']);
 
@@ -327,12 +337,12 @@ class UserController extends Controller
      *
      *     @OA\Response(
      *         response=403,
-     *         description="Forbidden - User does not have admin role",
+     *         description="Forbidden - User does not have admin role or trying to modify a superadmin without being superadmin",
      *
      *         @OA\JsonContent(
      *
      *             @OA\Property(property="code", type="integer", example=403),
-     *             @OA\Property(property="message", type="string", example="Forbidden")
+     *             @OA\Property(property="message", type="string", example="Only superadmins can update superadmin users")
      *         )
      *     ),
      *
@@ -366,6 +376,29 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id): JsonResponse
     {
+        $user = User::findOrFail($id);
+        
+        // Check if the target user is a superadmin
+        if ($user->isSuperadmin) {
+            // Check permission to update superadmin
+            $response = $this->checkSuperadminPermission('update');
+            if ($response !== null) {
+                return $response;
+            }
+        }
+        
+        // Check if attempting to change role to superadmin
+        $superadminRole = \App\Models\Role::getSuperadminRole();
+        if ($request->has('role_id') && $superadminRole && 
+            $request->role_id == $superadminRole->id && 
+            $user->role_id != $superadminRole->id) {
+            
+            // Only superadmins can make users into superadmins
+            if (!auth()->user()->isSuperadmin) {
+                return $this->forbiddenResponse('Only superadmins can assign the superadmin role');
+            }
+        }
+
         $validated = $request->validate([
             'name' => 'sometimes|required|string',
             'last_name' => 'sometimes|required|string',
@@ -378,7 +411,6 @@ class UserController extends Controller
             $validated['password'] = bcrypt($validated['password']);
         }
 
-        $user = User::findOrFail($id);
         $currentEmail = $user->email;
 
         $user->update($validated);
@@ -441,12 +473,12 @@ class UserController extends Controller
      *
      *     @OA\Response(
      *         response=403,
-     *         description="Forbidden - User does not have admin role",
+     *         description="Forbidden - User does not have admin role or trying to delete a superadmin without being superadmin",
      *
      *         @OA\JsonContent(
      *
      *             @OA\Property(property="code", type="integer", example=403),
-     *             @OA\Property(property="message", type="string", example="Forbidden")
+     *             @OA\Property(property="message", type="string", example="Only superadmins can delete superadmin users")
      *         )
      *     ),
      *
@@ -469,8 +501,33 @@ class UserController extends Controller
     public function destroy(string $id): JsonResponse
     {
         $user = User::findOrFail($id);
+        
+        // Check if the target user is a superadmin
+        if ($user->isSuperadmin) {
+            // Check permission to delete superadmin
+            $response = $this->checkSuperadminPermission('delete');
+            if ($response !== null) {
+                return $response;
+            }
+        }
+        
         $user->delete();
 
         return $this->successResponse('User deleted successfully');
+    }
+
+    /**
+     * Check if the current user has permission to manage superadmin users.
+     *
+     * @param string $action The action being performed (create, update, delete)
+     * @return JsonResponse|null Returns a forbidden response if not allowed, null if allowed
+     */
+    private function checkSuperadminPermission(string $action): ?JsonResponse
+    {
+        if (!auth()->user()->isSuperadmin) {
+            return $this->forbiddenResponse("Only superadmins can {$action} superadmin users");
+        }
+
+        return null;
     }
 }

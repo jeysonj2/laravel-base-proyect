@@ -18,13 +18,13 @@ class PasswordResetTest extends TestCase
     public function password_reset_mail_has_correct_data()
     {
         // Create role and user
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
         $user = User::create([
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
             'password_reset_token' => 'test-token-12345',
         ]);
 
@@ -42,13 +42,13 @@ class PasswordResetTest extends TestCase
     public function password_reset_has_correct_subject()
     {
         // Create role and user
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
         $user = User::create([
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
             'password_reset_token' => 'test-token-12345',
         ]);
 
@@ -63,13 +63,13 @@ class PasswordResetTest extends TestCase
     public function password_reset_contains_token_in_the_body()
     {
         // Create role and user
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
         $user = User::create([
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
             'password_reset_token' => 'test-token-12345',
         ]);
 
@@ -90,13 +90,13 @@ class PasswordResetTest extends TestCase
         $expiryMinutes = (int) env('PASSWORD_RESET_TOKEN_EXPIRY_MINUTES', 60);
 
         // Create role and user
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
         $user = User::create([
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
             'password_reset_token' => 'test-token-12345',
         ]);
 

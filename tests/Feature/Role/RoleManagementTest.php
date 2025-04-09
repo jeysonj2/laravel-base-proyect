@@ -35,8 +35,8 @@ class RoleManagementTest extends TestCase
                 ],
             ]);
 
-        // Should contain both roles (admin and user)
-        $response->assertJsonCount(2, 'data');
+        // Should contain all roles (superadmin, admin and user)
+        $response->assertJsonCount(3, 'data');
     }
 
     public function test_admin_can_get_single_role(): void

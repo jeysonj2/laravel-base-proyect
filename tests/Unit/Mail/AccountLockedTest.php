@@ -18,13 +18,13 @@ class AccountLockedTest extends TestCase
     public function account_locked_mail_has_correct_data_for_temporary_lock()
     {
         // Create role and user
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
         $user = User::create([
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
             'locked_until' => now()->addHour(),
         ]);
 
@@ -55,13 +55,13 @@ class AccountLockedTest extends TestCase
     public function account_locked_mail_has_correct_data_for_permanent_lock()
     {
         // Create role and user
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
         $user = User::create([
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
             'locked_until' => now()->addYears(10), // Very far in the future = permanent
         ]);
 
@@ -79,13 +79,13 @@ class AccountLockedTest extends TestCase
     public function account_locked_has_correct_subject_for_temporary_lock()
     {
         // Create role and user
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
         $user = User::create([
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
             'locked_until' => now()->addHour(),
         ]);
 
@@ -100,13 +100,13 @@ class AccountLockedTest extends TestCase
     public function account_locked_has_correct_subject_for_permanent_lock()
     {
         // Create role and user
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
         $user = User::create([
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
             'locked_until' => now()->addYears(10),
         ]);
 

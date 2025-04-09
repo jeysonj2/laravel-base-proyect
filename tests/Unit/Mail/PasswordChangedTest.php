@@ -17,13 +17,13 @@ class PasswordChangedTest extends TestCase
     public function password_changed_mail_has_correct_data()
     {
         // Create role and user
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
         $user = User::create([
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
         ]);
 
         // Create the mailable
@@ -39,13 +39,13 @@ class PasswordChangedTest extends TestCase
     public function password_changed_has_correct_subject()
     {
         // Create role and user
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
         $user = User::create([
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
         ]);
 
         // Create the mailable
@@ -59,13 +59,13 @@ class PasswordChangedTest extends TestCase
     public function password_changed_contains_contact_support_information()
     {
         // Create role and user
-        Role::create(['name' => 'user']);
+        $role = Role::create(['name' => 'user']);
         $user = User::create([
             'name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
             'password' => bcrypt('Password1!'),
-            'role_id' => 1,
+            'role_id' => $role->id,
         ]);
 
         // Create the mailable

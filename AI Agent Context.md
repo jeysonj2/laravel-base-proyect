@@ -14,6 +14,10 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
 - Protection of user and role routes through session management; only users with a valid JWT token can access them.
 - Implementation of middleware to restrict access to routes based on the role of the logged-in user.
 - Addition of a "superadmin" role with highest level permissions in the system.
+- Implementation of special superadmin privileges:
+  - Only superadmins can create, update, or delete other superadmin users
+  - Only superadmins can assign the superadmin role to other users
+  - Protected hierarchical permission system with superadmin > admin > user
 - Restriction of all user and role routes so that only users with the 'admin' or 'superadmin' role can access them.
 - Creation of an endpoint to send a verification code email to confirm the user's email validity.
 - Creation of an endpoint to verify the user's email, which receives a code to validate the email.
@@ -66,15 +70,17 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
     - **Password**: Tests for the password reset and change system.
     - **Profile**: Tests for the user profile management endpoints.
     - **Role**: Tests for role management and deletion (RoleManagementTest, RoleDeletionTest).
-    - **User**: Tests for the user management system and email verification.
+    - **User**: Tests for the user management system, email verification, and superadmin permissions (UserManagementTest, SuperadminPermissionsTest).
   - Test of the root route to verify system status.
   - Structured organization of tests into folders by functionality to facilitate maintenance.
+  - Creation of shell scripts (tests.sh and tests-coverage.sh) to simplify running tests and generating coverage reports.
   - Implementation of tests for all main API features.
 - Implementation of code coverage reporting to evaluate test effectiveness:
   - Configuration of Docker environment with Xdebug support and coverage mode enabled
   - Configuration of PHPUnit to generate detailed coverage reports in HTML and text formats
   - Setup for running tests with coverage metrics via the `--coverage` flag
   - Directory structure for storing coverage reports in an organized manner
+  - Current code coverage: Classes 45.00% (9/20), Methods 80.49% (66/82), Lines 86.56% (425/491)
 - Implementation of Swagger/OpenAPI documentation for all API endpoints:
   - Installation and configuration of the L5-Swagger package for Laravel
   - Addition of detailed Swagger annotations to all controllers:
