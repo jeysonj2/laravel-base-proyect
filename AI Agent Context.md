@@ -129,6 +129,12 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Complete documentation of the deployment process in a dedicated `DEPLOYMENT.md` file
   - Implementation of security best practices for production environments
   - Configuration for creating a default superadmin user during deployment using the environment variables `SUPER_ADMIN_EMAIL` and `SUPER_ADMIN_PASSWORD`
+- Implementation of protection to prevent users from deleting their own accounts:
+  - Modification of the `destroy` method in the `UserController` to check if the authenticated user is trying to delete their own account
+  - Addition of a clear error message explaining that users cannot delete their own accounts
+  - Updated Swagger API documentation to include this restriction in the 403 Forbidden response section
+  - Creation of comprehensive tests to verify this protection works for both admin and superadmin users
+  - Implementation of proper type conversion to ensure ID comparison works correctly regardless of type (string or integer)
 
 **Important Notes:**
 

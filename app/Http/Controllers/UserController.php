@@ -473,12 +473,17 @@ class UserController extends Controller
      *
      *     @OA\Response(
      *         response=403,
-     *         description="Forbidden - User does not have admin role or trying to delete a superadmin without being superadmin",
+     *         description="Forbidden - User does not have admin role, trying to delete a superadmin without being superadmin, or attempting to delete own account",
      *
      *         @OA\JsonContent(
      *
      *             @OA\Property(property="code", type="integer", example=403),
-     *             @OA\Property(property="message", type="string", example="Only superadmins can delete superadmin users")
+     *             @OA\Property(
+     *                 property="message", 
+     *                 type="string", 
+     *                 example="Only superadmins can delete superadmin users",
+     *                 description="Could also be: 'You cannot delete your own account'"
+     *             )
      *         )
      *     ),
      *
@@ -501,6 +506,14 @@ class UserController extends Controller
     public function destroy(string $id): JsonResponse
     {
         $user = User::findOrFail($id);
+        
+        // Prevent users from deleting their own account
+        $authId = auth()->user()->id;
+        $userId = $user->id;
+        
+        if ($authId === $userId) {
+            return $this->forbiddenResponse("You cannot delete your own account");
+        }
         
         // Check if the target user is a superadmin
         if ($user->isSuperadmin) {

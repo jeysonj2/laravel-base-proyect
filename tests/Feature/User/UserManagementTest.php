@@ -314,4 +314,42 @@ class UserManagementTest extends TestCase
             return $mail->hasTo($this->regularUser->email);
         });
     }
+
+    public function test_superadmin_user_cannot_delete_own_account(): void
+    {
+        // Superadmin attempting to delete their own account
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->superadminToken,
+        ])->deleteJson('/api/users/' . $this->superadmin->id);
+
+        // Assert - Should be forbidden even for superadmins
+        $response->assertStatus(403)
+            ->assertJson([
+                'message' => 'You cannot delete your own account',
+            ]);
+
+        // Check database - Should not have deleted the user
+        $this->assertDatabaseHas('users', [
+            'id' => $this->superadmin->id,
+        ]);
+    }
+
+    public function test_admin_user_cannot_delete_own_account(): void
+    {
+        // Admin attempting to delete their own account
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $this->adminToken,
+        ])->deleteJson('/api/users/' . $this->admin->id);
+
+        // Assert - Should be forbidden
+        $response->assertStatus(403)
+            ->assertJson([
+                'message' => 'You cannot delete your own account',
+            ]);
+
+        // Check database - Should not have deleted the user
+        $this->assertDatabaseHas('users', [
+            'id' => $this->admin->id,
+        ]);
+    }
 }

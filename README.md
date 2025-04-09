@@ -46,6 +46,7 @@ This is a base Laravel 12 project with a RESTful API implementation that include
     - Permanent lockouts after repeated temporary blocks
     - Email notifications for locked accounts
     - Admin interface to manage and unlock user accounts
+  - Protection against self-deletion of user accounts
   - Password reset workflow with secure tokens
   - Strong password validation with customizable requirements
   - Confirmation emails for password changes

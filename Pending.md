@@ -1,6 +1,5 @@
 # Pending Tasks
 
-- A user cannot delete their own account.
 - Add more tests to increase the test coverage to 92% or higher.
 - Configure an environment variable to specify the frontend URL, which will later be used in the email templates where the user needs to click on a URL.
 - Deploy on GitHub Pages
