@@ -17,6 +17,17 @@ class DatabaseSeeder extends Seeder
         // Run role seeder first to ensure roles exist
         $this->call(RoleSeeder::class);
 
+        // Check and create a default superadmin user if it doesn't exist
+        if (! User::where('email', 'superadmin@example.com')->exists()) {
+            User::factory()->create([
+                'name' => 'Superadmin',
+                'last_name' => 'User',
+                'email' => 'superadmin@example.com',
+                'password' => bcrypt('Abcde12345!'),
+                'role_id' => Role::where('name', 'superadmin')->first()->id,
+            ]);
+        }
+
         // Check and create a default admin user if it doesn't exist
         if (! User::where('email', 'admin@example.com')->exists()) {
             User::factory()->create([

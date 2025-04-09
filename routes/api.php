@@ -35,14 +35,14 @@ Route::middleware(['auth:api'])->group(function () {
 
     /**
      * Admin-only routes.
-     * These routes are restricted to users with the 'admin' role.
+     * These routes are restricted to users with the 'admin' and 'superadmin' role.
      */
-    Route::middleware(['role:admin'])->group(function () {
+    Route::middleware(['role:admin,superadmin'])->group(function () {
         Route::apiResource('roles', RoleController::class);
         Route::apiResource('users', UserController::class);
         Route::post('users/{user}/resend-verification', [EmailVerificationController::class, 'resend']);
 
-        // User lockout management routes (admin only)
+        // User lockout management routes (admin and superadmin only)
         Route::get('locked-users', [UserLockoutController::class, 'index']);
         Route::post('users/{user}/unlock', [UserLockoutController::class, 'unlock']);
     });

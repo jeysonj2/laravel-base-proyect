@@ -15,9 +15,9 @@ if [ "$1" = "php-fpm" ]; then
   # Run migrations
   php artisan migrate --force
 
-  # Create default admin user for production
-  echo "Ensuring admin user exists..."
-  php artisan app:create-default-admin --email="${ADMIN_EMAIL:-admin@example.com}" --password="${ADMIN_PASSWORD:-}" || true
+  # Create default superadmin user for production
+  echo "Ensuring superadmin user exists..."
+  php artisan app:create-default-superadmin --email="${SUPER_ADMIN_EMAIL:-superadmin@example.com}" --password="${SUPER_ADMIN_PASSWORD:-}" || true
 
   # Ensure keys exist first - before caching configuration
   echo "Generating application keys..."

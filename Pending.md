@@ -1,5 +1,7 @@
 # Pending Tasks
 
+- Include the "superadmin" role. The default user in the production environment should be a superadmin. Add a superadmin user in the database seed. A superadmin can only be created, edited, or deleted by another superadmin.
+- Configure an environment variable to specify the frontend URL, which will later be used in the email templates where the user needs to click on a URL.
 - Deploy on GitHub Pages
 - Make the email address verification feature optional through an environment variable
 - If the email address verification option is active, then the user cannot log in if the email has not been verified within a 24-hour period

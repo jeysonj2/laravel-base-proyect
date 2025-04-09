@@ -23,13 +23,14 @@ class RoleMiddleware
      * Throws an AccessDeniedHttpException if the user doesn't have any of the required roles.
      * Supports multiple roles by separating them with commas.
      *
-     * @param Request $request The incoming request
-     * @param Closure $next    The next middleware in the pipeline
-     * @param string  $roles   The role name(s) required to access the route (comma-separated)
+     * @param Request $request            The incoming request
+     * @param Closure $next               The next middleware in the pipeline
+     * @param string  $role               The primary role required to access the route
+     * @param string  ...$additionalRoles Additional roles that are allowed to access the route
      *
      * @throws AccessDeniedHttpException
      */
-    public function handle(Request $request, Closure $next, string $roles): Response
+    public function handle(Request $request, Closure $next, string $role, ...$additionalRoles): Response
     {
         // Get authenticated user either from request or from Auth facade
         $user = $request->user() ?? auth()->user();
@@ -39,12 +40,15 @@ class RoleMiddleware
             throw new AccessDeniedHttpException('User not authenticated.');
         }
 
-        // Split roles by comma if multiple roles are specified
-        $acceptedRoles = explode(',', $roles);
+        // Get the current user's role name
+        $userRoleName = strtolower($user->role->name);
+
+        // Combine the primary role with any additional roles
+        $acceptedRoles = array_merge([$role], $additionalRoles);
 
         // Check if the user has any of the required roles
-        foreach ($acceptedRoles as $role) {
-            if (strtolower($user->role->name) === strtolower(trim($role))) {
+        foreach ($acceptedRoles as $acceptedRole) {
+            if ($userRoleName === strtolower(trim($acceptedRole))) {
                 return $next($request);
             }
         }

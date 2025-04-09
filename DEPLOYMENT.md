@@ -35,7 +35,7 @@ Make the following changes:
 - Set a strong password for `DB_PASSWORD`
 - Update `MAIL_FROM_ADDRESS` with your domain email
 - Set `ACME_EMAIL` to your actual email for SSL certificate notifications
-- Configure the admin user by setting `ADMIN_EMAIL` and optionally `ADMIN_PASSWORD`
+- Configure the superadmin user by setting `SUPER_ADMIN_EMAIL` and optionally `SUPER_ADMIN_PASSWORD`
 
 Here's what the production environment template contains:
 
@@ -70,10 +70,10 @@ MAIL_FROM_NAME="${APP_NAME}"
 JWT_SECRET=  # Will be generated automatically
 JWT_TTL=60  # Token lifetime in minutes
 
-# Default Admin User Configuration
-ADMIN_EMAIL=admin@example.com
-# Leave ADMIN_PASSWORD empty to auto-generate a secure password during deployment
-ADMIN_PASSWORD=
+# Default Superadmin User Configuration
+SUPER_ADMIN_EMAIL=superadmin@example.com
+# Leave SUPER_ADMIN_PASSWORD empty to auto-generate a secure password during deployment
+SUPER_ADMIN_PASSWORD=
 
 # Let's Encrypt SSL Configuration
 ACME_EMAIL=youremail@example.com
@@ -84,7 +84,7 @@ ACME_EMAIL=youremail@example.com
 > **IMPORTANT:**
 >
 > - Leave the `APP_KEY` and `JWT_SECRET` fields empty as they will be automatically generated during the container startup process and saved to your local `.env` file.
-> - If you leave `ADMIN_PASSWORD` empty, a secure random password will be generated during deployment and displayed in the container logs.
+> - If you leave `SUPER_ADMIN_PASSWORD` empty, a secure random password will be generated during deployment and displayed in the container logs.
 
 ### 3. Build and Start the Containers
 
@@ -97,21 +97,21 @@ The startup process:
 
 1. Mounts your local `.env` file into the container
 2. Automatically generates secure `APP_KEY` and `JWT_SECRET` values
-3. Creates a default admin user with the specified email (or <admin@example.com> if not specified)
+3. Creates a default superadmin user with the specified email (or <superadmin@example.com> if not specified)
 4. Stores these values back to your local `.env` file for persistence
 5. Caches configuration for optimal performance
 
-> **Note:** The first time you start the containers, check the logs with `docker compose -f docker-compose.prod.yml logs app` to ensure the keys were generated successfully and to retrieve the auto-generated admin password if you didn't specify one.
+> **Note:** The first time you start the containers, check the logs with `docker compose -f docker-compose.prod.yml logs app` to ensure the keys were generated successfully and to retrieve the auto-generated superadmin password if you didn't specify one.
 
 ```bash
-# To check the initial setup logs and get the generated admin password
+# To check the initial setup logs and get the generated superadmin password
 docker compose -f docker-compose.prod.yml logs app
 ```
 
 Look for log entries similar to:
 
 ```
-Created new admin user with email: admin@example.com
+Created new superadmin user with email: superadmin@example.com
 Generated password: Abx71!kTs9pQ
 Please change this password after first login!
 ```

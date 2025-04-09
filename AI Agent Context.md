@@ -13,7 +13,8 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
 - Use of JWT for session management, utilizing the `tymon/jwt-auth` library.
 - Protection of user and role routes through session management; only users with a valid JWT token can access them.
 - Implementation of middleware to restrict access to routes based on the role of the logged-in user.
-- Restriction of all user and role routes so that only users with the 'admin' role can access them.
+- Addition of a "superadmin" role with highest level permissions in the system.
+- Restriction of all user and role routes so that only users with the 'admin' or 'superadmin' role can access them.
 - Creation of an endpoint to send a verification code email to confirm the user's email validity.
 - Creation of an endpoint to verify the user's email, which receives a code to validate the email.
 - Configuration to automatically send a verification email when creating or editing a user to confirm the account.
@@ -121,6 +122,7 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Creation of a `.env.prod-example` template with production-ready settings
   - Complete documentation of the deployment process in a dedicated `DEPLOYMENT.md` file
   - Implementation of security best practices for production environments
+  - Configuration for creating a default superadmin user during deployment using the environment variables `SUPER_ADMIN_EMAIL` and `SUPER_ADMIN_PASSWORD`
 
 **Important Notes:**
 

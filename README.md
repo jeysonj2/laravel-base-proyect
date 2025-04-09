@@ -26,7 +26,12 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   - Complete CRUD operations for users
   - Role-based access control with middleware protection
   - User profile management with restricted permissions
-  - Automatic admin user creation during production deployment
+  - Automatic superadmin user creation during production deployment
+  
+- **Role Management**
+  - Predefined roles: superadmin, admin, and user
+  - Role-based access control to endpoints
+  - Superadmin role with highest privileges in the system
   
 - **Email Verification**
   - Automatic email verification for new accounts and email updates
@@ -77,7 +82,7 @@ This is a base Laravel 12 project with a RESTful API implementation that include
 
 - **Production-Ready Deployment**
   - Docker Compose configuration for production environment
-  - Automatic creation of admin user during deployment
+  - Automatic creation of superadmin user during deployment
   - SSL/TLS with Let's Encrypt integration
   - Optimized PHP and Nginx configurations
   - SMTP server for email delivery
@@ -121,10 +126,11 @@ This is a base Laravel 12 project with a RESTful API implementation that include
 
 The following default users are created when running the database seeders:
 
-| Type  | Email             | Password      | Role  |
-|-------|-------------------|---------------|-------|
-| Admin | <admin@example.com> | Abcde12345!   | ADMIN |
-| User  | <test@example.com>  | Abcde12345!   | USER  |
+| Type       | Email                      | Password      | Role       |
+|------------|----------------------------|---------------|------------|
+| Superadmin | <superadmin@example.com>   | Abcde12345!   | SUPERADMIN |
+| Admin      | <admin@example.com>        | Abcde12345!   | ADMIN      |
+| User       | <test@example.com>         | Abcde12345!   | USER       |
 
 > ⚠️ **SECURITY WARNING**: Change these default passwords immediately after installation to prevent unauthorized access to your application. These credentials are intended for initial setup only.
 
@@ -154,6 +160,8 @@ Important environment variables to configure:
 - `LOCKOUT_PERIOD_HOURS`: Time period to count temporary lockouts (default: 24)
 - `PASSWORD_RESET_TOKEN_EXPIRY_MINUTES`: Expiration time for password reset tokens
 - `L5_SWAGGER_CONST_HOST`: Host for Swagger documentation (defaults to APP_URL)
+- `SUPER_ADMIN_EMAIL`: Email address for the default superadmin user in production
+- `SUPER_ADMIN_PASSWORD`: Password for the default superadmin user in production (auto-generated if not specified)
 
 ## API Documentation
 
@@ -168,7 +176,7 @@ Interactive API documentation is available through Swagger UI at `/api/documenta
 - `GET /api/profile`: Get user profile (authenticated)
 - `PUT /api/profile`: Update user profile (authenticated)
 
-### User Management Endpoints (Admin only)
+### User Management Endpoints (Admin and Superadmin only)
 
 - `GET /api/users`: List all users
 - `POST /api/users`: Create new user
@@ -177,7 +185,7 @@ Interactive API documentation is available through Swagger UI at `/api/documenta
 - `DELETE /api/users/{id}`: Delete user
 - `POST /api/users/{user}/resend-verification`: Resend verification email
 
-### Role Management Endpoints (Admin only)
+### Role Management Endpoints (Admin and Superadmin only)
 
 - `GET /api/roles`: List all roles
 - `POST /api/roles`: Create new role
@@ -194,7 +202,7 @@ Interactive API documentation is available through Swagger UI at `/api/documenta
 - `POST /api/password/email`: Request password reset email
 - `POST /api/password/reset`: Reset password with token
 
-### Account Lockout Management Endpoints (Admin only)
+### Account Lockout Management Endpoints (Admin and Superadmin only)
 
 - `GET /api/locked-users`: List locked users
 - `POST /api/users/{user}/unlock`: Unlock user account
