@@ -377,7 +377,7 @@ class UserController extends Controller
     public function update(Request $request, string $id): JsonResponse
     {
         $user = User::findOrFail($id);
-        
+
         // Check if the target user is a superadmin
         if ($user->isSuperadmin) {
             // Check permission to update superadmin
@@ -386,15 +386,16 @@ class UserController extends Controller
                 return $response;
             }
         }
-        
+
         // Check if attempting to change role to superadmin
         $superadminRole = \App\Models\Role::getSuperadminRole();
-        if ($request->has('role_id') && $superadminRole && 
-            $request->role_id == $superadminRole->id && 
-            $user->role_id != $superadminRole->id) {
-            
+        if (
+            $request->has('role_id') && $superadminRole &&
+            $request->role_id == $superadminRole->id &&
+            $user->role_id != $superadminRole->id
+        ) {
             // Only superadmins can make users into superadmins
-            if (!auth()->user()->isSuperadmin) {
+            if (! auth()->user()->isSuperadmin) {
                 return $this->forbiddenResponse('Only superadmins can assign the superadmin role');
             }
         }
@@ -479,8 +480,8 @@ class UserController extends Controller
      *
      *             @OA\Property(property="code", type="integer", example=403),
      *             @OA\Property(
-     *                 property="message", 
-     *                 type="string", 
+     *                 property="message",
+     *                 type="string",
      *                 example="Only superadmins can delete superadmin users",
      *                 description="Could also be: 'You cannot delete your own account'"
      *             )
@@ -506,15 +507,15 @@ class UserController extends Controller
     public function destroy(string $id): JsonResponse
     {
         $user = User::findOrFail($id);
-        
+
         // Prevent users from deleting their own account
         $authId = auth()->user()->id;
         $userId = $user->id;
-        
+
         if ($authId === $userId) {
-            return $this->forbiddenResponse("You cannot delete your own account");
+            return $this->forbiddenResponse('You cannot delete your own account');
         }
-        
+
         // Check if the target user is a superadmin
         if ($user->isSuperadmin) {
             // Check permission to delete superadmin
@@ -523,7 +524,7 @@ class UserController extends Controller
                 return $response;
             }
         }
-        
+
         $user->delete();
 
         return $this->successResponse('User deleted successfully');
@@ -533,12 +534,15 @@ class UserController extends Controller
      * Check if the current user has permission to manage superadmin users.
      *
      * @param string $action The action being performed (create, update, delete)
+     *
      * @return JsonResponse|null Returns a forbidden response if not allowed, null if allowed
      */
     private function checkSuperadminPermission(string $action): ?JsonResponse
     {
-        if (!auth()->user()->isSuperadmin) {
-            return $this->forbiddenResponse("Only superadmins can {$action} superadmin users");
+        if (! auth()->user()->isSuperadmin) {
+            return $this->forbiddenResponse(
+                "Only superadmins can {$action} superadmin users"
+            );
         }
 
         return null;

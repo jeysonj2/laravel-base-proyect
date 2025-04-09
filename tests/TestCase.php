@@ -12,19 +12,19 @@ abstract class TestCase extends BaseTestCase
     protected User $admin;
 
     protected User $regularUser;
-    
+
     protected User $superadmin;
 
     protected Role $adminRole;
-    
+
     protected Role $userRole;
-    
+
     protected Role $superadminRole;
 
     protected string $adminToken;
 
     protected string $userToken;
-    
+
     protected string $superadminToken;
 
     protected function setUpWithAuth(): void

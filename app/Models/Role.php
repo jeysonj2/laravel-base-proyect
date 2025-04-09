@@ -94,7 +94,7 @@ class Role extends Model
 
     /**
      * Get the superadmin role.
-     * 
+     *
      * @return self|null The superadmin role if it exists, null otherwise
      */
     public static function getSuperadminRole(): ?self

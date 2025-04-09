@@ -45,7 +45,7 @@ class RoleMiddleware
 
         // Combine the primary role with any additional roles
         $acceptedRoles = array_merge([$role], $additionalRoles);
-        
+
         // Process the roles array to handle comma-separated roles
         $processedRoles = [];
         foreach ($acceptedRoles as $acceptedRole) {

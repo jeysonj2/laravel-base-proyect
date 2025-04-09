@@ -18,10 +18,10 @@ class RoleDeletionTest extends TestCase
     {
         // Get the user role ID before attempting to delete
         $roleId = $this->userRole->id;
-        
+
         // Verify that the role has associated users
         $this->assertTrue($this->userRole->users()->count() > 0, 'The role must have associated users for this test');
-        
+
         // Attempt to delete the role that has users associated with it
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->adminToken,
@@ -30,7 +30,7 @@ class RoleDeletionTest extends TestCase
         // Verify that the response indicates an error (not a successful 2xx response)
         // In this case, it's returning a 500 Internal Server Error
         $response->assertStatus(500);
-        
+
         // We don't verify the exact message as it may vary depending on the backend implementation
         // What matters is that the role cannot be deleted when it has associated users
     }
