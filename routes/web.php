@@ -8,6 +8,7 @@
  * contains the "web" middleware group.
  */
 
+use App\Http\Controllers\EmailVerificationController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -22,3 +23,11 @@ Route::get('/', function () {
     // Redirect to the API documentation page
     return redirect('/api/documentation');
 })->name('home');
+
+/**
+ * Email verification route.
+ *
+ * This route handles the email verification process with a web interface.
+ * It accepts a verification code and processes it.
+ */
+Route::get('/verify-email', [EmailVerificationController::class, 'verifyWeb'])->name('verification.verify');

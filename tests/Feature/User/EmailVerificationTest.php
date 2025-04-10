@@ -58,7 +58,7 @@ class EmailVerificationTest extends TestCase
         ]);
 
         // Act
-        $response = $this->getJson('/api/verify-email?email' . '=' . $user->email . '&code=invalid-code');
+        $response = $this->getJson('/api/verify-email?code=invalid-code');
 
         // Assert
         $response->assertStatus(400) // The controller returns 400 instead of 422

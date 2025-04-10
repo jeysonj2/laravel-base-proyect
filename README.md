@@ -39,6 +39,8 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   - Automatic email verification for new accounts and email updates
   - Manual email verification endpoint with verification codes
   - Auto-resend verification emails when creating or updating users
+  - Web interface for email verification with success/error pages
+  - Configurable custom verification URL for frontend integration
   
 - **Security Features**
   - Advanced account lockout system:
@@ -78,7 +80,7 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   - Comprehensive test suite with Unit and Feature tests
   - Code coverage reporting using Xdebug
   - HTML and text-based coverage reports
-  - Current code coverage: 97.19% (lines), 90.24% (methods), 75.00% (classes)
+  - Current code coverage: 97.27% (lines), 90.36% (methods), 75.00% (classes)
   - Extensive unit tests for:
     - Models (User, Role)
     - Events (UserCreated)

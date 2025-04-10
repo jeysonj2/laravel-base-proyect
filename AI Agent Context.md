@@ -77,7 +77,7 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Implementation of tests for all main API features.
 - Implementation of code coverage reporting to evaluate test effectiveness:
   - Configuration of Docker environment with Xdebug support and coverage mode enabled
-  - Current code coverage: Classes 75.00% (15/20), Methods 90.24% (74/82), Lines 97.19% (485/499)
+  - Current code coverage: Classes 75.00% (15/20), Methods 90.36% (75/83), Lines 97.27% (499/513)
   - Complete test coverage for Console Commands, EventServiceProvider, Events, and ApiResponseTrait
   - Comprehensive test suite with feature tests for authentication, email verification, user management and more
   - Unit tests for models, events, service providers, and utility classes
@@ -141,15 +141,31 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Simple syntax like `./shell-scripts/test.sh Unit\\Models\\RoleTest Feature\\Auth\\LoginTest`
   - Proper handling of backslash escaping in test class names
   - Integration with Laravel's test filtering capabilities using the `--filter` option
+- Enhanced email verification system:
+  - Added a web interface for email verification that shows a success or error page
+  - Created an environment variable `EMAIL_VERIFICATION_URL` to specify a custom URL for email verification
+  - Created a configuration file `verification.php` to manage email verification settings
+  - Modified the email template to use the configured URL or fall back to the default web interface
+  - Created responsive and user-friendly verification success and error pages
+  - Added a new `verifyWeb` method to the `EmailVerificationController` to handle web-based verification
+  - Added comprehensive tests for the web verification interface
+  - Updated Swagger documentation for the new web-based verification endpoint
+  - Maintained backward compatibility with the API-based verification endpoint
 
 **Important Notes:**
 
-- We are using Docker Compose during development, so everything runs in containers and not directly from the terminal. Any command that needs to be executed must be done inside the containers. Please read the docker-compose.yml file to understand the service names in context.
+- We are using Docker Compose during development, so everything runs in containers and not directly from the terminal. Any command that needs to be executed must be done inside the containers. Please read the `docker-compose.yml` file to get familiar with the services names.
+- Shell scripts located in the folder `./shell-scripts` can run directly in the terminal, they contain the proper docker compose command for each.
 - We are working with Laravel 12, so all solutions must be adapted to this version. If necessary, consult the official Laravel 12 documentation at <https://laravel.com/docs/12.x>.
 - Environment variables are obtained as strings, so explicit casting to other data types is necessary when required.
 - We will communicate in Spanish or English; however, all generated code, along with messages and comments, must be in English to comply with international standards.
 - When adding a new feature, please add the related PHPdoc, Swagger annotations and tests.
 - When modifying a feature, please update the related PHPdoc, Swagger annotations and tests if necessary.
-- Every time I write to you (Github Copilot Agent Mode) in your prompt the sentence: `tested and approved` or `probado y aprobado`, you will update the `AI Agent Context.md` file with what has been recently done and the `README.md` file if necessary.
+- Every time I write to you (Github Copilot Agent Mode) in your prompt the sentence: `tested and approved` or `probado y aprobado`, you will:
+  - Read the git changes to get additional information about the recent changes
+  - Update the `AI Agent Context.md` file with what has been recently done by you (Github Copilot Agent Mode) and also about whatever you found in the git changes
+  - Update `README.md` file if necessary
+  - Run the command `./shell-scripts/fix-style.sh` to fix lint and format
+  - Run the command `./shell-scripts/tests-coverage.sh` to check all tests are passing and update de coverage percents in the files `AI Agent Context.md` and `README.md`
 
 Please confirm if you are ready to receive the next task.

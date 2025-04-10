@@ -190,4 +190,59 @@ class EmailVerificationController extends Controller
 
         return $this->successResponse('Email verified successfully.');
     }
+
+    /**
+     * Verify the user's email using a secret code through a web interface.
+     *
+     * This method provides a web interface for email verification, displaying
+     * a success or error page based on the verification result.
+     *
+     * @OA\Get(
+     *     path="/verify-email",
+     *     summary="Verify email address (web interface)",
+     *     description="Verifies a user's email address using the verification code sent in the email.
+     *     This endpoint provides a web-based interface for email verification,
+     *     displaying a success page or error page based on the verification result.",
+     *     operationId="verifyEmailWeb",
+     *     tags={"Email Verification"},
+     *
+     *     @OA\Parameter(
+     *         name="code",
+     *         in="query",
+     *         description="Verification code sent to user's email (32-character hexadecimal string)",
+     *         required=true,
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Returns a web page with verification success or error message"
+     *     )
+     * )
+     *
+     * @return \Illuminate\View\View
+     */
+    public function verifyWeb(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string',
+        ]);
+
+        $user = User::where('verification_code', $request->code)->first();
+
+        if (! $user) {
+            return view('auth.verification-error', [
+                'message' => 'Invalid verification code.',
+            ]);
+        }
+
+        $user->email_verified_at = now();
+        $user->verification_code = null; // Clear the verification code after successful verification
+        $user->save();
+
+        return view('auth.verification-success', [
+            'user' => $user,
+        ]);
+    }
 }
