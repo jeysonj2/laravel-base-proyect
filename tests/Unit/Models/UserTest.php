@@ -12,7 +12,7 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         // Make sure roles exist with proper primary keys
@@ -149,7 +149,7 @@ class UserTest extends TestCase
         $user = User::factory()->create([
             'is_permanently_locked' => false,
         ]);
-        
+
         // New attempt
         $this->assertFalse($user->registerFailedLoginAttempt());
         $this->assertEquals(1, $user->failed_login_attempts);

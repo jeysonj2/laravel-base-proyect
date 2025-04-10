@@ -5,6 +5,7 @@ namespace Tests\Unit\Commands;
 use App\Console\Commands\CreateDefaultSuperadminUser;
 use App\Models\Role;
 use App\Models\User;
+use Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -15,7 +16,7 @@ class CreateDefaultSuperadminUserTest extends TestCase
 
     protected CreateDefaultSuperadminUser $command;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->command = $this->app->make(CreateDefaultSuperadminUser::class);
@@ -54,7 +55,7 @@ class CreateDefaultSuperadminUserTest extends TestCase
             'name' => 'Superadmin',
             'last_name' => 'User',
         ]);
-        
+
         // Check that the user has the superadmin role
         $user = User::first();
         $this->assertNotNull($user);
@@ -67,12 +68,12 @@ class CreateDefaultSuperadminUserTest extends TestCase
         // Arrange
         Role::create(['name' => 'superadmin']);
         $this->assertDatabaseCount('users', 0);
-        
+
         // Act
         $this->artisan('app:create-default-superadmin', [
             '--email' => 'custom@example.com',
         ])->assertExitCode(0);
-        
+
         // Assert
         $this->assertDatabaseHas('users', [
             'email' => 'custom@example.com',
@@ -91,12 +92,12 @@ class CreateDefaultSuperadminUserTest extends TestCase
             'password' => bcrypt('password'),
             'role_id' => Role::where('name', 'superadmin')->first()->id,
         ]);
-        
+
         // Act
         $this->artisan('app:create-default-superadmin')
             ->expectsOutput('Superadmin user with email superadmin@example.com already exists. Use --force to overwrite.')
             ->assertExitCode(0);
-        
+
         // Assert
         $user = User::first();
         $this->assertEquals('Existing', $user->name);
@@ -115,12 +116,12 @@ class CreateDefaultSuperadminUserTest extends TestCase
             'password' => bcrypt('password'),
             'role_id' => Role::where('name', 'superadmin')->first()->id,
         ]);
-        
+
         // Act
         $this->artisan('app:create-default-superadmin', [
             '--force' => true,
         ])->assertExitCode(0);
-        
+
         // Assert
         $user = User::first();
         $this->assertEquals('Superadmin', $user->name);
@@ -132,14 +133,14 @@ class CreateDefaultSuperadminUserTest extends TestCase
     {
         // Arrange
         Role::create(['name' => 'superadmin']);
-        
+
         // Act
         $this->artisan('app:create-default-superadmin', [
             '--password' => 'custom-password',
         ])->assertExitCode(0);
-        
+
         // Assert - Check using the password
         $user = User::first();
-        $this->assertTrue(\Hash::check('custom-password', $user->password));
+        $this->assertTrue(Hash::check('custom-password', $user->password));
     }
 }

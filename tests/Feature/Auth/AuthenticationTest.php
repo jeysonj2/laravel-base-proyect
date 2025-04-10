@@ -2,15 +2,13 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Mail\EmailVerification;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\EmailVerification;
-use App\Mail\PasswordChanged;
 use Tests\TestCase;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthenticationTest extends TestCase
 {
@@ -311,7 +309,7 @@ class AuthenticationTest extends TestCase
     {
         // Direct authentication is more reliable than token-based auth in tests
         $this->actingAs($this->regularUser, 'api');
-        
+
         $response = $this->postJson('/api/change-password', [
             'current_password' => 'wrongpassword', // Intentionally wrong
             'new_password' => 'NewPassword123!',
@@ -326,7 +324,7 @@ class AuthenticationTest extends TestCase
     {
         // Direct authentication is more reliable than token-based auth in tests
         $this->actingAs($this->regularUser, 'api');
-        
+
         $response = $this->putJson('/api/profile', [
             'name' => 'Updated Name',
             'password' => 'NewPassword123!',
@@ -340,7 +338,7 @@ class AuthenticationTest extends TestCase
     {
         // Direct authentication is more reliable than token-based auth in tests
         $this->actingAs($this->regularUser, 'api');
-        
+
         $response = $this->putJson('/api/profile', [
             'name' => 'Updated Name',
             'role_id' => $this->adminRole->id,
@@ -356,7 +354,7 @@ class AuthenticationTest extends TestCase
 
         // Direct authentication is more reliable than token-based auth in tests
         $this->actingAs($this->regularUser, 'api');
-        
+
         $response = $this->putJson('/api/profile', [
             'email' => 'newemail@example.com',
         ]);
@@ -391,7 +389,7 @@ class AuthenticationTest extends TestCase
         ]);
 
         $response->assertStatus(401);
-        
+
         // Check that failed login attempts increased
         $user->refresh();
         $this->assertEquals(1, $user->failed_login_attempts);

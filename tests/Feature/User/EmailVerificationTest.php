@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\User;
 
+use App\Mail\EmailVerification;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\EmailVerification;
 use Tests\TestCase;
 
 class EmailVerificationTest extends TestCase
@@ -182,10 +182,10 @@ class EmailVerificationTest extends TestCase
 
         // Get the updated user with the new verification code
         $updatedUser = User::find($unverifiedUser->id);
-        
+
         // Verify a verification code exists (may be different from the original)
         $this->assertNotNull($updatedUser->verification_code);
-        
+
         // It appears the implementation generates a new code, so verify it's different
         $this->assertNotEquals('existing-verification-code', $updatedUser->verification_code);
 

@@ -6,23 +6,24 @@ use App\Events\UserCreated;
 use App\Listeners\SendVerificationEmail;
 use App\Providers\EventServiceProvider;
 use PHPUnit\Framework\Attributes\Test;
+use ReflectionClass;
 use Tests\TestCase;
 
 class EventServiceProviderTest extends TestCase
 {
     protected EventServiceProvider $provider;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->provider = new EventServiceProvider($this->app);
     }
 
     #[Test]
-    public function it_registers_userCreated_event_with_sendVerificationEmail_listener()
+    public function it_registers_user_created_event_with_send_verification_email_listener()
     {
         // Access protected property via reflection
-        $reflection = new \ReflectionClass($this->provider);
+        $reflection = new ReflectionClass($this->provider);
         $property = $reflection->getProperty('listen');
         $property->setAccessible(true);
         $listen = $property->getValue($this->provider);
