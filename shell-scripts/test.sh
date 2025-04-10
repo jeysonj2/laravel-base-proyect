@@ -24,4 +24,4 @@ done
 
 # Run the tests with the specified filter
 echo "Running tests: $FILTER"
-docker-compose exec app php artisan test --filter="$FILTER"
+docker compose exec app php artisan test --filter="$FILTER"

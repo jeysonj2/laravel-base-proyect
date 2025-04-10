@@ -4,4 +4,4 @@
 cd "$(dirname "$0")/.."
 
 # Start the containers in detached mode
-docker-compose -f docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d

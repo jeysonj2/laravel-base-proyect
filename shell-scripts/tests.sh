@@ -4,4 +4,4 @@
 cd "$(dirname "$0")/.."
 
 # Run the tests
-docker-compose exec app php artisan test
+docker compose exec app php artisan test

@@ -4,4 +4,4 @@
 cd "$(dirname "$0")/.."
 
 # Stop and remove the containers
-docker-compose -f docker-compose.prod.yml down --remove-orphans
+docker compose -f docker-compose.prod.yml down --remove-orphans

@@ -4,4 +4,4 @@
 cd "$(dirname "$0")/.."
 
 # Run the fix-style command
-docker-compose exec app composer fix-style
+docker compose exec app composer fix-style

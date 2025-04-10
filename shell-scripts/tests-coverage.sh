@@ -4,4 +4,4 @@
 cd "$(dirname "$0")/.."
 
 # Run the tests with coverage
-docker-compose exec app php artisan test --coverage
+docker compose exec app php artisan test --coverage

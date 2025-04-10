@@ -4,4 +4,4 @@
 cd "$(dirname "$0")/.."
 
 # Run build command
-docker-compose -f docker-compose.prod.yml build
+docker compose -f docker-compose.prod.yml build

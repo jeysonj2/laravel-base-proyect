@@ -4,4 +4,4 @@
 cd "$(dirname "$0")/.."
 
 # Generate the Swagger documentation
-docker-compose exec app php artisan l5-swagger:generate
+docker compose exec app php artisan l5-swagger:generate
