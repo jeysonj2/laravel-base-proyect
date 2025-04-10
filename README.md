@@ -357,6 +357,7 @@ This project provides a set of convenient shell scripts to simplify common Docke
 | `./shell-scripts/fix-style.sh` | Automatically fix code style issues |
 | `./shell-scripts/tests.sh` | Run all tests without coverage reporting |
 | `./shell-scripts/tests-coverage.sh` | Run tests with coverage reporting |
+| `./shell-scripts/swagger-generate.sh` | Generate Swagger API documentation |
 
 ### Making Scripts Executable
 

@@ -1564,7 +1564,7 @@
                         }
                     },
                     "403": {
-                        "description": "Forbidden - User does not have admin role",
+                        "description": "Forbidden - User does not have admin role or is trying to create a superadmin without being superadmin",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1575,7 +1575,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Forbidden"
+                                            "example": "Only superadmins can create other superadmin users"
                                         }
                                     },
                                     "type": "object"
@@ -1819,7 +1819,7 @@
                         }
                     },
                     "403": {
-                        "description": "Forbidden - User does not have admin role",
+                        "description": "Forbidden - User does not have admin role or trying to modify a superadmin without being superadmin",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1830,7 +1830,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Forbidden"
+                                            "example": "Only superadmins can update superadmin users"
                                         }
                                     },
                                     "type": "object"
@@ -1946,7 +1946,7 @@
                         }
                     },
                     "403": {
-                        "description": "Forbidden - User does not have admin role",
+                        "description": "Forbidden - User does not have admin role, trying to delete a superadmin without being\n     *         superadmin, or attempting to delete own account",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1956,8 +1956,9 @@
                                             "example": 403
                                         },
                                         "message": {
+                                            "description": "Could also be: 'You cannot delete your own account'",
                                             "type": "string",
-                                            "example": "Forbidden"
+                                            "example": "Only superadmins can delete superadmin users"
                                         }
                                     },
                                     "type": "object"
