@@ -45,8 +45,10 @@ APP_NAME="Laravel Base Project"
 APP_ENV=production
 APP_KEY=  # Will be generated automatically
 APP_DEBUG=false
-APP_URL=https://my-laravel-base-project.test
+# HTTP_PORT=80
 APP_DOMAIN=my-laravel-base-project.test
+# APP_URL=http://${APP_DOMAIN}:${HTTP_PORT}
+APP_URL=http://${APP_DOMAIN}
 
 # PostgreSQL Database Configuration
 DB_CONNECTION=pgsql

@@ -176,5 +176,6 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Read the git changes to get additional information about the recent changes
   - Update the `AI Agent Context.md` file with what has been recently done by you (Github Copilot Agent Mode) and also about whatever you found in the git changes
   - Update `README.md` file if necessary
+  - Update `DEPLOYMENT.md` file if necessary
   - Run the command `./shell-scripts/fix-style.sh` to fix lint and format
   - Run the command `./shell-scripts/tests-coverage.sh` to check all tests are passing and update de coverage percents in the files `AI Agent Context.md` and `README.md`
