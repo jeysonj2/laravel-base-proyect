@@ -1,19 +1,19 @@
 
 
 [1;37;40mCode Coverage Report:      [0m
-[1;37;40m  2025-04-10 13:23:26      [0m
+[1;37;40m  2025-04-10 15:40:35      [0m
 [1;37;40m                           [0m
 [1;37;40m Summary:                  [0m
 [30;43m  Classes: 75.00% (15/20)  [0m
 [30;42m  Methods: 90.24% (74/82)  [0m
-[30;42m  Lines:   96.60% (483/500)[0m
+[30;42m  Lines:   97.19% (485/499)[0m
 
 App\Console\Commands\CreateDefaultSuperadminUser
   [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 36/ 36)[0m
 App\Events\UserCreated
   [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% (  4/  4)[0m
 App\Http\Controllers\AuthController
-  [37;41mMethods:  33.33% ( 2/ 6)[0m   [30;43mLines:  89.57% (103/115)[0m
+  [37;41mMethods:  33.33% ( 2/ 6)[0m   [30;42mLines:  92.17% (106/115)[0m
 App\Http\Controllers\EmailVerificationController
   [37;41mMethods:  50.00% ( 1/ 2)[0m   [30;43mLines:  88.24% ( 15/ 17)[0m
 App\Http\Controllers\PasswordResetController
@@ -41,7 +41,7 @@ App\Mail\PasswordChanged
 App\Mail\PasswordReset
   [30;42mMethods: 100.00% ( 4/ 4)[0m   [30;42mLines: 100.00% ( 15/ 15)[0m
 App\Models\Role
-  [30;42mMethods: 100.00% ( 6/ 6)[0m   [30;42mLines: 100.00% ( 10/ 10)[0m
+  [30;42mMethods: 100.00% ( 6/ 6)[0m   [30;42mLines: 100.00% (  9/  9)[0m
 App\Models\User
   [30;42mMethods: 100.00% (13/13)[0m   [30;42mLines: 100.00% ( 69/ 69)[0m
 App\Providers\AppServiceProvider

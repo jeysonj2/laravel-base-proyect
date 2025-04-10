@@ -78,12 +78,10 @@ class Role extends Model
 
     /**
      * Check if this role is an admin role.
-     * Both 'admin' and 'superadmin' are considered admin roles.
      */
     public function isAdmin(): bool
     {
-        $roleName = strtolower($this->name);
-        return $roleName === 'admin' || $roleName === 'superadmin';
+        return strtolower($this->name) === 'admin';
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace Tests\Feature\User;
 
 use App\Mail\EmailVerification;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
@@ -52,14 +51,14 @@ class EmailVerificationTest extends TestCase
     {
         // Arrange
         $user = User::factory()->create([
-            'email' => 'test@example.com',
+            'email' => 'test_user_cannot_verify_email_with_invalid_code@example.com',
             'verification_code' => 'valid-verification-code',
             'email_verified_at' => null,
-            'role_id' => Role::where('name', 'user')->first()->id,
+            'role_id' => $this->userRole->id,
         ]);
 
         // Act
-        $response = $this->getJson('/api/verify-email?email=test@example.com&code=invalid-code');
+        $response = $this->getJson('/api/verify-email?email' . '=' . $user->email . '&code=invalid-code');
 
         // Assert
         $response->assertStatus(400) // The controller returns 400 instead of 422
@@ -71,7 +70,7 @@ class EmailVerificationTest extends TestCase
         // Check database - email_verified_at should still be null
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
-            'email' => 'test@example.com',
+            'email' => $user->email,
             'email_verified_at' => null,
         ]);
     }
@@ -80,14 +79,14 @@ class EmailVerificationTest extends TestCase
     {
         // Arrange
         $user = User::factory()->create([
-            'email' => 'test@example.com',
+            'email' => 'test_user_cannot_verify_with_mismatched_email@example.com',
             'verification_code' => 'valid-verification-code',
             'email_verified_at' => null,
-            'role_id' => Role::where('name', 'user')->first()->id,
+            'role_id' => $this->userRole->id,
         ]);
 
         // Act
-        $response = $this->getJson('/api/verify-email?email=wrong@example.com&code=valid-verification-code');
+        $response = $this->getJson('/api/verify-email?email' . '=' . $user->email . '&code=valid-verification-code');
 
         // Assert
         $response->assertStatus(400) // The controller returns 400 instead of 422
@@ -99,7 +98,7 @@ class EmailVerificationTest extends TestCase
         // Check database - email_verified_at should still be null
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
-            'email' => 'test@example.com',
+            'email' => $user->email,
             'email_verified_at' => null,
         ]);
     }
@@ -112,7 +111,7 @@ class EmailVerificationTest extends TestCase
         $unverifiedUser = User::factory()->create([
             'email_verified_at' => null,
             'verification_code' => null,
-            'role_id' => Role::where('name', 'user')->first()->id,
+            'role_id' => $this->userRole->id,
         ]);
 
         // Use direct authentication instead of token-based auth
@@ -142,7 +141,7 @@ class EmailVerificationTest extends TestCase
         // Create a verified user
         $verifiedUser = User::factory()->create([
             'email_verified_at' => now(),
-            'role_id' => Role::where('name', 'user')->first()->id,
+            'role_id' => $this->userRole->id,
         ]);
 
         // Use direct authentication instead of token-based auth
@@ -167,7 +166,7 @@ class EmailVerificationTest extends TestCase
         $unverifiedUser = User::factory()->create([
             'email_verified_at' => null,
             'verification_code' => 'existing-verification-code',
-            'role_id' => Role::where('name', 'user')->first()->id,
+            'role_id' => $this->userRole->id,
         ]);
 
         // Use direct authentication instead of token-based auth

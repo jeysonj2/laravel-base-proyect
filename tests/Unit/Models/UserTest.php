@@ -14,23 +14,14 @@ class UserTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-        // Make sure roles exist with proper primary keys
-        Role::query()->delete();
-        Role::insert([
-            ['id' => 1, 'name' => 'user'],
-            ['id' => 2, 'name' => 'admin'],
-            ['id' => 3, 'name' => 'superadmin'],
-        ]);
+        parent::setUpWithAuth();
     }
 
     #[Test]
     public function user_belongs_to_role()
     {
-        $role = Role::where('name', 'user')->first();
-        $user = User::factory()->create([
-            'role_id' => $role->id,
-        ]);
+        $role = $this->userRole;
+        $user = $this->regularUser;
 
         $this->assertInstanceOf(Role::class, $user->role);
         $this->assertEquals($role->id, $user->role->id);
@@ -39,34 +30,21 @@ class UserTest extends TestCase
     #[Test]
     public function user_has_is_admin_attribute()
     {
-        $role = Role::where('name', 'user')->first();
-        $user = User::factory()->create([
-            'role_id' => $role->id,
-        ]);
+        $user = $this->regularUser;
+
         $this->assertFalse($user->isAdmin);
 
-        $adminRole = Role::where('name', 'admin')->first();
-        $admin = User::factory()->create([
-            'role_id' => $adminRole->id,
-        ]);
+        $admin = $this->admin;
         $this->assertTrue($admin->isAdmin);
 
-        $superadminRole = Role::where('name', 'superadmin')->first();
-        $superadmin = User::factory()->create([
-            'role_id' => $superadminRole->id,
-        ]);
-        $this->assertTrue($superadmin->isAdmin);
+        $superadmin = $this->superadmin;
+        $this->assertTrue($superadmin->isSuperadmin);
     }
 
     #[Test]
     public function it_hides_sensitive_attributes()
     {
-        $user = User::factory()->create([
-            'password' => 'password',
-            'remember_token' => 'token123',
-            'verification_code' => 'verification123',
-            'password_reset_token' => 'reset123',
-        ]);
+        $user = $this->regularUser;
 
         $userArray = $user->toArray();
 

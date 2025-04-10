@@ -27,6 +27,8 @@ abstract class TestCase extends BaseTestCase
 
     protected string $superadminToken;
 
+    public static string $DEFAULT_PASSWORD = 'StrongPassword123!';
+
     protected function setUpWithAuth(): void
     {
         parent::setUp();
@@ -40,11 +42,14 @@ abstract class TestCase extends BaseTestCase
         $this->adminRole = Role::create(['name' => 'admin']);
         $this->userRole = Role::create(['name' => 'user']);
 
+        $password = self::$DEFAULT_PASSWORD;
+
         // Create superadmin user
         $this->superadmin = User::factory()->create([
             'name' => 'Super',
             'last_name' => 'Admin',
             'email' => 'superadmin@example.com',
+            'password' => $password,
             'role_id' => $this->superadminRole->id,
         ]);
 
@@ -53,6 +58,7 @@ abstract class TestCase extends BaseTestCase
             'name' => 'Admin',
             'last_name' => 'User',
             'email' => 'admin@example.com',
+            'password' => $password,
             'role_id' => $this->adminRole->id,
         ]);
 
@@ -61,6 +67,7 @@ abstract class TestCase extends BaseTestCase
             'name' => 'Regular',
             'last_name' => 'User',
             'email' => 'regular@example.com',
+            'password' => $password,
             'role_id' => $this->userRole->id,
         ]);
 

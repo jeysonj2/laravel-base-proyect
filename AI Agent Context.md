@@ -77,7 +77,7 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Implementation of tests for all main API features.
 - Implementation of code coverage reporting to evaluate test effectiveness:
   - Configuration of Docker environment with Xdebug support and coverage mode enabled
-  - Current code coverage: Classes 75.00% (15/20), Methods 90.24% (74/82), Lines 96.60% (483/500)
+  - Current code coverage: Classes 75.00% (15/20), Methods 90.24% (74/82), Lines 97.19% (485/499)
   - Complete test coverage for Console Commands, EventServiceProvider, Events, and ApiResponseTrait
   - Comprehensive test suite with feature tests for authentication, email verification, user management and more
   - Unit tests for models, events, service providers, and utility classes
@@ -135,6 +135,12 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Updated Swagger API documentation to include this restriction in the 403 Forbidden response section
   - Creation of comprehensive tests to verify this protection works for both admin and superadmin users
   - Implementation of proper type conversion to ensure ID comparison works correctly regardless of type (string or integer)
+- Creation of a shell script to run specific tests:
+  - Implementation of a flexible command to execute specific test classes
+  - Support for running multiple test classes at once, separated by spaces
+  - Simple syntax like `./shell-scripts/test.sh Unit\\Models\\RoleTest Feature\\Auth\\LoginTest`
+  - Proper handling of backslash escaping in test class names
+  - Integration with Laravel's test filtering capabilities using the `--filter` option
 
 **Important Notes:**
 

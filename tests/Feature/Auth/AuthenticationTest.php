@@ -6,7 +6,6 @@ use App\Mail\EmailVerification;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
@@ -21,17 +20,10 @@ class AuthenticationTest extends TestCase
 
     public function test_user_can_login_with_correct_credentials(): void
     {
-        // Arrange
-        $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => Hash::make('Password123!'),
-            'role_id' => Role::where('name', 'user')->first()->id,
-        ]);
-
         // Act
         $response = $this->postJson('/api/login', [
-            'email' => 'test@example.com',
-            'password' => 'Password123!',
+            'email' => $this->regularUser->email,
+            'password' => self::$DEFAULT_PASSWORD,
         ]);
 
         // Assert
@@ -51,17 +43,10 @@ class AuthenticationTest extends TestCase
 
     public function test_user_cannot_login_with_incorrect_credentials(): void
     {
-        // Arrange
-        $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => Hash::make('Password123!'),
-            'role_id' => Role::where('name', 'user')->first()->id,
-        ]);
-
         // Act
         $response = $this->postJson('/api/login', [
-            'email' => 'test@example.com',
-            'password' => 'WrongPassword123!',
+            'email' => $this->regularUser->email,
+            'password' => 'Wrong' . self::$DEFAULT_PASSWORD,
         ]);
 
         // Assert
@@ -77,7 +62,7 @@ class AuthenticationTest extends TestCase
         // Arrange
         $user = User::factory()->create([
             'email' => 'test@example.com',
-            'password' => Hash::make('Password123!'),
+            'password' => self::$DEFAULT_PASSWORD,
             'role_id' => Role::where('name', 'user')->first()->id,
             'failed_login_attempts' => 0,
         ]);
@@ -85,7 +70,7 @@ class AuthenticationTest extends TestCase
         // Act
         $response = $this->postJson('/api/login', [
             'email' => 'test@example.com',
-            'password' => 'WrongPassword123!',
+            'password' => 'Wrong' . self::$DEFAULT_PASSWORD,
         ]);
 
         // Assert
@@ -98,17 +83,10 @@ class AuthenticationTest extends TestCase
 
     public function test_user_can_refresh_token(): void
     {
-        // Arrange
-        $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => Hash::make('Password123!'),
-            'role_id' => Role::where('name', 'user')->first()->id,
-        ]);
-
         // Login to obtain a valid token
         $loginResponse = $this->postJson('/api/login', [
-            'email' => 'test@example.com',
-            'password' => 'Password123!',
+            'email' => $this->regularUser->email,
+            'password' => self::$DEFAULT_PASSWORD,
         ]);
 
         $refreshToken = $loginResponse->json('data.refresh_token');
@@ -133,17 +111,10 @@ class AuthenticationTest extends TestCase
 
     public function test_user_can_logout(): void
     {
-        // Arrange
-        $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => Hash::make('Password123!'),
-            'role_id' => Role::where('name', 'user')->first()->id,
-        ]);
-
         // Login to obtain a valid token
         $loginResponse = $this->postJson('/api/login', [
-            'email' => 'test@example.com',
-            'password' => 'Password123!',
+            'email' => $this->regularUser->email,
+            'password' => self::$DEFAULT_PASSWORD,
         ]);
 
         $token = $loginResponse->json('data.access_token');
@@ -176,15 +147,15 @@ class AuthenticationTest extends TestCase
     {
         // Arrange
         $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => Hash::make('OldPassword123!'),
-            'role_id' => Role::where('name', 'user')->first()->id,
+            'email' => 'test_user_can_change_password@example.com',
+            'password' => self::$DEFAULT_PASSWORD,
+            'role_id' => $this->userRole->id,
         ]);
 
         // Login to obtain a valid token
         $loginResponse = $this->postJson('/api/login', [
-            'email' => 'test@example.com',
-            'password' => 'OldPassword123!',
+            'email' => $user->email,
+            'password' => self::$DEFAULT_PASSWORD,
         ]);
 
         $token = $loginResponse->json('data.access_token');
@@ -193,9 +164,9 @@ class AuthenticationTest extends TestCase
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
         ])->postJson('/api/change-password', [
-            'current_password' => 'OldPassword123!',
-            'new_password' => 'NewPassword123!',
-            'password_confirmation' => 'NewPassword123!',
+            'current_password' => self::$DEFAULT_PASSWORD,
+            'new_password' => 'New' . self::$DEFAULT_PASSWORD,
+            'password_confirmation' => 'New' . self::$DEFAULT_PASSWORD,
         ]);
 
         // Assert
@@ -207,8 +178,8 @@ class AuthenticationTest extends TestCase
 
         // Check if user can login with new password
         $loginResponse = $this->postJson('/api/login', [
-            'email' => 'test@example.com',
-            'password' => 'NewPassword123!',
+            'email' => $user->email,
+            'password' => 'New' . self::$DEFAULT_PASSWORD,
         ]);
 
         $loginResponse->assertStatus(200);
@@ -223,24 +194,24 @@ class AuthenticationTest extends TestCase
 
         // Arrange
         $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => Hash::make('Password123!'),
-            'role_id' => Role::where('name', 'user')->first()->id,
+            'email' => 'test_account_locks_after_max_failed_attempts@example.com',
+            'password' => self::$DEFAULT_PASSWORD,
+            'role_id' => $this->userRole->id,
             'failed_login_attempts' => 0,
         ]);
 
         // Act - 3 failed attempts
         for ($i = 0; $i < 3; $i++) {
             $this->postJson('/api/login', [
-                'email' => 'test@example.com',
-                'password' => 'WrongPassword' . $i . '!',
+                'email' => $user->email,
+                'password' => 'Wrong' . $i . self::$DEFAULT_PASSWORD,
             ]);
         }
 
         // Try to login with correct password
         $response = $this->postJson('/api/login', [
-            'email' => 'test@example.com',
-            'password' => 'Password123!',
+            'email' => $user->email,
+            'password' => self::$DEFAULT_PASSWORD,
         ]);
 
         // Assert
@@ -277,17 +248,9 @@ class AuthenticationTest extends TestCase
 
     public function test_refresh_token_validates_refresh_claim(): void
     {
-        // First login to get a token
-        $response = $this->postJson('/api/login', [
-            'email' => $this->regularUser->email,
-            'password' => 'Password123!',
-        ]);
-
-        $token = $response->json('data.access_token');
-
         // Now try using this access token (not refresh token) for refresh endpoint
-        $refreshResponse = $this->withHeaders([
-            'Authorization' => 'Bearer ' . $token,
+        $refreshResponse = $this->withHeaders(headers: [
+            'Authorization' => 'Bearer ' . $this->userToken,
         ])->postJson('/api/refresh');
 
         // The response may vary depending on implementation, but should not be 200
@@ -298,7 +261,7 @@ class AuthenticationTest extends TestCase
     {
         // Try to use an invalid token
         $response = $this->withHeaders([
-            'Authorization' => 'Bearer invalidtoken123',
+            'Authorization' => 'Bearer invalidToken123',
         ])->postJson('/api/refresh');
 
         $response->assertStatus(401);
@@ -355,16 +318,17 @@ class AuthenticationTest extends TestCase
         // Direct authentication is more reliable than token-based auth in tests
         $this->actingAs($this->regularUser, 'api');
 
+        $newEmail = 'new' . $this->regularUser->email;
         $response = $this->putJson('/api/profile', [
-            'email' => 'newemail@example.com',
+            'email' => $newEmail,
         ]);
 
         $response->assertStatus(200);
         $this->assertEquals('Profile updated successfully. Please verify your new email address.', $response->json('message'));
 
         // Verify the verification email was sent
-        Mail::assertSent(EmailVerification::class, function ($mail) {
-            return $mail->hasTo('newemail@example.com');
+        Mail::assertSent(EmailVerification::class, function ($mail) use ($newEmail) {
+            return $mail->hasTo($newEmail);
         });
 
         // Verify the user's email_verified_at is null and verification_code exists
@@ -376,16 +340,16 @@ class AuthenticationTest extends TestCase
     public function test_user_with_correct_email_wrong_password_increases_attempts(): void
     {
         $user = User::factory()->create([
-            'email' => 'test@example.com',
-            'password' => Hash::make('Password123!'),
-            'role_id' => Role::where('name', 'user')->first()->id,
+            'email' => 'test_user_with_correct_email_wrong_password_increases_attempts@example.com',
+            'password' => self::$DEFAULT_PASSWORD,
+            'role_id' => $this->userRole->id,
             'failed_login_attempts' => 0,
         ]);
 
         // Try to login with correct email but wrong password
         $response = $this->postJson('/api/login', [
-            'email' => 'test@example.com',
-            'password' => 'WrongPassword123!',
+            'email' => $user->email,
+            'password' => 'Wrong' . self::$DEFAULT_PASSWORD,
         ]);
 
         $response->assertStatus(401);
@@ -398,15 +362,15 @@ class AuthenticationTest extends TestCase
     public function test_login_with_permanently_locked_account(): void
     {
         $user = User::factory()->create([
-            'email' => 'locked@example.com',
-            'password' => Hash::make('Password123!'),
-            'role_id' => Role::where('name', 'user')->first()->id,
+            'email' => 'test_login_with_permanently_locked_account@example.com',
+            'password' => self::$DEFAULT_PASSWORD,
+            'role_id' => $this->userRole->id,
             'is_permanently_locked' => true,
         ]);
 
         $response = $this->postJson('/api/login', [
-            'email' => 'locked@example.com',
-            'password' => 'Password123!',
+            'email' => $user->email,
+            'password' => self::$DEFAULT_PASSWORD,
         ]);
 
         $response->assertStatus(401);
