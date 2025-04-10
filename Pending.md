@@ -1,7 +1,5 @@
 # Pending Tasks
 
-- Configure an environment variable to specify the frontend URL, which will later be used in the email templates where the user needs to click on a URL.
-- Add an environment variable to set the web server port
 - Deploy on GitHub Pages
 - Make the email address verification feature optional through an environment variable
 - If the email address verification option is active, then the user cannot log in if the email has not been verified within a 24-hour period

@@ -71,7 +71,7 @@ JWT_SECRET=  # Will be generated automatically
 JWT_TTL=60  # Token lifetime in minutes
 
 # Default Superadmin User Configuration
-SUPER_ADMIN_EMAIL=superadmin@example.com
+SUPER_ADMIN_EMAIL=superadmin_laravel_base_project@mailinator.com
 # Leave SUPER_ADMIN_PASSWORD empty to auto-generate a secure password during deployment
 SUPER_ADMIN_PASSWORD=
 

@@ -166,12 +166,14 @@ This project uses Docker Compose with the following services:
 
 Important environment variables to configure:
 
+- `HTTP_PORT`: Port for the web server to listen on (default: 8000 for development, 80 for production)
 - `MAX_LOGIN_ATTEMPTS`: Maximum failed login attempts before temporary lockout (default: 3)
 - `LOGIN_ATTEMPTS_WINDOW_MINUTES`: Time window for counting login attempts (default: 5)
 - `ACCOUNT_LOCKOUT_DURATION_MINUTES`: Duration of temporary account lockout (default: 60)
 - `MAX_LOCKOUTS_IN_PERIOD`: Number of temporary lockouts before permanent lock (default: 2)
 - `LOCKOUT_PERIOD_HOURS`: Time period to count temporary lockouts (default: 24)
 - `PASSWORD_RESET_TOKEN_EXPIRY_MINUTES`: Expiration time for password reset tokens
+- `EMAIL_VERIFICATION_URL`: Custom URL for email verification (optional)
 - `L5_SWAGGER_CONST_HOST`: Host for Swagger documentation (defaults to APP_URL)
 - `SUPER_ADMIN_EMAIL`: Email address for the default superadmin user in production
 - `SUPER_ADMIN_PASSWORD`: Password for the default superadmin user in production (auto-generated if not specified)

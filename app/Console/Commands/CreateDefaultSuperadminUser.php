@@ -62,7 +62,7 @@ class CreateDefaultSuperadminUser extends Command
 
         // Generate a strong password if not provided
         if (! $password) {
-            $password = Str::password(12, true, true, true, false);
+            $password = Str::password(20, true, true, false, false);
         }
 
         // Create or update the superadmin user

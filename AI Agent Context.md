@@ -151,6 +151,17 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Added comprehensive tests for the web verification interface
   - Updated Swagger documentation for the new web-based verification endpoint
   - Maintained backward compatibility with the API-based verification endpoint
+- Implementation of configurable HTTP port for web server:
+  - Added the `HTTP_PORT` environment variable to allow customizing the HTTP port for both development and production environments
+  - Updated development configuration files (`.env.example`, `.env.dev-example`, `.env.testing`) to use the variable with a default of port 8000
+  - Updated production configuration file (`.env.prod-example`) to use the variable with a default of port 80
+  - Modified `docker-compose.yml` to use the `HTTP_PORT` environment variable for port mapping
+  - Modified `docker-compose.prod.yml` to use the `HTTP_PORT` environment variable for port mapping
+  - Updated Nginx configuration files to use the HTTP_PORT variable in listen directives
+  - Enhanced the Nginx start script to properly handle variable substitution for the HTTP port
+  - Used `sed` for reliable variable replacement instead of `envsubst` to avoid configuration errors
+  - Added debugging output to verify the correct port configuration during container startup
+  - Added clear documentation about configuring the HTTP port in the deployment guide
 
 **Important Notes:**
 
@@ -167,5 +178,3 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Update `README.md` file if necessary
   - Run the command `./shell-scripts/fix-style.sh` to fix lint and format
   - Run the command `./shell-scripts/tests-coverage.sh` to check all tests are passing and update de coverage percents in the files `AI Agent Context.md` and `README.md`
-
-Please confirm if you are ready to receive the next task.

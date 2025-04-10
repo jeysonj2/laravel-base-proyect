@@ -39,7 +39,7 @@ services:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
     ports:
-      - "80:80"
+      - "${HTTP_PORT:-80}:${HTTP_PORT:-80}"
       - "443:443"
     networks:
       - laravel
@@ -50,6 +50,7 @@ services:
       - .env
     environment:
       - APP_DOMAIN=${APP_DOMAIN:-my-laravel-base-project.test}
+      - HTTP_PORT=${HTTP_PORT:-80}
     command: sh /start-nginx.sh
 
   db:

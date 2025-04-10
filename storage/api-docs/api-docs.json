@@ -662,6 +662,32 @@
                 }
             }
         },
+        "/verify-email": {
+            "get": {
+                "tags": [
+                    "Email Verification"
+                ],
+                "summary": "Verify email address (web interface)",
+                "description": "Verifies a user's email address using the verification code sent in the email.\n     *     This endpoint provides a web-based interface for email verification,\n     *     displaying a success page or error page based on the verification result.",
+                "operationId": "verifyEmailWeb",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "description": "Verification code sent to user's email (32-character hexadecimal string)",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns a web page with verification success or error message"
+                    }
+                }
+            }
+        },
         "/api/password/email": {
             "post": {
                 "tags": [

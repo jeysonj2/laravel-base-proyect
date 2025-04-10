@@ -17,7 +17,7 @@ if [ "$1" = "php-fpm" ]; then
 
   # Create default superadmin user for production
   echo "Ensuring superadmin user exists..."
-  php artisan app:create-default-superadmin --email="${SUPER_ADMIN_EMAIL:-superadmin@example.com}" --password="${SUPER_ADMIN_PASSWORD:-}" || true
+  php artisan app:create-default-superadmin --email="${SUPER_ADMIN_EMAIL:-superadmin_laravel_base_project@mailinator.com}" --password="${SUPER_ADMIN_PASSWORD:-}" || true
 
   # Ensure keys exist first - before caching configuration
   echo "Generating application keys..."
