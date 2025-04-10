@@ -167,7 +167,7 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - When `HTTP_ONLY=yes`, the application runs only on HTTP port and doesn't use port 443
   - Updated Nginx start script (`docker/nginx/start-nginx.sh`) to check for the HTTP_ONLY variable and skip HTTPS configuration
   - Created a Docker Compose override file (`docker-compose.http-only.yml`) that removes port 443 mapping
-  - Created a convenience shell script (`shell-scripts/start-http-only.sh`) to easily start in HTTP-only mode
+  - Created a convenience shell script (`shell-scripts/start-prod-http-only.sh`) to easily start in HTTP-only mode
   - Updated the Certbot service to skip SSL certificate generation when HTTP_ONLY is enabled
   - Updated the deployment documentation with detailed instructions for HTTP-only deployment
   - This feature allows deployment in environments where port 443 is already in use by other services

@@ -105,7 +105,7 @@ If you have other services running on port 443 or cannot use HTTPS for any reaso
 
 ```bash
 # Set HTTP_ONLY=yes in your .env file or use the convenience script:
-./shell-scripts/start-http-only.sh
+./shell-scripts/start-prod-http-only.sh
 ```
 
 The HTTP-only mode:
@@ -180,7 +180,7 @@ To run in HTTP-only mode:
 
 ```bash
 # Option 1: Use the convenience script
-./shell-scripts/start-http-only.sh
+./shell-scripts/start-prod-http-only.sh
 
 # Option 2: Set the environment variable and start manually
 echo "HTTP_ONLY=yes" >> .env

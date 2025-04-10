@@ -356,7 +356,7 @@ This project provides a set of convenient shell scripts to simplify common Docke
 | Script | Description |
 |--------|-------------|
 | `./shell-scripts/start-prod.sh` | Start all production containers in detached mode |
-| `./shell-scripts/start-http-only.sh` | Start production containers in HTTP-only mode (without HTTPS) |
+| `./shell-scripts/start-prod-http-only.sh` | Start production containers in HTTP-only mode (without HTTPS) |
 | `./shell-scripts/stop-prod.sh` | Stop and remove all production containers |
 | `./shell-scripts/restart-prod.sh` | Restart all production containers |
 | `./shell-scripts/build-prod.sh` | Build production Docker images |
