@@ -95,6 +95,7 @@ This is a base Laravel 12 project with a RESTful API implementation that include
 
 - **Production-Ready Deployment**
   - Docker Compose configuration for production environment
+  - HTTP-only mode for environments where port 443 is already in use
   - Automatic creation of superadmin user during deployment
   - SSL/TLS with Let's Encrypt integration
   - Optimized PHP and Nginx configurations
@@ -167,6 +168,7 @@ This project uses Docker Compose with the following services:
 Important environment variables to configure:
 
 - `HTTP_PORT`: Port for the web server to listen on (default: 8000 for development, 80 for production)
+- `HTTP_ONLY`: When set to "yes", runs the application without HTTPS (useful when port 443 is already in use)
 - `MAX_LOGIN_ATTEMPTS`: Maximum failed login attempts before temporary lockout (default: 3)
 - `LOGIN_ATTEMPTS_WINDOW_MINUTES`: Time window for counting login attempts (default: 5)
 - `ACCOUNT_LOCKOUT_DURATION_MINUTES`: Duration of temporary account lockout (default: 60)
@@ -354,6 +356,7 @@ This project provides a set of convenient shell scripts to simplify common Docke
 | Script | Description |
 |--------|-------------|
 | `./shell-scripts/start-prod.sh` | Start all production containers in detached mode |
+| `./shell-scripts/start-http-only.sh` | Start production containers in HTTP-only mode (without HTTPS) |
 | `./shell-scripts/stop-prod.sh` | Stop and remove all production containers |
 | `./shell-scripts/restart-prod.sh` | Restart all production containers |
 | `./shell-scripts/build-prod.sh` | Build production Docker images |
@@ -418,6 +421,7 @@ This project includes a production-ready Docker Compose configuration optimized 
 
 - Optimized PHP-FPM configuration with OPcache enabled
 - Nginx with HTTP/2 and SSL/TLS support
+- Optional HTTP-only mode for environments where port 443 is already in use
 - Let's Encrypt integration for free SSL certificates
 - SMTP server for email delivery
 - PostgreSQL database with persistent storage

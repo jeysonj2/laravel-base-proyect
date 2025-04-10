@@ -51,6 +51,7 @@ services:
     environment:
       - APP_DOMAIN=${APP_DOMAIN:-my-laravel-base-project.test}
       - HTTP_PORT=${HTTP_PORT:-80}
+      - HTTP_ONLY=${HTTP_ONLY:-no}
     command: sh /start-nginx.sh
 
   db:
@@ -91,7 +92,12 @@ services:
       - web-root:/var/www/html/public
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html/public --email ${ACME_EMAIL:-youremail@example.com} --agree-tos --no-eff-email --staging -d ${APP_DOMAIN:-my-laravel-base-project.test} -d www.${APP_DOMAIN:-my-laravel-base-project.test}
+    command: >
+      sh -c "if [ \"$${HTTP_ONLY}\" != \"yes\" ]; then
+        certbot certonly --webroot --webroot-path=/var/www/html/public --email ${ACME_EMAIL:-youremail@example.com} --agree-tos --no-eff-email --staging -d ${APP_DOMAIN:-my-laravel-base-project.test} -d www.${APP_DOMAIN:-my-laravel-base-project.test};
+      else 
+        echo \"HTTP_ONLY mode enabled, skipping SSL certificate generation\";
+      fi"
     env_file:
       - .env
 

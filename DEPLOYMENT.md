@@ -50,6 +50,8 @@ APP_DOMAIN=my-laravel-base-project.test
 # APP_URL=http://${APP_DOMAIN}:${HTTP_PORT}
 APP_URL=http://${APP_DOMAIN}
 
+# HTTP_ONLY=no  # Set to "yes" to run without HTTPS (useful when port 443 is already in use)
+
 # PostgreSQL Database Configuration
 DB_CONNECTION=pgsql
 DB_HOST=db
@@ -90,10 +92,28 @@ ACME_EMAIL=youremail@example.com
 
 ### 3. Build and Start the Containers
 
+#### Standard Deployment (with HTTPS support)
+
 ```bash
 docker compose -f docker-compose.prod.yml build
 docker compose -f docker-compose.prod.yml up -d
 ```
+
+#### HTTP-Only Deployment (when port 443 is already in use)
+
+If you have other services running on port 443 or cannot use HTTPS for any reason, you can deploy in HTTP-only mode:
+
+```bash
+# Set HTTP_ONLY=yes in your .env file or use the convenience script:
+./shell-scripts/start-http-only.sh
+```
+
+The HTTP-only mode:
+
+- Does not use or bind to port 443
+- Disables SSL certificate generation via certbot
+- Serves the application via HTTP only on the configured HTTP_PORT (default: 80)
+- Skips HTTPS redirect configuration in Nginx
 
 The startup process:
 
@@ -120,6 +140,8 @@ Please change this password after first login!
 
 ### 4. Generate SSL Certificates with Let's Encrypt
 
+> **Note:** Skip this step if you're running in HTTP-only mode.
+
 The certbot container is initially configured in `--staging` mode for testing. Once you've verified that it works correctly, you can switch to production certificates:
 
 ```bash
@@ -133,17 +155,37 @@ docker compose -f docker-compose.prod.yml up -d certbot
 
 Note: Certbot will automatically renew certificates before they expire.
 
-## SSL Certificates and HTTP Fallback
+## SSL Certificates and HTTP Configuration
 
 ### Automatic HTTPS/HTTP Configuration
 
 The system is designed to automatically detect whether SSL certificates are available and configure the web server accordingly:
 
-1. If valid SSL certificates exist in the `/etc/letsencrypt` directory, the web server will serve the application over both HTTP and HTTPS, with HTTP traffic redirected to HTTPS.
+1. If valid SSL certificates exist in the `/etc/letsencrypt` directory and `HTTP_ONLY` is not set to "yes", the web server will serve the application over both HTTP and HTTPS, with HTTP traffic redirected to HTTPS.
 
-2. If SSL certificates are not available (for example, during initial deployment or in development environments), the web server will automatically fall back to serving the application over HTTP only.
+2. If SSL certificates are not available (for example, during initial deployment or in development environments) or if `HTTP_ONLY` is set to "yes", the web server will automatically fall back to serving the application over HTTP only.
 
 This behavior is controlled by a custom script (`docker/nginx/start-nginx.sh`) that checks for certificate existence during container startup and configures the Nginx server appropriately.
+
+### HTTP-Only Mode
+
+You can force the application to run in HTTP-only mode by setting `HTTP_ONLY=yes` in your `.env` file. This is useful in several scenarios:
+
+- When port 443 is already in use by another service on the host machine
+- When running behind a reverse proxy that handles SSL termination
+- When running in environments where SSL is not required or available
+- For development or testing purposes when HTTPS is not needed
+
+To run in HTTP-only mode:
+
+```bash
+# Option 1: Use the convenience script
+./shell-scripts/start-http-only.sh
+
+# Option 2: Set the environment variable and start manually
+echo "HTTP_ONLY=yes" >> .env
+docker compose -f docker-compose.prod.yml up -d
+```
 
 ### Initial HTTP-Only Mode
 

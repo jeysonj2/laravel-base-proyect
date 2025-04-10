@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  webserver:
+    environment:
+      - HTTP_ONLY=yes
+    # Remove port 443 in HTTP_ONLY mode
+    ports:
+      - "${HTTP_PORT:-80}:${HTTP_PORT:-80}"
+
+  # Don't run certbot service when in HTTP_ONLY mode
+  certbot:
+    profiles:
+      - donotstart
