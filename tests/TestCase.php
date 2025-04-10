@@ -5,6 +5,7 @@ namespace Tests;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 abstract class TestCase extends BaseTestCase
@@ -32,6 +33,8 @@ abstract class TestCase extends BaseTestCase
     protected function setUpWithAuth(): void
     {
         parent::setUp();
+
+        Mail::fake();
 
         // Delete all existing users and roles
         User::truncate();
