@@ -362,6 +362,7 @@ This project provides a set of convenient shell scripts to simplify common Docke
 | `./shell-scripts/build-prod.sh` | Build production Docker images |
 | `./shell-scripts/reset-prod.sh` | Stop containers, rebuild production images, and start containers again |
 | `./shell-scripts/reset-full-prod.sh` | Remove all production containers and volumes, rebuild images from scratch, and start containers |
+| `./shell-scripts/reset-full-prod-http-only.sh` | Remove all HTTP-only mode containers and volumes, rebuild images from scratch, and start in HTTP-only mode |
 
 #### Code Quality and Testing Scripts
 
