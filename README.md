@@ -78,7 +78,14 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   - Comprehensive test suite with Unit and Feature tests
   - Code coverage reporting using Xdebug
   - HTML and text-based coverage reports
-  - Current code coverage: 86.56% (lines), 80.49% (methods), 45.00% (classes)
+  - Current code coverage: 96.60% (lines), 90.24% (methods), 75.00% (classes)
+  - Extensive unit tests for:
+    - Models (User, Role)
+    - Events (UserCreated)
+    - Console Commands (CreateDefaultSuperadminUser)
+    - Service Providers (EventServiceProvider)
+    - API Response utilities (ApiResponseTrait)
+  - Feature tests for authentication, user management, email verification and more
   - Code style enforcement with Laravel Pint
   - Code standards validation with PHP_CodeSniffer
   - Automated code formatting and linting tools

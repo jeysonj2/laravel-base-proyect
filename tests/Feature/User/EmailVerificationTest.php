@@ -5,6 +5,8 @@ namespace Tests\Feature\User;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EmailVerification;
 use Tests\TestCase;
 
 class EmailVerificationTest extends TestCase
@@ -100,5 +102,96 @@ class EmailVerificationTest extends TestCase
             'email' => 'test@example.com',
             'email_verified_at' => null,
         ]);
+    }
+
+    public function test_admin_can_resend_verification_email(): void
+    {
+        Mail::fake();
+
+        // Create an unverified user without a verification code
+        $unverifiedUser = User::factory()->create([
+            'email_verified_at' => null,
+            'verification_code' => null,
+            'role_id' => Role::where('name', 'user')->first()->id,
+        ]);
+
+        // Use direct authentication instead of token-based auth
+        $response = $this->actingAs($this->admin, 'api')
+            ->postJson("/api/users/{$unverifiedUser->id}/resend-verification");
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'code',
+                'message',
+            ]);
+
+        // Verify a new verification code was generated
+        $updatedUser = User::find($unverifiedUser->id);
+        $this->assertNotNull($updatedUser->verification_code);
+
+        // Verify the email was sent
+        Mail::assertSent(EmailVerification::class, function ($mail) use ($unverifiedUser) {
+            return $mail->hasTo($unverifiedUser->email);
+        });
+    }
+
+    public function test_admin_cannot_resend_verification_email_to_verified_user(): void
+    {
+        Mail::fake();
+
+        // Create a verified user
+        $verifiedUser = User::factory()->create([
+            'email_verified_at' => now(),
+            'role_id' => Role::where('name', 'user')->first()->id,
+        ]);
+
+        // Use direct authentication instead of token-based auth
+        $response = $this->actingAs($this->admin, 'api')
+            ->postJson("/api/users/{$verifiedUser->id}/resend-verification");
+
+        $response->assertStatus(400)
+            ->assertJsonStructure([
+                'code',
+                'message',
+            ]);
+
+        // Verify no email was sent
+        Mail::assertNotSent(EmailVerification::class);
+    }
+
+    public function test_admin_can_resend_verification_email_to_user_with_existing_code(): void
+    {
+        Mail::fake();
+
+        // Create an unverified user with an existing verification code
+        $unverifiedUser = User::factory()->create([
+            'email_verified_at' => null,
+            'verification_code' => 'existing-verification-code',
+            'role_id' => Role::where('name', 'user')->first()->id,
+        ]);
+
+        // Use direct authentication instead of token-based auth
+        $response = $this->actingAs($this->admin, 'api')
+            ->postJson("/api/users/{$unverifiedUser->id}/resend-verification");
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'code',
+                'message',
+            ]);
+
+        // Get the updated user with the new verification code
+        $updatedUser = User::find($unverifiedUser->id);
+        
+        // Verify a verification code exists (may be different from the original)
+        $this->assertNotNull($updatedUser->verification_code);
+        
+        // It appears the implementation generates a new code, so verify it's different
+        $this->assertNotEquals('existing-verification-code', $updatedUser->verification_code);
+
+        // Verify the email was sent
+        Mail::assertSent(EmailVerification::class, function ($mail) use ($unverifiedUser) {
+            return $mail->hasTo($unverifiedUser->email);
+        });
     }
 }

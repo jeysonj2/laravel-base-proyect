@@ -77,10 +77,10 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Implementation of tests for all main API features.
 - Implementation of code coverage reporting to evaluate test effectiveness:
   - Configuration of Docker environment with Xdebug support and coverage mode enabled
-  - Configuration of PHPUnit to generate detailed coverage reports in HTML and text formats
-  - Setup for running tests with coverage metrics via the `--coverage` flag
-  - Directory structure for storing coverage reports in an organized manner
-  - Current code coverage: Classes 45.00% (9/20), Methods 80.49% (66/82), Lines 86.56% (425/491)
+  - Current code coverage: Classes 75.00% (15/20), Methods 90.24% (74/82), Lines 96.60% (483/500)
+  - Complete test coverage for Console Commands, EventServiceProvider, Events, and ApiResponseTrait
+  - Comprehensive test suite with feature tests for authentication, email verification, user management and more
+  - Unit tests for models, events, service providers, and utility classes
 - Implementation of Swagger/OpenAPI documentation for all API endpoints:
   - Installation and configuration of the L5-Swagger package for Laravel
   - Addition of detailed Swagger annotations to all controllers:

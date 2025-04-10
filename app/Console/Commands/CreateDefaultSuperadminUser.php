@@ -67,6 +67,8 @@ class CreateDefaultSuperadminUser extends Command
 
         // Create or update the superadmin user
         if ($superadminUser) {
+            $superadminUser->name = 'Superadmin';
+            $superadminUser->last_name = 'User';
             $superadminUser->password = bcrypt($password);
             $superadminUser->email_verified_at = now();
             $superadminUser->role_id = $superadminRole->id;

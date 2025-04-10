@@ -6,7 +6,11 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EmailVerification;
+use App\Mail\PasswordChanged;
 use Tests\TestCase;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthenticationTest extends TestCase
 {
@@ -258,5 +262,156 @@ class AuthenticationTest extends TestCase
         $updatedUser = User::find($user->id);
         $this->assertNotNull($updatedUser->locked_until);
         $this->assertTrue(now()->lt($updatedUser->locked_until));
+    }
+
+    public function test_refresh_token_requires_authorization_header(): void
+    {
+        $response = $this->postJson('/api/refresh');
+
+        $response->assertStatus(401)
+            ->assertJsonStructure([
+                'code',
+                'message',
+            ]);
+
+        $this->assertEquals('Refresh token is required.', $response->json('message'));
+    }
+
+    public function test_refresh_token_validates_refresh_claim(): void
+    {
+        // First login to get a token
+        $response = $this->postJson('/api/login', [
+            'email' => $this->regularUser->email,
+            'password' => 'Password123!',
+        ]);
+
+        $token = $response->json('data.access_token');
+
+        // Now try using this access token (not refresh token) for refresh endpoint
+        $refreshResponse = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->postJson('/api/refresh');
+
+        // The response may vary depending on implementation, but should not be 200
+        $this->assertNotEquals(200, $refreshResponse->status());
+    }
+
+    public function test_refresh_token_handles_invalid_token(): void
+    {
+        // Try to use an invalid token
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer invalidtoken123',
+        ])->postJson('/api/refresh');
+
+        $response->assertStatus(401);
+        $this->assertEquals('Invalid refresh token.', $response->json('message'));
+    }
+
+    public function test_change_password_validates_current_password(): void
+    {
+        // Direct authentication is more reliable than token-based auth in tests
+        $this->actingAs($this->regularUser, 'api');
+        
+        $response = $this->postJson('/api/change-password', [
+            'current_password' => 'wrongpassword', // Intentionally wrong
+            'new_password' => 'NewPassword123!',
+            'password_confirmation' => 'NewPassword123!',
+        ]);
+
+        $response->assertStatus(422);
+        $this->assertEquals('Current password is incorrect.', $response->json('message'));
+    }
+
+    public function test_update_profile_cannot_change_password(): void
+    {
+        // Direct authentication is more reliable than token-based auth in tests
+        $this->actingAs($this->regularUser, 'api');
+        
+        $response = $this->putJson('/api/profile', [
+            'name' => 'Updated Name',
+            'password' => 'NewPassword123!',
+        ]);
+
+        $response->assertStatus(422);
+        $this->assertEquals('Password cannot be updated through this endpoint. Please use the change-password endpoint instead.', $response->json('message'));
+    }
+
+    public function test_update_profile_cannot_change_role(): void
+    {
+        // Direct authentication is more reliable than token-based auth in tests
+        $this->actingAs($this->regularUser, 'api');
+        
+        $response = $this->putJson('/api/profile', [
+            'name' => 'Updated Name',
+            'role_id' => $this->adminRole->id,
+        ]);
+
+        $response->assertStatus(422);
+        $this->assertEquals('Role cannot be updated through this endpoint.', $response->json('message'));
+    }
+
+    public function test_update_profile_sends_verification_email_when_email_changes(): void
+    {
+        Mail::fake();
+
+        // Direct authentication is more reliable than token-based auth in tests
+        $this->actingAs($this->regularUser, 'api');
+        
+        $response = $this->putJson('/api/profile', [
+            'email' => 'newemail@example.com',
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertEquals('Profile updated successfully. Please verify your new email address.', $response->json('message'));
+
+        // Verify the verification email was sent
+        Mail::assertSent(EmailVerification::class, function ($mail) {
+            return $mail->hasTo('newemail@example.com');
+        });
+
+        // Verify the user's email_verified_at is null and verification_code exists
+        $this->regularUser->refresh();
+        $this->assertNull($this->regularUser->email_verified_at);
+        $this->assertNotNull($this->regularUser->verification_code);
+    }
+
+    public function test_user_with_correct_email_wrong_password_increases_attempts(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'test@example.com',
+            'password' => Hash::make('Password123!'),
+            'role_id' => Role::where('name', 'user')->first()->id,
+            'failed_login_attempts' => 0,
+        ]);
+
+        // Try to login with correct email but wrong password
+        $response = $this->postJson('/api/login', [
+            'email' => 'test@example.com',
+            'password' => 'WrongPassword123!',
+        ]);
+
+        $response->assertStatus(401);
+        
+        // Check that failed login attempts increased
+        $user->refresh();
+        $this->assertEquals(1, $user->failed_login_attempts);
+    }
+
+    public function test_login_with_permanently_locked_account(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'locked@example.com',
+            'password' => Hash::make('Password123!'),
+            'role_id' => Role::where('name', 'user')->first()->id,
+            'is_permanently_locked' => true,
+        ]);
+
+        $response = $this->postJson('/api/login', [
+            'email' => 'locked@example.com',
+            'password' => 'Password123!',
+        ]);
+
+        $response->assertStatus(401);
+        $this->assertStringContainsString('permanently locked', $response->json('message'));
     }
 }
