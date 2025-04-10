@@ -1946,7 +1946,7 @@
                         }
                     },
                     "403": {
-                        "description": "Forbidden - User does not have admin role, trying to delete a superadmin without being\n     *         superadmin, or attempting to delete own account",
+                        "description": "Forbidden - User does not have admin role, trying to delete a superadmin without being superadmin, or attempting to delete own account",
                         "content": {
                             "application/json": {
                                 "schema": {
