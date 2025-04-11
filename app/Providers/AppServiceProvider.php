@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 
@@ -71,5 +72,15 @@ class AppServiceProvider extends ServiceProvider
                     'min' => env('PASSWORD_MIN_LENGTH', 10),
                 ]);
         });
+
+        // Read the APP_URL from the environment to force HTTPS
+        // This is useful for ensuring that all generated URLs use HTTPS
+        // when the application is running in a secure environment.
+        $appUrl = env('APP_URL');
+        // Check if it is https
+        if ($appUrl && str_starts_with($appUrl, 'https://')) {
+            // Set the URL scheme to https
+            URL::forceScheme('https');
+        }
     }
 }
