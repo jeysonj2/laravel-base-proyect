@@ -9,6 +9,7 @@ services:
       - ./storage:/var/www/html/storage
       - ./bootstrap/cache:/var/www/html/bootstrap/cache
       - ./.env:/var/www/html/.env
+      - swagger-api:/var/www/html/vendor/swagger-api
     networks:
       - laravel
     depends_on:
@@ -32,7 +33,7 @@ services:
     container_name: laravel_webserver
     volumes:
       - ./public:/var/www/html/public:ro
-      - ./vendor/swagger-api:/var/www/html/vendor/swagger-api:ro
+      - swagger-api:/var/www/html/vendor/swagger-api:ro
       - ./docker/nginx/conf.d/http.conf:/etc/nginx/conf.d/templates/http.conf:ro
       - ./docker/nginx/conf.d/https.conf:/etc/nginx/conf.d/templates/https.conf:ro
       - ./docker/nginx/start-nginx.sh:/start-nginx.sh:ro
@@ -93,4 +94,6 @@ volumes:
   certbot-var:
     driver: local
   web-root:
+    driver: local
+  swagger-api:
     driver: local

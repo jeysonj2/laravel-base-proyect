@@ -373,6 +373,8 @@ The production deployment setup automatically generates Swagger documentation du
 
 This automatic generation happens once during container startup and doesn't affect performance.
 
+> **Note:** The Swagger API files are generated inside the `app` container and shared with the `webserver` container via a named volume called `swagger-api`. This ensures that both containers have access to the same Swagger documentation files without requiring them to be written to the host filesystem.
+
 ### Custom Swagger URL Configuration (Optional)
 
 By default, the documentation uses the `APP_URL` from your `.env` file. If you need to set a different URL specifically for Swagger (for example, if your API is on a subdomain), you can add this to your `.env` file:

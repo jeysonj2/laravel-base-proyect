@@ -61,3 +61,5 @@ volumes:
     driver: local
   web-root:
     driver: local
+  swagger-api:
+    driver: local
