@@ -47,8 +47,7 @@ APP_KEY=  # Will be generated automatically
 APP_DEBUG=false
 # HTTP_PORT=80
 APP_DOMAIN=my-laravel-base-project.test
-# APP_URL=http://${APP_DOMAIN}:${HTTP_PORT}
-APP_URL=http://${APP_DOMAIN}
+APP_URL=http://my-laravel-base-project.test
 
 # HTTP_ONLY=no  # Set to "yes" to run without HTTPS (useful when port 443 is already in use)
 
@@ -95,23 +94,29 @@ ACME_EMAIL=youremail@example.com
 #### Standard Deployment (with HTTPS support)
 
 ```bash
-docker compose -f docker-compose.prod.yml build
-docker compose -f docker-compose.prod.yml up -d
+# Set HTTP_ONLY=no (or leave it unset) in your .env file
+./shell-scripts/start-prod.sh
 ```
+
+This will:
+
+- Use docker-compose.prod.with-https.yml configuration
+- Map port 443 for HTTPS
+- Start the certbot service for SSL certificate generation
 
 #### HTTP-Only Deployment (when port 443 is already in use)
 
 If you have other services running on port 443 or cannot use HTTPS for any reason, you can deploy in HTTP-only mode:
 
 ```bash
-# Set HTTP_ONLY=yes in your .env file or use the convenience script:
-./shell-scripts/start-prod-http-only.sh
+# Set HTTP_ONLY=yes in your .env file
+./shell-scripts/start-prod.sh
 ```
 
 The HTTP-only mode:
 
 - Does not use or bind to port 443
-- Disables SSL certificate generation via certbot
+- Does not include the certbot service
 - Serves the application via HTTP only on the configured HTTP_PORT (default: 80)
 - Skips HTTPS redirect configuration in Nginx
 

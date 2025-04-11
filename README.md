@@ -95,7 +95,10 @@ This is a base Laravel 12 project with a RESTful API implementation that include
 
 - **Production-Ready Deployment**
   - Docker Compose configuration for production environment
-  - HTTP-only mode for environments where port 443 is already in use
+  - Improved HTTP-only mode implementation:
+    - No need for special commands, just set HTTP_ONLY=yes in .env
+    - Dynamically loads the appropriate Docker Compose configuration
+    - More maintainable approach using Docker Compose extension
   - Automatic creation of superadmin user during deployment
   - SSL/TLS with Let's Encrypt integration
   - Optimized PHP and Nginx configurations
@@ -355,14 +358,12 @@ This project provides a set of convenient shell scripts to simplify common Docke
 
 | Script | Description |
 |--------|-------------|
-| `./shell-scripts/start-prod.sh` | Start all production containers in detached mode |
-| `./shell-scripts/start-prod-http-only.sh` | Start production containers in HTTP-only mode (without HTTPS) |
+| `./shell-scripts/start-prod.sh` | Start all production containers in detached mode (with or without HTTPS based on HTTP_ONLY setting) |
 | `./shell-scripts/stop-prod.sh` | Stop and remove all production containers |
 | `./shell-scripts/restart-prod.sh` | Restart all production containers |
 | `./shell-scripts/build-prod.sh` | Build production Docker images |
 | `./shell-scripts/reset-prod.sh` | Stop containers, rebuild production images, and start containers again |
 | `./shell-scripts/reset-full-prod.sh` | Remove all production containers and volumes, rebuild images from scratch, and start containers |
-| `./shell-scripts/reset-full-prod-http-only.sh` | Remove all HTTP-only mode containers and volumes, rebuild images from scratch, and start in HTTP-only mode |
 
 #### Code Quality and Testing Scripts
 
@@ -422,8 +423,9 @@ This project includes a production-ready Docker Compose configuration optimized 
 
 - Optimized PHP-FPM configuration with OPcache enabled
 - Nginx with HTTP/2 and SSL/TLS support
-- Optional HTTP-only mode for environments where port 443 is already in use
-- Let's Encrypt integration for free SSL certificates
+- Flexible deployment options:
+  - Full HTTPS support with Let's Encrypt (default)
+  - HTTP-only mode by setting HTTP_ONLY=yes in .env (for environments where port 443 is already in use)
 - SMTP server for email delivery
 - PostgreSQL database with persistent storage
 

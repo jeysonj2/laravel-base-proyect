@@ -166,11 +166,11 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Added the `HTTP_ONLY` environment variable to control whether the application runs without HTTPS
   - When `HTTP_ONLY=yes`, the application runs only on HTTP port and doesn't use port 443
   - Updated Nginx start script (`docker/nginx/start-nginx.sh`) to check for the HTTP_ONLY variable and skip HTTPS configuration
-  - Created a Docker Compose file (`docker-compose.prod.http-only.yml`) that extends the production configuration but removes port 443 mapping
-  - Created convenience shell scripts for HTTP-only mode:
-    - `shell-scripts/start-prod-http-only.sh` to start the application in HTTP-only mode
-    - `shell-scripts/reset-full-prod-http-only.sh` to fully rebuild and restart the HTTP-only environment
-  - Updated the Certbot service to skip SSL certificate generation when HTTP_ONLY is enabled
+  - Improved HTTP_ONLY mode implementation with Docker Compose:
+    - Modified `docker-compose.prod.yml` to be HTTP-only by default (no port 443, no certbot service)
+    - Created `docker-compose.prod.with-https.yml` that extends the base configuration to add HTTPS support
+    - Updated all production shell scripts to dynamically use the appropriate configuration based on HTTP_ONLY value
+    - Removed redundant HTTP-only specific files for a more maintainable solution
   - Updated the deployment documentation with detailed instructions for HTTP-only deployment
   - This feature allows deployment in environments where port 443 is already in use by other services
 
@@ -190,3 +190,5 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Update `DEPLOYMENT.md` file if necessary
   - Run the command `./shell-scripts/fix-style.sh` to fix lint and format
   - Run the command `./shell-scripts/tests-coverage.sh` to check all tests are passing and update de coverage percents in the files `AI Agent Context.md` and `README.md`
+
+Please let me know when you are prepare to start working on a new task

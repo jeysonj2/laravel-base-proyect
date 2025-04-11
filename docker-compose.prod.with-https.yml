@@ -1,0 +1,63 @@
+# This file extends the base production configuration with HTTPS support
+# It adds the port 443 mapping to webserver and includes the certbot service
+
+services:
+  app:
+    extends:
+      file: docker-compose.prod.yml
+      service: app
+
+  webserver:
+    extends:
+      file: docker-compose.prod.yml
+      service: webserver
+    ports:
+      - "${HTTP_PORT:-80}:${HTTP_PORT:-80}"
+      - "443:443"
+    environment:
+      - APP_DOMAIN=${APP_DOMAIN:-my-laravel-base-project.test}
+      - HTTP_PORT=${HTTP_PORT:-80}
+      - HTTP_ONLY=no
+
+  db:
+    extends:
+      file: docker-compose.prod.yml
+      service: db
+
+  mailserver:
+    extends:
+      file: docker-compose.prod.yml
+      service: mailserver
+
+  # SSL certificate service with Let's Encrypt
+  certbot:
+    image: certbot/certbot
+    container_name: laravel_certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/html/public
+    depends_on:
+      - webserver
+    command: >
+      certbot certonly --webroot --webroot-path=/var/www/html/public 
+      --email ${ACME_EMAIL:-youremail@example.com} 
+      --agree-tos --no-eff-email --staging 
+      -d ${APP_DOMAIN:-my-laravel-base-project.test} 
+      -d www.${APP_DOMAIN:-my-laravel-base-project.test}
+    env_file:
+      - .env
+
+networks:
+  laravel:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
+  certbot-etc:
+    driver: local
+  certbot-var:
+    driver: local
+  web-root:
+    driver: local
