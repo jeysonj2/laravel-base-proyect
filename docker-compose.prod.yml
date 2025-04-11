@@ -7,7 +7,6 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./storage:/var/www/html/storage
-      - ./vendor/swagger-api:/var/www/html/vendor/swagger-api
       - ./bootstrap/cache:/var/www/html/bootstrap/cache
       - ./.env:/var/www/html/.env
     networks:
