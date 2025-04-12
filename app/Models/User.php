@@ -84,7 +84,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  *     @OA\Property(
  *         property="role_id",
  *         type="integer",
- *         example=2,
+ *         example=1,
  *         description="ID of the role assigned to this user, references roles table"
  *     ),
  *     @OA\Property(
@@ -117,11 +117,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  *         type="string",
  *         format="date-time",
  *         description="Timestamp when the user was last updated"
- *     ),
- *     @OA\Property(
- *         property="role",
- *         ref="#/components/schemas/Role",
- *         description="The role assigned to this user"
  *     )
  * )
  */

@@ -97,6 +97,12 @@
                                                     "description": "Refresh token expiration time in seconds",
                                                     "type": "integer",
                                                     "example": 1209600
+                                                },
+                                                "user": {
+                                                    "$ref": "#/components/schemas/User"
+                                                },
+                                                "role": {
+                                                    "$ref": "#/components/schemas/Role"
                                                 }
                                             },
                                             "type": "object"
@@ -2523,7 +2529,7 @@
                     "role_id": {
                         "description": "ID of the role assigned to this user, references roles table",
                         "type": "integer",
-                        "example": 2
+                        "example": 1
                     },
                     "failed_login_attempts": {
                         "description": "Number of consecutive failed login attempts, resets after successful login",
@@ -2550,9 +2556,6 @@
                         "description": "Timestamp when the user was last updated",
                         "type": "string",
                         "format": "date-time"
-                    },
-                    "role": {
-                        "$ref": "#/components/schemas/Role"
                     }
                 },
                 "type": "object"

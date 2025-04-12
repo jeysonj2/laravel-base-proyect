@@ -112,6 +112,12 @@ class AuthController extends Controller
      *                     type="object",
      *                     ref="#/components/schemas/User",
      *                     description="The authenticated user's information"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="role",
+     *                     type="object",
+     *                     ref="#/components/schemas/Role",
+     *                     description="The authenticated user's role information"
      *                 )
      *             )
      *         )
