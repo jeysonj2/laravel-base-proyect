@@ -81,7 +81,7 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   - Comprehensive test suite with Unit and Feature tests
   - Code coverage reporting using Xdebug
   - HTML and text-based coverage reports
-  - Current code coverage: 97.10% (lines), 97.06% (methods), 95.24% (classes)
+  - Current code coverage: 97.1% (lines), 97.06% (methods), 95.24% (classes)
   - Extensive unit tests for:
     - Models (User, Role)
     - Events (UserCreated)
@@ -365,6 +365,7 @@ This project provides a set of convenient shell scripts to simplify common Docke
 | `./shell-scripts/build-prod.sh` | Build production Docker images |
 | `./shell-scripts/reset-prod.sh` | Stop containers, rebuild production images, and start containers again |
 | `./shell-scripts/reset-full-prod.sh` | Remove all production containers and volumes, rebuild images from scratch, and start containers |
+| `./shell-scripts/update-prod.sh` | Update production deployment: fetches latest code from remote repository and restarts containers |
 
 #### Code Quality and Testing Scripts
 

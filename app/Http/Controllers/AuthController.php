@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\AccountLocked;
 use App\Mail\EmailVerification;
 use App\Mail\PasswordChanged;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -105,6 +106,12 @@ class AuthController extends Controller
      *                     type="integer",
      *                     example=1209600,
      *                     description="Refresh token expiration time in seconds"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="user",
+     *                     type="object",
+     *                     ref="#/components/schemas/User",
+     *                     description="The authenticated user's information"
      *                 )
      *             )
      *         )
@@ -202,12 +209,20 @@ class AuthController extends Controller
         // Restore original TTL for future tokens
         $factory->setTTL($originalTTL);
 
+        // Get the authenticated user
+        $authenticatedUser = Auth::guard('api')->user();
+
+        // Get the user's role
+        $userRole = Role::find($authenticatedUser->role_id);
+
         return $this->successResponse('Login successful.', [
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
             'refresh_token' => $refreshToken,
             'refresh_expires_in' => $refreshTTL * 60,
+            'user' => $authenticatedUser,
+            'role' => $userRole,
         ]);
     }
 

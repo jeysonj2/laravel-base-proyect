@@ -268,11 +268,28 @@ docker compose -f docker-compose.prod.yml restart app
 
 To update the application to a new version:
 
+### Using the Convenience Script (Recommended)
+
+```bash
+# Use the update script to fetch latest code and restart containers
+./shell-scripts/update-prod.sh
+```
+
+This script will:
+
+- Fetch the latest changes from the remote repository
+- Run the reset-prod.sh script to ensure all containers are stopped, rebuilt, and started
+
+### Manual Update Process
+
+If you prefer to update manually:
+
 ```bash
 # Get changes from the repository
 git pull
 
 # Rebuild and restart the containers
+# Use docker-compose.prod.with-https.yml if you are using HTTPS
 docker compose -f docker-compose.prod.yml down
 docker compose -f docker-compose.prod.yml build
 docker compose -f docker-compose.prod.yml up -d

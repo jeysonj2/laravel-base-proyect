@@ -101,7 +101,7 @@ We will continue with this project in Laravel 12. So far, we have achieved the f
   - Implementation of tests for all main API features.
 - Implementation of code coverage reporting to evaluate test effectiveness:
   - Configuration of Docker environment with Xdebug support and coverage mode enabled
-  - Current code coverage: Classes 95.24% (20/21), Methods 97.06% (99/102), Lines 97.10% (503/518)
+  - Current code coverage: Classes 95.24% (20/21), Methods 97.06% (99/102), Lines 97.1% (503/518)
   - Complete test coverage for Console Commands, EventServiceProvider, Events, and ApiResponseTrait
   - Comprehensive test suite with feature tests for authentication, email verification, user management and more
   - Unit tests for models, events, service providers, and utility classes
@@ -223,7 +223,7 @@ We will continue with this project in Laravel 12. So far, we have achieved the f
 
 Remember every time I write to you (Github Copilot Agent Mode) in your prompt the sentence: `tested and approved` or `probado y aprobado`, you will:
 
-- Read the git changes to get additional information about the recent changes
+- Read the git staged changes to get additional information about the current changes
 - Update the `AI Agent Context.md` file with what has been recently done by you (Github Copilot Agent Mode) and also about whatever you found in the git changes
 - Update `README.md` file if necessary
 - Update `DEPLOYMENT.md` file if necessary

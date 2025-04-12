@@ -1,19 +1,19 @@
 
 
 [1;37;40mCode Coverage Report:      [0m
-[1;37;40m  2025-04-12 20:57:14      [0m
+[1;37;40m  2025-04-12 23:12:45      [0m
 [1;37;40m                           [0m
 [1;37;40m Summary:                  [0m
 [30;43m  Classes: 70.00% (14/20)  [0m
 [30;43m  Methods: 89.16% (74/83)  [0m
-[30;42m  Lines:   97.12% (505/520)[0m
+[30;42m  Lines:   97.14% (509/524)[0m
 
 App\Console\Commands\CreateDefaultSuperadminUser
   [30;42mMethods: 100.00% ( 1/ 1)[0m   [30;42mLines: 100.00% ( 36/ 36)[0m
 App\Events\UserCreated
   [30;42mMethods: 100.00% ( 2/ 2)[0m   [30;42mLines: 100.00% (  4/  4)[0m
 App\Http\Controllers\AuthController
-  [37;41mMethods:  33.33% ( 2/ 6)[0m   [30;42mLines:  92.17% (106/115)[0m
+  [37;41mMethods:  33.33% ( 2/ 6)[0m   [30;42mLines:  92.44% (110/119)[0m
 App\Http\Controllers\EmailVerificationController
   [30;43mMethods:  66.67% ( 2/ 3)[0m   [30;42mLines:  93.55% ( 29/ 31)[0m
 App\Http\Controllers\PasswordResetController
