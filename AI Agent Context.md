@@ -1,6 +1,30 @@
-# Initial Context for GitHub Copilot Agent Mode
+You are a highly skilled Laravel developer tasked with add/edit features in the current project.
 
-We will continue with the project in Laravel 12. So far, we have achieved the following:
+Your goal is to provide a detailed plan and code structure for the feature based on the given project description and specific requirements.
+
+1. Development Guidelines:
+  
+- Use PHP 8.3+ features where appropriate
+- Follow Laravel conventions and best practices
+- Prefer using helpers over facades when possible
+- Focus on creating code that provides excellent developer experience (DX), better autocompletion, type safety, and comprehensive docblocks
+
+2. Coding Standards and Conventions:
+  
+- File names: Use PascalCase (e.g., MyClassFile.php)
+- Class and Enum names: Use PascalCase (e.g., MyClass)
+- Method names: Use camelCase (e.g., myMethod)
+- Variable and Properties names: Use snake_case (e.g., my_variable)
+- Constants and Enum Cases names: Use SCREAMING_SNAKE_CASE (e.g., MY_CONSTANT)
+
+3. Testing and Documentation:
+  
+- Provide an overview of the testing strategy (e.g., unit tests, feature tests)
+- Outline the documentation structure, including README.md, usage examples, and API references
+
+Remember to adhere to the specified coding standards, development guidelines, and Laravel best practices throughout your plan and code samples. Ensure that your response is detailed, well-structured, and provides a clear roadmap for developing the Laravel package based on the given project description and requirements.
+
+We will continue with this project in Laravel 12. So far, we have achieved the following:
 
 - Initialization of the project with Laravel 12.
 - Configuration of Docker Compose to run the project.
@@ -77,7 +101,7 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
   - Implementation of tests for all main API features.
 - Implementation of code coverage reporting to evaluate test effectiveness:
   - Configuration of Docker environment with Xdebug support and coverage mode enabled
-  - Current code coverage: Classes 75.00% (15/20), Methods 90.36% (75/83), Lines 97.27% (499/513)
+  - Current code coverage: Classes 95.24% (20/21), Methods 97.06% (99/102), Lines 97.10% (503/518)
   - Complete test coverage for Console Commands, EventServiceProvider, Events, and ApiResponseTrait
   - Comprehensive test suite with feature tests for authentication, email verification, user management and more
   - Unit tests for models, events, service providers, and utility classes
@@ -173,6 +197,19 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
     - Removed redundant HTTP-only specific files for a more maintainable solution
   - Updated the deployment documentation with detailed instructions for HTTP-only deployment
   - This feature allows deployment in environments where port 443 is already in use by other services
+- Implementation of pagination for user lists:
+  - Added pagination support to the UserController index method to efficiently handle large datasets
+  - Added pagination support to the UserLockoutController index method for better management of locked user accounts
+  - Implemented configurable page size through the `per_page` query parameter (defaults to 15)
+  - Added bounds checking to ensure `per_page` is always between 1 and 100 for optimal performance
+  - Updated the OpenAPI documentation to fully describe the pagination parameters and response structure
+  - Enhanced API responses with comprehensive pagination metadata including:
+    - Current page number and total pages
+    - Navigation links for first, last, next, and previous pages
+    - Item count information (from, to, total)
+    - Per page settings
+  - Improved front-end usability by providing all necessary pagination information for UI components
+  - Ensured backward compatibility with existing API consumers
 
 **Important Notes:**
 
@@ -183,12 +220,14 @@ We will continue with the project in Laravel 12. So far, we have achieved the fo
 - We will communicate in Spanish or English; however, all generated code, along with messages and comments, must be in English to comply with international standards.
 - When adding a new feature, please add the related PHPdoc, Swagger annotations and tests.
 - When modifying a feature, please update the related PHPdoc, Swagger annotations and tests if necessary.
-- Every time I write to you (Github Copilot Agent Mode) in your prompt the sentence: `tested and approved` or `probado y aprobado`, you will:
-  - Read the git changes to get additional information about the recent changes
-  - Update the `AI Agent Context.md` file with what has been recently done by you (Github Copilot Agent Mode) and also about whatever you found in the git changes
-  - Update `README.md` file if necessary
-  - Update `DEPLOYMENT.md` file if necessary
-  - Run the command `./shell-scripts/fix-style.sh` to fix lint and format
-  - Run the command `./shell-scripts/tests-coverage.sh` to check all tests are passing and update de coverage percents in the files `AI Agent Context.md` and `README.md`
+
+Remember every time I write to you (Github Copilot Agent Mode) in your prompt the sentence: `tested and approved` or `probado y aprobado`, you will:
+
+- Read the git changes to get additional information about the recent changes
+- Update the `AI Agent Context.md` file with what has been recently done by you (Github Copilot Agent Mode) and also about whatever you found in the git changes
+- Update `README.md` file if necessary
+- Update `DEPLOYMENT.md` file if necessary
+- Run the command `./shell-scripts/fix-style.sh` to fix lint and format
+- Run the command `./shell-scripts/tests-coverage.sh` to check all tests are passing and update de coverage percents in the files `AI Agent Context.md` and `README.md`
 
 Please let me know when you are prepare to start working on a new task

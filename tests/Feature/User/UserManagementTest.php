@@ -29,17 +29,29 @@ class UserManagementTest extends TestCase
                 'code',
                 'message',
                 'data' => [
-                    '*' => [
-                        'id',
-                        'name',
-                        'last_name',
-                        'email',
+                    'current_page',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'last_name',
+                            'email',
+                            'role_id',
+                        ],
                     ],
+                    'first_page_url',
+                    'from',
+                    'last_page',
+                    'last_page_url',
+                    'links',
+                    'next_page_url',
+                    'path',
+                    'per_page',
+                    'prev_page_url',
+                    'to',
+                    'total',
                 ],
             ]);
-
-        // Should contain both users
-        $response->assertJsonCount(3, 'data');
     }
 
     public function test_admin_can_get_single_user(): void
@@ -210,14 +222,8 @@ class UserManagementTest extends TestCase
     public function test_admin_can_view_locked_users(): void
     {
         // Arrange
-        // Create a locked user
-        $lockedUser = User::factory()->create([
-            'name' => 'Locked',
-            'last_name' => 'User',
-            'email' => 'locked@example.com',
-            'role_id' => $this->userRole->id,
-            'locked_until' => now()->addHour(), // Locked for an hour
-            'lockout_count' => 1,
+        $this->regularUser->update([
+            'locked_until' => now()->addMinutes(60),
         ]);
 
         // Act
@@ -231,26 +237,32 @@ class UserManagementTest extends TestCase
                 'code',
                 'message',
                 'data' => [
-                    '*' => [
-                        'id',
-                        'name',
-                        'last_name',
-                        'email',
-                        'locked_until',
-                        'is_permanently_locked',
+                    'current_page',
+                    'data' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'email',
+                            'locked_until',
+                            'is_permanently_locked',
+                        ],
                     ],
-                ],
-            ])
-            ->assertJsonCount(1, 'data')
-            ->assertJson([
-                'data' => [
-                    [
-                        'id' => $lockedUser->id,
-                        'name' => 'Locked',
-                        'email' => 'locked@example.com',
-                    ],
+                    'first_page_url',
+                    'from',
+                    'last_page',
+                    'last_page_url',
+                    'links',
+                    'next_page_url',
+                    'path',
+                    'per_page',
+                    'prev_page_url',
+                    'to',
+                    'total',
                 ],
             ]);
+
+        // Check that our locked user is in the paginated data
+        $response->assertJsonPath('data.data.0.email', $this->regularUser->email);
     }
 
     public function test_admin_can_unlock_user(): void

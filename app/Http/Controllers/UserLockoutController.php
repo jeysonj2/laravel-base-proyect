@@ -18,16 +18,34 @@ class UserLockoutController extends Controller
     /**
      * Get all locked users.
      *
-     * Retrieves a list of all user accounts that are currently locked,
+     * Retrieves a paginated list of all user accounts that are currently locked,
      * either temporarily or permanently.
      *
      * @OA\Get(
      *     path="/api/locked-users",
      *     summary="Get locked users",
-     *     description="Retrieves all locked user accounts (admin only)",
+     *     description="Retrieves all locked user accounts with pagination (admin only)",
      *     operationId="getLockedUsers",
      *     tags={"User Lockout"},
      *     security={{"bearerAuth":{}}},
+     *
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Number of items per page",
+     *         required=false,
+     *
+     *         @OA\Schema(type="integer", default=15)
+     *     ),
      *
      *     @OA\Response(
      *         response=200,
@@ -39,9 +57,95 @@ class UserLockoutController extends Controller
      *             @OA\Property(property="message", type="string", example="Locked users retrieved successfully."),
      *             @OA\Property(
      *                 property="data",
-     *                 type="array",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="current_page",
+     *                     type="integer",
+     *                     example=1,
+     *                     description="Current page number"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="array",
      *
-     *                 @OA\Items(ref="#/components/schemas/User")
+     *                     @OA\Items(ref="#/components/schemas/User")
+     *                 ),
+     *
+     *                 @OA\Property(
+     *                     property="first_page_url",
+     *                     type="string",
+     *                     example="http://example.com/api/locked-users?page=1",
+     *                     description="URL for the first page"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="from",
+     *                     type="integer",
+     *                     example=1,
+     *                     description="The starting item index of the current page"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="last_page",
+     *                     type="integer",
+     *                     example=2,
+     *                     description="The last page number"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="last_page_url",
+     *                     type="string",
+     *                     example="http://example.com/api/locked-users?page=2",
+     *                     description="URL for the last page"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="links",
+     *                     type="array",
+     *                     description="Navigation links for pagination",
+     *
+     *                     @OA\Items(
+     *                         type="object",
+     *
+     *                         @OA\Property(property="url", type="string", nullable=true),
+     *                         @OA\Property(property="label", type="string"),
+     *                         @OA\Property(property="active", type="boolean")
+     *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="next_page_url",
+     *                     type="string",
+     *                     nullable=true,
+     *                     example="http://example.com/api/locked-users?page=2",
+     *                     description="URL for the next page"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="path",
+     *                     type="string",
+     *                     example="http://example.com/api/locked-users",
+     *                     description="Base path for pagination"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="per_page",
+     *                     type="integer",
+     *                     example=15,
+     *                     description="Number of items per page"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="prev_page_url",
+     *                     type="string",
+     *                     nullable=true,
+     *                     example=null,
+     *                     description="URL for the previous page"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="to",
+     *                     type="integer",
+     *                     example=15,
+     *                     description="The ending item index of the current page"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="total",
+     *                     type="integer",
+     *                     example=20,
+     *                     description="Total number of locked users"
+     *                 )
      *             )
      *         )
      *     ),
@@ -69,17 +173,22 @@ class UserLockoutController extends Controller
      *     )
      * )
      *
+     * @param Request $request The HTTP request containing pagination parameters
+     *
      * @return JsonResponse Response containing the list of locked users
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $perPage = (int) $request->input('per_page', 15);
+        $perPage = min(max($perPage, 1), 100); // Ensure per_page is between 1 and 100
+
         $lockedUsers = User::where(function ($query) {
             $query->where('is_permanently_locked', true)
                 ->orWhere(function ($query) {
                     $query->whereNotNull('locked_until')
                         ->where('locked_until', '>', now());
                 });
-        })->get();
+        })->paginate($perPage);
 
         return $this->successResponse('Locked users retrieved successfully.', $lockedUsers);
     }

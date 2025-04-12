@@ -86,15 +86,32 @@ class UserLockoutTest extends TestCase
             'code',
             'message',
             'data' => [
-                '*' => [
-                    'id',
-                    'name',
-                    'email',
-                    'locked_until',
-                    'is_permanently_locked',
+                'current_page',
+                'data' => [
+                    '*' => [
+                        'id',
+                        'name',
+                        'email',
+                        'locked_until',
+                        'is_permanently_locked',
+                    ],
                 ],
+                'first_page_url',
+                'from',
+                'last_page',
+                'last_page_url',
+                'links',
+                'next_page_url',
+                'path',
+                'per_page',
+                'prev_page_url',
+                'to',
+                'total',
             ],
         ]);
+
+        // Check that our locked user is in the paginated data
+        $response->assertJsonPath('data.data.0.email', $this->regularUser->email);
     }
 
     #[Test]

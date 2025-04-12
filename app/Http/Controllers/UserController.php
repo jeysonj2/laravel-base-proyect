@@ -20,15 +20,33 @@ class UserController extends Controller
     /**
      * Display a listing of all users.
      *
-     * Retrieves and returns all users in the system.
+     * Retrieves and returns all users in the system with pagination.
      *
      * @OA\Get(
      *     path="/api/users",
      *     summary="Get all users",
-     *     description="Retrieves a list of all users (admin only)",
+     *     description="Retrieves a paginated list of all users (admin only)",
      *     operationId="getUsers",
      *     tags={"Users"},
      *     security={{"bearerAuth":{}}},
+     *
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Number of items per page",
+     *         required=false,
+     *
+     *         @OA\Schema(type="integer", default=15)
+     *     ),
      *
      *     @OA\Response(
      *         response=200,
@@ -40,9 +58,95 @@ class UserController extends Controller
      *             @OA\Property(property="message", type="string", example="Users retrieved successfully"),
      *             @OA\Property(
      *                 property="data",
-     *                 type="array",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="current_page",
+     *                     type="integer",
+     *                     example=1,
+     *                     description="Current page number"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="data",
+     *                     type="array",
      *
-     *                 @OA\Items(ref="#/components/schemas/User")
+     *                     @OA\Items(ref="#/components/schemas/User")
+     *                 ),
+     *
+     *                 @OA\Property(
+     *                     property="first_page_url",
+     *                     type="string",
+     *                     example="http://example.com/api/users?page=1",
+     *                     description="URL for the first page"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="from",
+     *                     type="integer",
+     *                     example=1,
+     *                     description="The starting item index of the current page"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="last_page",
+     *                     type="integer",
+     *                     example=5,
+     *                     description="The last page number"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="last_page_url",
+     *                     type="string",
+     *                     example="http://example.com/api/users?page=5",
+     *                     description="URL for the last page"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="links",
+     *                     type="array",
+     *                     description="Navigation links for pagination",
+     *
+     *                     @OA\Items(
+     *                         type="object",
+     *
+     *                         @OA\Property(property="url", type="string", nullable=true),
+     *                         @OA\Property(property="label", type="string"),
+     *                         @OA\Property(property="active", type="boolean")
+     *                     )
+     *                 ),
+     *                 @OA\Property(
+     *                     property="next_page_url",
+     *                     type="string",
+     *                     nullable=true,
+     *                     example="http://example.com/api/users?page=2",
+     *                     description="URL for the next page"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="path",
+     *                     type="string",
+     *                     example="http://example.com/api/users",
+     *                     description="Base path for pagination"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="per_page",
+     *                     type="integer",
+     *                     example=15,
+     *                     description="Number of items per page"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="prev_page_url",
+     *                     type="string",
+     *                     nullable=true,
+     *                     example=null,
+     *                     description="URL for the previous page"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="to",
+     *                     type="integer",
+     *                     example=15,
+     *                     description="The ending item index of the current page"
+     *                 ),
+     *                 @OA\Property(
+     *                     property="total",
+     *                     type="integer",
+     *                     example=75,
+     *                     description="Total number of items"
+     *                 )
      *             )
      *         )
      *     ),
@@ -70,11 +174,16 @@ class UserController extends Controller
      *     )
      * )
      *
-     * @return JsonResponse Response containing all users
+     * @param Request $request The HTTP request containing pagination parameters
+     *
+     * @return JsonResponse Response containing paginated users
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $users = User::all();
+        $perPage = (int) $request->input('per_page', 15);
+        $perPage = min(max($perPage, 1), 100); // Ensure per_page is between 1 and 100
+
+        $users = User::paginate($perPage);
 
         return $this->successResponse('Users retrieved successfully', $users);
     }

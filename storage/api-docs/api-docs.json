@@ -1421,8 +1421,30 @@
                     "Users"
                 ],
                 "summary": "Get all users",
-                "description": "Retrieves a list of all users (admin only)",
+                "description": "Retrieves a paginated list of all users (admin only)",
                 "operationId": "getUsers",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "List of users",
@@ -1439,10 +1461,91 @@
                                             "example": "Users retrieved successfully"
                                         },
                                         "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/User"
-                                            }
+                                            "properties": {
+                                                "current_page": {
+                                                    "description": "Current page number",
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                },
+                                                "first_page_url": {
+                                                    "description": "URL for the first page",
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/users?page=1"
+                                                },
+                                                "from": {
+                                                    "description": "The starting item index of the current page",
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "last_page": {
+                                                    "description": "The last page number",
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "last_page_url": {
+                                                    "description": "URL for the last page",
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/users?page=5"
+                                                },
+                                                "links": {
+                                                    "description": "Navigation links for pagination",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "type": "string",
+                                                                "nullable": true
+                                                            },
+                                                            "label": {
+                                                                "type": "string"
+                                                            },
+                                                            "active": {
+                                                                "type": "boolean"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "next_page_url": {
+                                                    "description": "URL for the next page",
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/users?page=2",
+                                                    "nullable": true
+                                                },
+                                                "path": {
+                                                    "description": "Base path for pagination",
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/users"
+                                                },
+                                                "per_page": {
+                                                    "description": "Number of items per page",
+                                                    "type": "integer",
+                                                    "example": 15
+                                                },
+                                                "prev_page_url": {
+                                                    "description": "URL for the previous page",
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "to": {
+                                                    "description": "The ending item index of the current page",
+                                                    "type": "integer",
+                                                    "example": 15
+                                                },
+                                                "total": {
+                                                    "description": "Total number of items",
+                                                    "type": "integer",
+                                                    "example": 75
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -2026,8 +2129,30 @@
                     "User Lockout"
                 ],
                 "summary": "Get locked users",
-                "description": "Retrieves all locked user accounts (admin only)",
+                "description": "Retrieves all locked user accounts with pagination (admin only)",
                 "operationId": "getLockedUsers",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "List of locked users",
@@ -2044,10 +2169,91 @@
                                             "example": "Locked users retrieved successfully."
                                         },
                                         "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/User"
-                                            }
+                                            "properties": {
+                                                "current_page": {
+                                                    "description": "Current page number",
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                },
+                                                "first_page_url": {
+                                                    "description": "URL for the first page",
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/locked-users?page=1"
+                                                },
+                                                "from": {
+                                                    "description": "The starting item index of the current page",
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "last_page": {
+                                                    "description": "The last page number",
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "last_page_url": {
+                                                    "description": "URL for the last page",
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/locked-users?page=2"
+                                                },
+                                                "links": {
+                                                    "description": "Navigation links for pagination",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "url": {
+                                                                "type": "string",
+                                                                "nullable": true
+                                                            },
+                                                            "label": {
+                                                                "type": "string"
+                                                            },
+                                                            "active": {
+                                                                "type": "boolean"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "next_page_url": {
+                                                    "description": "URL for the next page",
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/locked-users?page=2",
+                                                    "nullable": true
+                                                },
+                                                "path": {
+                                                    "description": "Base path for pagination",
+                                                    "type": "string",
+                                                    "example": "http://example.com/api/locked-users"
+                                                },
+                                                "per_page": {
+                                                    "description": "Number of items per page",
+                                                    "type": "integer",
+                                                    "example": 15
+                                                },
+                                                "prev_page_url": {
+                                                    "description": "URL for the previous page",
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "to": {
+                                                    "description": "The ending item index of the current page",
+                                                    "type": "integer",
+                                                    "example": 15
+                                                },
+                                                "total": {
+                                                    "description": "Total number of locked users",
+                                                    "type": "integer",
+                                                    "example": 20
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"

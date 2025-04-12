@@ -27,6 +27,7 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   - Role-based access control with middleware protection
   - User profile management with restricted permissions
   - Automatic superadmin user creation during production deployment
+  - Paginated user lists with configurable page size
   
 - **Role Management**
   - Predefined roles: superadmin, admin, and user
@@ -80,7 +81,7 @@ This is a base Laravel 12 project with a RESTful API implementation that include
   - Comprehensive test suite with Unit and Feature tests
   - Code coverage reporting using Xdebug
   - HTML and text-based coverage reports
-  - Current code coverage: 97.27% (lines), 90.36% (methods), 75.00% (classes)
+  - Current code coverage: 97.10% (lines), 97.06% (methods), 95.24% (classes)
   - Extensive unit tests for:
     - Models (User, Role)
     - Events (UserCreated)
